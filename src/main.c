@@ -13,6 +13,10 @@ int main(int argc, char *argv[])
     log_info("Not cleaning...");
   }
 
+  char *input = NULL;
+  get_arg_value(&input, argc, argv, "-input");
+  log_info(input);
+
   char **buffer = malloc(sizeof(char*) * argc);
   int nextra = get_extra_args(buffer, argc, argv);
 

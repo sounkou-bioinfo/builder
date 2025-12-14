@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include "parser.h"
 
 int include(char *arg, char value)
@@ -15,16 +16,29 @@ int include(char *arg, char value)
   return 0;
 }
 
-char *get_arg_value(int argc, char *argv[], char *arg)
+int is_directive(char *arg) {
+  if(strlen(arg) < 2) {
+    return 0;
+  }
+
+  if(arg[0] == '-' && arg[1] == 'D') {
+    return 1;
+  }
+  return 0;
+}
+
+void get_arg_value(char **value, int argc, char *argv[], char *arg)
 {
   for (int i = 1; i < argc; i++)
   {
     if (strcmp(argv[i], arg) == 0)
     {
-      return argv[i + 1];
+      *value = malloc(sizeof(char) * strlen(argv[i + 1]));
+      strcpy(*value, argv[i + 1]);
+      return;
     }
   }
-  return "";
+  return;
 }
 
 int has_arg(int argc, char *argv[], char *arg)
@@ -62,7 +76,7 @@ int get_extra_args(char **buffer, int argc, char *argv[])
     }
 
     // these are directives
-    if(include(argv[i], '-') && include(argv[i], 'D')) {
+    if(is_directive(argv[i])) {
       buffer[j] = argv[i];
       j++;
     }
