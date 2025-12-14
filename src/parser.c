@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
 #include "parser.h"
 
 int include(char *arg, char value)
@@ -27,18 +27,18 @@ int is_directive(char *arg) {
   return 0;
 }
 
-void get_arg_value(char **value, int argc, char *argv[], char *arg)
+char *get_arg_value(int argc, char *argv[], char *arg)
 {
   for (int i = 1; i < argc; i++)
   {
     if (strcmp(argv[i], arg) == 0)
     {
-      *value = malloc(sizeof(char) * strlen(argv[i + 1]));
-      strcpy(*value, argv[i + 1]);
-      return;
+      char *value = malloc(strlen(argv[i + 1]) + 1);
+      strcpy(value, argv[i + 1]);
+      return value;
     }
   }
-  return;
+  return NULL;
 }
 
 int has_arg(int argc, char *argv[], char *arg)
@@ -58,18 +58,18 @@ int get_extra_args(char **buffer, int argc, char *argv[])
   int j = 0;
   for (int i = 1; i < argc; i++)
   {
-    if (strcmp(argv[i], "-noclean") == 1)
+    if (strcmp(argv[i], "-noclean") == 0)
     {
       continue;
     }
 
-    if (strcmp(argv[i], "-input") == 1)
+    if (strcmp(argv[i], "-input") == 0)
     {
       i++;
       continue;
     }
 
-    if(strcmp(argv[i], "-output") == 1)
+    if(strcmp(argv[i], "-output") == 0)
     {
       i++;
       continue;

@@ -1,11 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "parser.h"
 #include "log.h"
 
 int main(int argc, char *argv[])
 {
-  int must_clean = has_arg(argc, argv, "-noclean");
+  int must_clean = !has_arg(argc, argv, "-noclean");
 
   if(must_clean) {
     log_info("Cleaning...");
@@ -13,19 +14,34 @@ int main(int argc, char *argv[])
     log_info("Not cleaning...");
   }
 
-  char *input = NULL;
-  get_arg_value(&input, argc, argv, "-input");
+  char *input = get_arg_value(argc, argv, "-input");
+
+  if(input == NULL) {
+    input = strdup("srcr");
+    log_info("No -input, defaulting to srcr");
+  }
   log_info(input);
+
+  char *output = get_arg_value(argc, argv, "-output");
+
+  if(output == NULL) {
+    output = strdup("R");
+    log_info("No -output, defaulting to R");
+  }
+  log_info(output);
 
   char **buffer = malloc(sizeof(char*) * argc);
   int nextra = get_extra_args(buffer, argc, argv);
 
+  log_info("Directives:");
   for (int i = 0; i < nextra; i++)
   {
     log_info(buffer[i]);
   }
 
   free(buffer);
+  free(input);
+  free(output);
 
   return 0;
 }
