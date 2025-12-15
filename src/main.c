@@ -3,28 +3,21 @@
 #include <string.h>
 #include "parser.h"
 #include "log.h"
+#include "file.h"
 
 int main(int argc, char *argv[])
 {
-  int must_clean = !has_arg(argc, argv, "-noclean");
-
-  if(must_clean) {
-    log_info("Cleaning...");
-  } else {
-    log_info("Not cleaning...");
-  }
-
   char *input = get_arg_value(argc, argv, "-input");
 
   if(input == NULL) {
     input = strdup("srcr");
     log_info("No -input, defaulting to srcr");
   }
+
   if(input == NULL) {
     log_error("Failed to allocate memory");
     return 1;
   }
-  log_info(input);
 
   char *output = get_arg_value(argc, argv, "-output");
 
@@ -32,11 +25,11 @@ int main(int argc, char *argv[])
     output = strdup("R");
     log_info("No -output, defaulting to R");
   }
+  
   if(output == NULL) {
     log_error("Failed to allocate memory");
     return 1;
   }
-  log_info(output);
 
   char **buffer = malloc(sizeof(char*) * argc);
   if(buffer == NULL) {
@@ -44,13 +37,24 @@ int main(int argc, char *argv[])
     return 1;
   }
 
-  int nextra = get_extra_args(buffer, argc, argv);
+  int n_extra = get_extra_args(buffer, argc, argv);
 
-  log_info("Directives:");
-  for (int i = 0; i < nextra; i++)
-  {
-    log_info(buffer[i]);
+  int must_clean = !has_arg(argc, argv, "-noclean");
+
+  if(must_clean) {
+    char *msg = strdup("Cleaning: ");
+    strcat(msg, output);
+    log_info(msg);
+    free(msg);
+    transfer(input, output, n_extra, buffer, clean);
+  } else {
+    char *msg = strdup("Not cleaning: ");
+    strcat(msg, output);
+    log_info(msg);
+    free(msg);
   }
+
+  transfer(input, output, n_extra, buffer, copy);
 
   free(buffer);
   free(input);

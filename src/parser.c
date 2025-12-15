@@ -81,7 +81,7 @@ int get_extra_args(char **buffer, int argc, char *argv[])
 
     // these are directives
     if(is_directive(argv[i])) {
-      buffer[j] = argv[i];
+      buffer[j] = argv[i] + 2;
       j++;
     }
   }
