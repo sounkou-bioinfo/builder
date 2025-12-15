@@ -20,6 +20,10 @@ int main(int argc, char *argv[])
     input = strdup("srcr");
     log_info("No -input, defaulting to srcr");
   }
+  if(input == NULL) {
+    log_error("Failed to allocate memory");
+    return 1;
+  }
   log_info(input);
 
   char *output = get_arg_value(argc, argv, "-output");
@@ -28,9 +32,18 @@ int main(int argc, char *argv[])
     output = strdup("R");
     log_info("No -output, defaulting to R");
   }
+  if(output == NULL) {
+    log_error("Failed to allocate memory");
+    return 1;
+  }
   log_info(output);
 
   char **buffer = malloc(sizeof(char*) * argc);
+  if(buffer == NULL) {
+    log_error("Failed to allocate memory");
+    return 1;
+  }
+
   int nextra = get_extra_args(buffer, argc, argv);
 
   log_info("Directives:");

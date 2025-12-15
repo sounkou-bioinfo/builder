@@ -5,7 +5,8 @@
 
 int include(char *arg, char value)
 {
-  for (int i = 0; i < strlen(arg); i++)
+  const int l = strlen(arg);
+  for (int i = 0; i < l; i++)
   {
     if (arg[i] == value)
     {
@@ -33,7 +34,10 @@ char *get_arg_value(int argc, char *argv[], char *arg)
   {
     if (strcmp(argv[i], arg) == 0)
     {
-      char *value = malloc(strlen(argv[i + 1]) + 1);
+      char *value = strdup(argv[i + 1]);
+      if(argc < i + 1) {
+        return NULL;
+      }
       strcpy(value, argv[i + 1]);
       return value;
     }
