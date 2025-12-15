@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
   char *input = get_arg_value(argc, argv, "-input");
 
   if(input == NULL) {
-    input = strdup("srcr");
+    input = strdup("srcr/");
     log_info("No -input, defaulting to srcr");
   }
 
@@ -19,10 +19,12 @@ int main(int argc, char *argv[])
     return 1;
   }
 
+  input = strip_last_slash(input);
+
   char *output = get_arg_value(argc, argv, "-output");
 
   if(output == NULL) {
-    output = strdup("R");
+    output = strdup("R/");
     log_info("No -output, defaulting to R");
   }
   
@@ -30,6 +32,8 @@ int main(int argc, char *argv[])
     log_error("Failed to allocate memory");
     return 1;
   }
+
+  output = ensure_dir(output);
 
   char **buffer = malloc(sizeof(char*) * argc);
   if(buffer == NULL) {
