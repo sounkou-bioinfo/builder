@@ -3,6 +3,7 @@
 #include <dirent.h>
 #include <string.h>
 #include <limits.h>
+#include <regex.h>
 #include "file.h"
 #include "log.h"
 
@@ -32,6 +33,59 @@ int clean(char *src, char *dst, int n_extra_args, char **extra_args)
   return 0;
 }
 
+int is_def(int state, char line[1024])
+{
+  if(strlen(line) == 0) {
+    return state;
+  }
+
+  if(line[0] != '#') {
+    return state;
+  }
+
+  if(strlen(line) < 6) {
+    return state;
+  }
+
+  if(strncmp(line, "#ifdef", 6) == 0) {
+    return 1;
+  }
+
+  if(strncmp(line, "#endif", 6) == 0) {
+    return 0;
+  }
+
+  if(strlen(line) < 7) {
+    return state;
+  }
+
+  if(strncmp(line, "# ifdef", 7) == 0){
+    return 1;
+  }
+
+  if(strncmp(line, "# endif",  7) == 0) {
+    return 0;
+  }
+
+  return state;
+}
+
+int matches_def(char line[], int n_extra_args, char **extra_args)
+{
+  for(int i = 0; i < n_extra_args; i++) {
+    regex_t regex;
+    regcomp(&regex, extra_args[i], REG_EXTENDED);
+    if(regexec(&regex, line, 0, NULL, 0) == 0) {
+      regfree(&regex);
+      return 1;
+    }
+
+    regfree(&regex);
+  }
+
+  return 0;
+}
+
 int copy(char *src, char *dst, int n_extra_args, char **extra_args)
 {
 
@@ -45,9 +99,19 @@ int copy(char *src, char *dst, int n_extra_args, char **extra_args)
   printf("Copying %s to %s\n", src, dst);
 
   char line[1024];
+  int is_in_def = 0;
   while(fgets(line, 1024, src_file) != NULL) {
+    is_in_def = is_def(is_in_def, line);
+    printf("#%d", is_in_def);
     printf("%s", line);
   }
+
+  if (is_in_def > 0) {
+    log_error("Failed to find matching #endif");
+    return 1;
+  }
+    
+  fclose(src_file);
 
   return 0;
 }
