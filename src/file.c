@@ -142,13 +142,6 @@ int copy(char *src, char *dst, int n_extra_args, char **extra_args)
     }
   }
 
-  if (should_write > 0) {
-    char msg[PATH_MAX + 64];
-    snprintf(msg, sizeof(msg), "Failed to find matching #endif in %s", src);
-    log_error(msg);
-    return 1;
-  }
-    
   fclose(src_file);
 
   return 0;
