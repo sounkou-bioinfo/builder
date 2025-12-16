@@ -49,7 +49,7 @@ int matches_def(char line[], int n_extra_args, char **extra_args)
   return 0;
 }
 
-int is_def(int state, char line[1024], int n_extra_args, char **extra_args)
+int get_state(int state, char line[1024], int n_extra_args, char **extra_args)
 {
   if(strlen(line) == 0) {
     return state;
@@ -128,7 +128,7 @@ int copy(char *src, char *dst, int n_extra_args, char **extra_args)
   char line[1024];
   int should_write = 1;
   while(fgets(line, 1024, src_file) != NULL) {
-    should_write = is_def(should_write, line, n_extra_args, extra_args);
+    should_write = get_state(should_write, line, n_extra_args, extra_args);
     printf("#%d", should_write);
     printf("%s", line);
 
