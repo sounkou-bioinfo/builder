@@ -33,43 +33,6 @@ int clean(char *src, char *dst, int n_extra_args, char **extra_args)
   return 0;
 }
 
-int is_def(int state, char line[1024])
-{
-  if(strlen(line) == 0) {
-    return state;
-  }
-
-  if(line[0] != '#') {
-    return state;
-  }
-
-  if(strlen(line) < 6) {
-    return state;
-  }
-
-  if(strncmp(line, "#ifdef", 6) == 0) {
-    return 1;
-  }
-
-  if(strncmp(line, "#endif", 6) == 0) {
-    return 0;
-  }
-
-  if(strlen(line) < 7) {
-    return state;
-  }
-
-  if(strncmp(line, "# ifdef", 7) == 0){
-    return 1;
-  }
-
-  if(strncmp(line, "# endif",  7) == 0) {
-    return 0;
-  }
-
-  return state;
-}
-
 int matches_def(char line[], int n_extra_args, char **extra_args)
 {
   for(int i = 0; i < n_extra_args; i++) {
@@ -86,28 +49,103 @@ int matches_def(char line[], int n_extra_args, char **extra_args)
   return 0;
 }
 
+int is_def(int state, char line[1024], int n_extra_args, char **extra_args)
+{
+  if(strlen(line) == 0) {
+    return state;
+  }
+
+  if(line[0] != '#') {
+    return state;
+  }
+
+  if(strlen(line) < 6) {
+    return state;
+  }
+
+  if(strncmp(line, "#ifdef", 6) == 0) {
+    return matches_def(line, n_extra_args, extra_args);
+  }
+
+  if(strncmp(line, "#endif", 6) == 0) {
+    return 1;
+  }
+
+  if(strlen(line) < 7) {
+    return state;
+  }
+
+  if(strncmp(line, "# ifdef", 7) == 0){
+    return matches_def(line, n_extra_args, extra_args);
+  }
+
+  if(strncmp(line, "# endif",  7) == 0) {
+    return 1;
+  }
+
+  return state;
+}
+
+char *replace_slash(char *path)
+{
+  char *new_path = strdup(path);
+  for(int i = 0; i < strlen(new_path); i++) {
+    if(new_path[i] == '/') {
+      new_path[i] = '-';
+    }
+  }
+  
+  return new_path;
+}
+
+char *make_dest_path(char *src, char *dst)
+{
+  size_t l = strlen(src) + strlen(dst) + 1;
+  char *path = malloc(l);
+
+  if(path == NULL) {
+    log_error("Failed to allocate memory");
+    return NULL;
+  }
+
+  snprintf(path, l, "%s%s", dst, replace_slash(src));
+  return path;
+}
+
 int copy(char *src, char *dst, int n_extra_args, char **extra_args)
 {
-
+  char *dest = make_dest_path(src, dst);
   FILE *src_file = fopen(src, "r");
+  FILE *dst_file = fopen(dest, "w");
 
   if(src_file == NULL) {
     log_error("Failed to open source file");
     return 1;
   }
 
-  printf("Copying %s to %s\n", src, dst);
+  printf("Copying %s to %s\n", src, dest);
 
   char line[1024];
-  int is_in_def = 0;
+  int should_write = 1;
   while(fgets(line, 1024, src_file) != NULL) {
-    is_in_def = is_def(is_in_def, line);
-    printf("#%d", is_in_def);
+    should_write = is_def(should_write, line, n_extra_args, extra_args);
+    printf("#%d", should_write);
     printf("%s", line);
+
+    if(!should_write) {
+      continue;
+    }
+
+    if(fputs(line, dst_file) == EOF) {
+      log_error("Failed to write to destination file");
+      return 1;
+    }
   }
 
-  if (is_in_def > 0) {
-    log_error("Failed to find matching #endif");
+  if (should_write > 0) {
+    char msg[PATH_MAX + 64];
+    snprintf(msg, sizeof(msg), "Failed to find matching #endif in %s", src);
+    log_error(msg);
     return 1;
   }
     
