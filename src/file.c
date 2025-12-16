@@ -123,14 +123,15 @@ int copy(char *src, char *dst, int n_extra_args, char **extra_args)
     return 1;
   }
 
-  printf("Copying %s to %s\n", src, dest);
+  char *msg = malloc(strlen(src) + strlen(dst) + 64);
+  snprintf(msg, strlen(src) + strlen(dst) + 64, "Copying %s to %s", src, dest);
+  log_info(msg);
+  free(msg);
 
   char line[1024];
   int should_write = 1;
   while(fgets(line, 1024, src_file) != NULL) {
     should_write = get_state(should_write, line, n_extra_args, extra_args);
-    printf("#%d", should_write);
-    printf("%s", line);
 
     if(!should_write) {
       continue;
