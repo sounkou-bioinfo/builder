@@ -21,6 +21,11 @@ int main(int argc, char *argv[])
 
   input = strip_last_slash(input);
 
+  if(!exists(input)) {
+    log_error("Input directory does not exist");
+    return 1;
+  }
+
   char *output = get_arg_value(argc, argv, "-output");
 
   if(output == NULL) {
@@ -30,6 +35,11 @@ int main(int argc, char *argv[])
   
   if(output == NULL) {
     log_error("Failed to allocate memory");
+    return 1;
+  }
+
+  if(!exists(output)) {
+    log_error("Output directory does not exist");
     return 1;
   }
 
@@ -50,7 +60,7 @@ int main(int argc, char *argv[])
     strcat(msg, output);
     log_info(msg);
     free(msg);
-    transfer(input, output, n_extra, buffer, clean);
+    transfer(output, output, n_extra, buffer, clean);
   } else {
     char *msg = strdup("Not cleaning: ");
     strcat(msg, output);

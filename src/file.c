@@ -7,6 +7,18 @@
 #include "file.h"
 #include "log.h"
 
+int exists(char *path)
+{
+  FILE *file = fopen(path, "r");
+
+  if(file == NULL) {
+    return 0;
+  }
+
+  fclose(file);
+  return 1;
+}
+
 char *strip_last_slash(char *path)
 {
   char *dir = strdup(path);
@@ -30,7 +42,7 @@ char *ensure_dir(char *path)
 
 int clean(char *src, char *dst, int n_extra_args, char **extra_args)
 {
-  return 0;
+  return remove(src);
 }
 
 int matches_def(char line[], int n_extra_args, char **extra_args)
