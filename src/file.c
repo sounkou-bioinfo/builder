@@ -197,9 +197,8 @@ int transfer(char *src_dir, char *dst_dir, int n_extra_args, char **extra_args, 
   }
 
   while((entry = readdir(source)) != NULL) {
-    if (strcmp(entry->d_name, ".") == 0 ||
-        strcmp(entry->d_name, "..") == 0) {
-        continue;
+    if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0) {
+      continue;
     }
 
     snprintf(path, PATH_MAX, "%s/%s", src_dir, entry->d_name);
