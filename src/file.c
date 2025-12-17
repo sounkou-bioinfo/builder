@@ -144,6 +144,8 @@ int copy(char *src, char *dst, int n_extra_args, char **extra_args)
   FILE *dst_file = fopen(dest, "w");
 
   if(src_file == NULL) {
+    fclose(dst_file);
+    fclose(src_file);
     log_error("Failed to open source file");
     return 1;
   }
@@ -174,6 +176,7 @@ int copy(char *src, char *dst, int n_extra_args, char **extra_args)
     }
   }
 
+  fclose(dst_file);
   fclose(src_file);
 
   return 0;
