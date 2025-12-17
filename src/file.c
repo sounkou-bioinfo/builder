@@ -61,37 +61,50 @@ int matches_def(char line[], int n_extra_args, char **extra_args)
   return 0;
 }
 
+char *remove_leading_spaces(char *line)
+{
+  while(*line && (*line == ' ' || *line == '\t')) {
+    line++;
+  }
+  return line;
+}
+
 int get_state(int state, char line[1024], int n_extra_args, char **extra_args)
 {
+  // empty line
   if(strlen(line) == 0) {
     return state;
   }
 
-  if(line[0] != '#') {
-    return state;
-  }
-
+  // line is too short to include a directive
   if(strlen(line) < 6) {
     return state;
   }
 
-  if(strncmp(line, "#ifdef", 6) == 0) {
-    return matches_def(line, n_extra_args, extra_args);
-  }
+  char *trimmed = remove_leading_spaces(line);
 
-  if(strncmp(line, "#endif", 6) == 0) {
-    return 1;
-  }
-
-  if(strlen(line) < 7) {
+  // line is nto a comment
+  if(trimmed[0] != '#') {
     return state;
   }
 
-  if(strncmp(line, "# ifdef", 7) == 0){
-    return matches_def(line, n_extra_args, extra_args);
+  if(strncmp(trimmed, "#ifdef", 6) == 0) {
+    return matches_def(trimmed, n_extra_args, extra_args);
   }
 
-  if(strncmp(line, "# endif",  7) == 0) {
+  if(strncmp(trimmed, "#endif", 6) == 0) {
+    return 1;
+  }
+
+  if(strlen(trimmed) < 7) {
+    return state;
+  }
+
+  if(strncmp(trimmed, "# ifdef", 7) == 0){
+    return matches_def(trimmed, n_extra_args, extra_args);
+  }
+
+  if(strncmp(trimmed, "# endif",  7) == 0) {
     return 1;
   }
 
