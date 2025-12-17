@@ -19,6 +19,7 @@ You can also use the `# ifdef` directives.
 
 ```r
 x <- 1;
+
 # ifdef DEBUG
 cat("x is", x, "\n");
 # endif
@@ -26,4 +27,4 @@ cat("x is", x, "\n");
 x <- x + 1
 ```
 
-Then build with `./builder -input srcr -DDEBUG`.
+Then build with `./builder -input srcr -DDEBUG` to include the `DEBUG` directive in the `output` directory.

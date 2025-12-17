@@ -155,10 +155,16 @@ int copy(char *src, char *dst, int n_extra_args, char **extra_args)
 
   char line[1024];
   int should_write = 1;
+  int previous_state = 1;
   while(fgets(line, 1024, src_file) != NULL) {
+    previous_state = should_write;
     should_write = get_state(should_write, line, n_extra_args, extra_args);
 
     if(!should_write) {
+      continue;
+    }
+
+    if(should_write && !previous_state) {
       continue;
     }
 
