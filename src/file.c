@@ -45,20 +45,25 @@ int clean(char *src, char *dst, int n_extra_args, char **extra_args)
   return remove(src);
 }
 
-int matches_def(char line[], int n_extra_args, char **extra_args)
+int match_index(char line[], int n_extra_args, char **extra_args)
 {
   for(int i = 0; i < n_extra_args; i++) {
     regex_t regex;
     regcomp(&regex, extra_args[i], REG_EXTENDED);
     if(regexec(&regex, line, 0, NULL, 0) == 0) {
       regfree(&regex);
-      return 1;
+      return i;
     }
 
     regfree(&regex);
   }
 
-  return 0;
+  return -1;
+}
+
+int matches_def(char line[], int n_extra_args, char **extra_args)
+{
+  return match_index(line, n_extra_args, extra_args) != -1;
 }
 
 char *remove_leading_spaces(char *line)
@@ -69,13 +74,8 @@ char *remove_leading_spaces(char *line)
   return line;
 }
 
-int get_state(int state, char line[1024], int n_extra_args, char **extra_args)
+int should_write_line(int state, char line[1024], int n_extra_args, char **extra_args)
 {
-  // empty line
-  if(strlen(line) == 0) {
-    return state;
-  }
-
   // line is too short to include a directive
   if(strlen(line) < 6) {
     return state;
@@ -83,13 +83,18 @@ int get_state(int state, char line[1024], int n_extra_args, char **extra_args)
 
   char *trimmed = remove_leading_spaces(line);
 
-  // line is nto a comment
+  // line is not a comment
   if(trimmed[0] != '#') {
     return state;
   }
 
   if(strncmp(trimmed, "#ifdef", 6) == 0) {
     return matches_def(trimmed, n_extra_args, extra_args);
+  }
+
+  if(strncmp(trimmed, "#else", 5) == 0) {
+    if(state == 1) return 0;
+    return 1;
   }
 
   if(strncmp(trimmed, "#endif", 6) == 0) {
@@ -145,16 +150,10 @@ int copy(char *src, char *dst, int n_extra_args, char **extra_args)
 
   char line[1024];
   int should_write = 1;
-  int previous_state = 1;
   while(fgets(line, 1024, src_file) != NULL) {
-    previous_state = should_write;
-    should_write = get_state(should_write, line, n_extra_args, extra_args);
+    should_write = should_write_line(should_write, line, n_extra_args, extra_args);
 
     if(!should_write) {
-      continue;
-    }
-
-    if(should_write && !previous_state) {
       continue;
     }
 
