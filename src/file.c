@@ -96,18 +96,6 @@ int get_state(int state, char line[1024], int n_extra_args, char **extra_args)
     return 1;
   }
 
-  if(strlen(trimmed) < 7) {
-    return state;
-  }
-
-  if(strncmp(trimmed, "# ifdef", 7) == 0){
-    return matches_def(trimmed, n_extra_args, extra_args);
-  }
-
-  if(strncmp(trimmed, "# endif",  7) == 0) {
-    return 1;
-  }
-
   return state;
 }
 

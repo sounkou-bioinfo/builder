@@ -20,9 +20,9 @@ You can also use the `# ifdef` directives.
 ```r
 x <- 1;
 
-# ifdef DEBUG
+#ifdef DEBUG
 cat("x is", x, "\n");
-# endif
+#endif
 
 x <- x + 1
 ```
