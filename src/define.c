@@ -61,7 +61,9 @@ void free_array(Define *arr)
   }
 
   for(int i = 0; i < arr->size; i++) {
-    free(arr->name[i]);
+    if(arr->name[i] != NULL) {
+      free(arr->name[i]);
+    }
     if(arr->value[i] != NULL) {
       free(arr->value[i]);
     }
