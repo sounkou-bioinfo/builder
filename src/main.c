@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "parser.h"
+#include "define.h"
 #include "log.h"
 #include "file.h"
 
@@ -60,7 +61,7 @@ int main(int argc, char *argv[])
     strcat(msg, output);
     log_info(msg);
     free(msg);
-    transfer(output, output, n_extra, buffer, clean);
+    walk(output, output, n_extra, buffer, clean, NULL);
   } else {
     char *msg = strdup("Not cleaning: ");
     strcat(msg, output);
@@ -68,11 +69,13 @@ int main(int argc, char *argv[])
     free(msg);
   }
 
-  transfer(input, output, n_extra, buffer, copy);
+  Define *defines = create_define();
+  walk(input, output, n_extra, buffer, copy, &defines);
 
   free(buffer);
   free(input);
   free(output);
+  free_array(defines);
 
   return 0;
 }

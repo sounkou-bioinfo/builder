@@ -4,6 +4,7 @@
 #include <string.h>
 #include <limits.h>
 #include <regex.h>
+#include "define.h"
 #include "file.h"
 #include "log.h"
 
@@ -40,7 +41,7 @@ char *ensure_dir(char *path)
   return dir;
 }
 
-int clean(char *src, char *dst, int n_extra_args, char **extra_args)
+int clean(char *src, char *dst, int n_extra_args, char **extra_args, Define **defs)
 {
   return remove(src);
 }
@@ -130,7 +131,7 @@ char *make_dest_path(char *src, char *dst)
   return path;
 }
 
-int copy(char *src, char *dst, int n_extra_args, char **extra_args)
+int copy(char *src, char *dst, int n_extra_args, char **extra_args, Define **defs)
 {
   char *dest = make_dest_path(src, dst);
   FILE *src_file = fopen(src, "r");
@@ -152,6 +153,7 @@ int copy(char *src, char *dst, int n_extra_args, char **extra_args)
   int should_write = 1;
   while(fgets(line, 1024, src_file) != NULL) {
     should_write = should_write_line(should_write, line, n_extra_args, extra_args);
+    define(defs, line);
 
     if(!should_write) {
       continue;
@@ -169,7 +171,7 @@ int copy(char *src, char *dst, int n_extra_args, char **extra_args)
   return 0;
 }
 
-int transfer(char *src_dir, char *dst_dir, int n_extra_args, char **extra_args, Callback func)
+int walk(char *src_dir, char *dst_dir, int n_extra_args, char **extra_args, Callback func, Define **defs)
 {
   DIR *source;
   struct dirent *entry;
@@ -192,9 +194,9 @@ int transfer(char *src_dir, char *dst_dir, int n_extra_args, char **extra_args, 
 
     // it's a directory, recurse
     if (entry->d_type == DT_DIR) {
-      transfer(path, dst_dir, n_extra_args, extra_args, func);
+      walk(path, dst_dir, n_extra_args, extra_args, func, defs);
     } else {
-      func(path, dst_dir, n_extra_args, extra_args);
+      func(path, dst_dir, n_extra_args, extra_args, defs);
     }
   }
   
