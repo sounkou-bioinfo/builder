@@ -116,3 +116,80 @@ void define(Define **defines, char *line)
   push(*defines, name_copy, value_copy);
   free(copy);
 }
+
+char* str_replace(const char *orig, const char *find, const char *replace) {
+  const char *pos = orig;
+  int count = 0;
+  int find_len = strlen(find);
+  int replace_len = strlen(replace);
+  
+  while ((pos = strstr(pos, find)) != NULL) {
+    count++;
+    pos += find_len;
+  }
+  
+  if (count == 0) {
+    return strdup(orig);
+  }
+  
+  int orig_len = strlen(orig);
+  int new_len = orig_len + count * (replace_len - find_len);
+  
+  char *result = malloc(new_len + 1);
+  if (!result) {
+    return NULL;
+  }
+  
+  char *current = result;
+  const char *src = orig;
+  
+  while ((pos = strstr(src, find)) != NULL) {
+    int len_before = pos - src;
+    memcpy(current, src, len_before);
+    current += len_before;
+    
+    memcpy(current, replace, replace_len);
+    current += replace_len;
+    
+    src = pos + find_len;
+  }
+  
+  strcpy(current, src);
+  
+  return result;
+}
+
+char *define_replace(Define **defines, char *line)
+{
+  if(*defines == NULL) {
+    return strdup(line);
+  }
+
+  if(strncmp(line, "#define", 7) == 0) {
+    return strdup(line);
+  }
+
+  char *current = strdup(line);
+  if(current == NULL) {
+    return NULL;
+  }
+
+  for(int i = 0; i < (*defines)->size; i++) {
+    char *name = (*defines)->name[i];
+    char *value = (*defines)->value[i];
+
+    if(name == NULL || value == NULL) {
+      continue;
+    }
+
+    char *replaced = str_replace(current, name, value);
+    if(replaced == NULL) {
+      continue;
+    }
+
+    free(current);
+    current = replaced;
+  }
+
+  return current;
+}

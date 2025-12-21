@@ -154,15 +154,20 @@ int copy(char *src, char *dst, int n_extra_args, char **extra_args, Define **def
   while(fgets(line, 1024, src_file) != NULL) {
     should_write = should_write_line(should_write, line, n_extra_args, extra_args);
     define(defs, line);
+    char *processed = define_replace(defs, line);
 
     if(!should_write) {
+      free(processed);
       continue;
     }
 
-    if(fputs(line, dst_file) == EOF) {
+    if(fputs(processed, dst_file) == EOF) {
+      free(processed);
       log_error("Failed to write to destination file");
       return 1;
     }
+
+    free(processed);
   }
 
   fclose(dst_file);
