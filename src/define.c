@@ -86,7 +86,7 @@ void define(Define **defines, char *line)
   if(copy == NULL) {
     return;
   }
-    
+
   // Skip "#define"
   token = strtok(copy, " ");
   token = strtok(NULL, " ");
@@ -101,15 +101,30 @@ void define(Define **defines, char *line)
     return;
   }
 
-  // Get value
-  token = strtok(NULL, " ");
+  // Get value - capture everything after the name
   char *value_copy = NULL;
-  if(token != NULL) {
-    value_copy = strdup(token);
-    if(value_copy == NULL) {
-      free(name_copy);
-      free(copy);
-      return;
+  char *rest = strtok(NULL, "");  // Get rest of line
+  if(rest != NULL) {
+    // Skip leading whitespace
+    while(*rest == ' ' || *rest == '\t') {
+      rest++;
+    }
+    if(*rest != '\0') {
+      // Remove trailing newline/carriage return
+      int len = strlen(rest);
+      while(len > 0 && (rest[len-1] == '\n' || rest[len-1] == '\r')) {
+        rest[len-1] = '\0';
+        len--;
+      }
+
+      if(*rest != '\0') {
+        value_copy = strdup(rest);
+        if(value_copy == NULL) {
+          free(name_copy);
+          free(copy);
+          return;
+        }
+      }
     }
   }
 
