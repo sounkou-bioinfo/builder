@@ -18,13 +18,17 @@ make
 You can also use the `# ifdef` directives.
 
 ```r
-x <- 1;
+#define PI 3.14
 
-#ifdef DEBUG
-cat("x is", x, "\n");
-#endif
+foo <- function(){
+    #ifdef DEBUG
+    print("debuging")
+    #endif
 
-x <- x + 1
+    PI + 1L
+}
 ```
 
 Then build with `./builder -input srcr -DDEBUG` to include the `DEBUG` directive in the `output` directory.
+
+Currently supports `#ifdef`, `#else`, `#endif`, `#define` only.
