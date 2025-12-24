@@ -31,4 +31,4 @@ foo <- function(){
 
 Then build with `./builder -input srcr -DDEBUG` to include the `DEBUG` directive in the `output` directory.
 
-Currently supports `#ifdef`, `#else`, `#endif`, `#define` only.
+Currently supports `#ifdef`, `#ifndef`, `#else`, `#endif`, `#define` only.

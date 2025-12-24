@@ -93,6 +93,10 @@ int should_write_line(int state, char line[1024], int n_extra_args, char **extra
     return matches_def(trimmed, n_extra_args, extra_args);
   }
 
+  if(strncmp(trimmed, "#ifndef", 7) == 0) {
+    return !matches_def(trimmed, n_extra_args, extra_args);
+  }
+
   if(strncmp(trimmed, "#else", 5) == 0) {
     if(state == 1) return 0;
     return 1;
