@@ -8,6 +8,22 @@
 
 int main(int argc, char *argv[])
 {
+  int help = has_arg(argc, argv, "-help");
+
+  if(help) {
+    printf("Usage: builder [OPTIONS]\n\n");
+    printf("Options:\n");
+    printf("  -input <path>         Input directory (default: srcr/)\n");
+    printf("  -output <path>        Output directory (default: R/)\n");
+    printf("  -noclean              Skip cleaning output directory before processing\n");
+    printf("  -D<NAME>              Define boolean\n");
+    printf("  -help                 Show this help message\n");
+    printf("\n");
+    printf("Example:\n");
+    printf("  builder -input src/ -output build/ -DDEBUG\n");
+    return 0;
+  }
+
   char *input = get_arg_value(argc, argv, "-input");
 
   if(input == NULL) {
