@@ -11,6 +11,8 @@ make
 
 ## Usage
 
+See `builder -help` for usage.
+
 ```bash
 ./builder -input srcr 
 ```
