@@ -1,5 +1,5 @@
 build:
-	cc -o bin/builder src/main.c src/parser.c src/log.c src/file.c src/define.c -Wall
+	cc -o bin/builder src/main.c src/parser.c src/log.c src/file.c src/define.c -Wall -Iinclude
 
 cmd := ./bin/builder -input srcr -DDEBUG -DTEST '"a string"'
 
