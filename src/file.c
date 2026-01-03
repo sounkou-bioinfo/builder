@@ -175,18 +175,13 @@ int copy(char *src, char *dst, Define **defs)
   char line[1024];
   int should_write = 1;
   while(fgets(line, 1024, src_file) != NULL) {
-    should_write = should_write_line(should_write, line, defs);
+    should_write = should_write_line(should_write, strdup(line), defs);
     define(defs, line);
     char *processed = define_replace(defs, line);
 
     if(!should_write) {
       free(processed);
       continue;
-    }
-
-    size_t len = strlen(processed);
-    if(len > 0 && processed[len - 1] != '\n') {
-      processed[len - 1] = '\n';
     }
 
     if(fputs(processed, dst_file) == EOF) {

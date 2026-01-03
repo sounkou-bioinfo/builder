@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h> 
 #include "define.h"
+#include "parser.h"
 
 Define *create_define()
 {
@@ -193,7 +194,7 @@ char *define_replace(Define **defines, char *line)
     char *name = (*defines)->name[i];
     char *value = (*defines)->value[i];
 
-    if(name == NULL || value == NULL) {
+    if(name == NULL || value == NULL || strcmp(value, NO_DEFINITION) == 0) {
       continue;
     }
 
