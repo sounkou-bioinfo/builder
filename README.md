@@ -27,10 +27,15 @@ foo <- function(){
     print("debuging")
     #endif
 
+    #ifdef TEST
+    print(TEST)
+    #endif
+
     PI + 1L
 }
 ```
 
-Then build with `./builder -input srcr -DDEBUG` to include the `DEBUG` directive in the `output` directory.
+Then build with `./builder -input srcr -DDEBUG -DTEST '"hello world"'` 
+to include the `DEBUG`, and `TEST` directives in the `output` directory.
 
 Currently supports `#ifdef`, `#ifndef`, `#else`, `#endif`, `#define` only.
