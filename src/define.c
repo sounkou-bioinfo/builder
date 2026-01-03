@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-#include <stdlib.h>
+#include <stdlib.h> 
 #include "define.h"
 
 Define *create_define()
@@ -207,4 +207,31 @@ char *define_replace(Define **defines, char *line)
   }
 
   return current;
+}
+
+char *get_define_value(Define **defines, char *name)
+{
+  if(defines == NULL) {
+    return NULL;
+  }
+
+  for(int i = 0; i < (*defines)->size; i++) {
+    if(strcmp((*defines)->name[i], name) == 0) {
+      printf("Found def for `%s`\n", name);
+      return (*defines)->value[i];
+    }
+  }
+
+  return NULL;
+}
+
+void print_defines(Define *defines)
+{
+  if(defines == NULL) {
+    return;
+  }
+
+  for(int i = 0; i < defines->size; i++) {
+    printf("%s = %s\n", defines->name[i], defines->value[i]);
+  }
 }

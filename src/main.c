@@ -62,33 +62,38 @@ int main(int argc, char *argv[])
 
   output = ensure_dir(output);
 
-  char **buffer = malloc(sizeof(char*) * argc);
-  if(buffer == NULL) {
-    log_error("Failed to allocate memory");
-    return 1;
-  }
+  Define *defines = create_define();
 
-  int n_extra = get_extra_args(buffer, argc, argv);
+  get_definitions(defines, argc, argv);
+  print_defines(defines);
 
   int must_clean = !has_arg(argc, argv, "-noclean");
 
   if(must_clean) {
-    char *msg = strdup("Cleaning: ");
-    strcat(msg, output);
+    size_t msg_len = strlen("Cleaning: ") + strlen(output) + 1;
+    char *msg = malloc(msg_len);
+    if(msg == NULL) {
+      log_error("Failed to allocate memory");
+      return 1;
+    }
+    snprintf(msg, msg_len, "Cleaning: %s", output);
     log_info(msg);
     free(msg);
-    walk(output, output, n_extra, buffer, clean, NULL);
+    walk(output, output, clean, NULL);
   } else {
-    char *msg = strdup("Not cleaning: ");
-    strcat(msg, output);
+    size_t msg_len = strlen("Not cleaning: ") + strlen(output) + 1;
+    char *msg = malloc(msg_len);
+    if(msg == NULL) {
+      log_error("Failed to allocate memory");
+      return 1;
+    }
+    snprintf(msg, msg_len, "Not cleaning: %s", output);
     log_info(msg);
     free(msg);
   }
 
-  Define *defines = create_define();
-  walk(input, output, n_extra, buffer, copy, &defines);
+  walk(input, output, copy, &defines);
 
-  free(buffer);
   free(input);
   free(output);
   free_array(defines);

@@ -3,3 +3,6 @@ build:
 
 dev: build
 	./bin/builder -input srcr -DDEBUG
+
+debug: build
+	valgrind --leak-check=full ./bin/builder -input srcr -DDEBUG

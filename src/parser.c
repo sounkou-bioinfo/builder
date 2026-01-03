@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "parser.h"
+#include "define.h"
 
 int include(char *arg, char value)
 {
@@ -57,9 +58,8 @@ int has_arg(int argc, char *argv[], char *arg)
   return 0;
 }
 
-int get_extra_args(char **buffer, int argc, char *argv[])
+void get_definitions(Define *arr, int argc, char *argv[])
 {
-  int j = 0;
   for (int i = 1; i < argc; i++)
   {
     if (strcmp(argv[i], "-noclean") == 0)
@@ -81,10 +81,27 @@ int get_extra_args(char **buffer, int argc, char *argv[])
 
     // these are directives
     if(is_directive(argv[i])) {
-      buffer[j] = argv[i] + 2;
-      j++;
+      if(i < argc - 1 && !is_directive(argv[i + 1])) {
+        char *name = strdup(argv[i] + 2);
+        char *value = strdup(argv[i + 1]);
+        if(name == NULL || value == NULL) {
+          free(name);
+          free(value);
+          return;
+        }
+        push(arr, name, value);
+        i++;
+        continue;
+      }
+
+      char *name = strdup(argv[i] + 2);
+      char *undefined = strdup("<UNDEFINED>");
+      if(name == NULL || undefined == NULL) {
+        free(name);
+        free(undefined);
+        return;
+      }
+      push(arr, name, undefined);
     }
   }
-
-  return j;
 }

@@ -13,5 +13,7 @@ void push(Define *arr, char *name, char *value);
 void free_array(Define *arr);
 void define(Define **defines, char *line);
 char *define_replace(Define **defines, char *line);
+char *get_define_value(Define **defines, char *name);
+void print_defines(Define *defines);
 
 #endif

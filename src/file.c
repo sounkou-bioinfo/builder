@@ -22,49 +22,41 @@ int exists(char *path)
 
 char *strip_last_slash(char *path)
 {
-  char *dir = strdup(path);
-  char last_slash = dir[strlen(dir) - 1];
-  if(last_slash == '/') {
-    dir = realloc(dir, strlen(dir) - 1);
+  size_t len = strlen(path);
+
+  if(len > 0 && path[len - 1] == '/') {
+    char *dir = malloc(len);  // len - 1 for string + 1 for null = len
+    if(dir == NULL) {
+      return NULL;
+    }
+    strncpy(dir, path, len - 1);
+    dir[len - 1] = '\0';
+    return dir;
   }
-  return dir;
+
+  return strdup(path);
 }
 
 char *ensure_dir(char *path)
 {
-  char *dir = strdup(path);
-  char last_slash = dir[strlen(dir) - 1];
-  if(last_slash != '/') {
-    dir = realloc(dir, strlen(dir) + 2);
+  size_t len = strlen(path);
+
+  if(len > 0 && path[len - 1] != '/') {
+    char *dir = malloc(len + 2);  // len + '/' + null terminator
+    if(dir == NULL) {
+      return NULL;
+    }
+    strcpy(dir, path);
     strcat(dir, "/");
+    return dir;
   }
-  return dir;
+
+  return strdup(path);
 }
 
-int clean(char *src, char *dst, int n_extra_args, char **extra_args, Define **defs)
+int clean(char *src, char *dst, Define **defs)
 {
   return remove(src);
-}
-
-int match_index(char line[], int n_extra_args, char **extra_args)
-{
-  for(int i = 0; i < n_extra_args; i++) {
-    regex_t regex;
-    regcomp(&regex, extra_args[i], REG_EXTENDED);
-    if(regexec(&regex, line, 0, NULL, 0) == 0) {
-      regfree(&regex);
-      return i;
-    }
-
-    regfree(&regex);
-  }
-
-  return -1;
-}
-
-int matches_def(char line[], int n_extra_args, char **extra_args)
-{
-  return match_index(line, n_extra_args, extra_args) != -1;
 }
 
 char *remove_leading_spaces(char *line)
@@ -75,7 +67,23 @@ char *remove_leading_spaces(char *line)
   return line;
 }
 
-int should_write_line(int state, char line[1024], int n_extra_args, char **extra_args)
+char *remove_keyword(char *line)
+{
+  char *t = strchr(line, ' ');
+  if(t == NULL) {
+    return strdup(line);
+  }
+  t++;
+
+  size_t len = strlen(t);
+  if(len > 0 && t[len - 1] == '\n') {
+    t[len - 1] = '\0';
+  }
+
+  return strdup(t);
+}
+
+int should_write_line(int state, char line[1024], Define **defs)
 {
   // line is too short to include a directive
   if(strlen(line) < 6) {
@@ -90,11 +98,11 @@ int should_write_line(int state, char line[1024], int n_extra_args, char **extra
   }
 
   if(strncmp(trimmed, "#ifdef", 6) == 0) {
-    return matches_def(trimmed, n_extra_args, extra_args);
+    return get_define_value(defs, remove_keyword(trimmed)) != NULL;
   }
 
   if(strncmp(trimmed, "#ifndef", 7) == 0) {
-    return !matches_def(trimmed, n_extra_args, extra_args);
+    return get_define_value(defs, remove_keyword(trimmed)) == NULL;
   }
 
   if(strncmp(trimmed, "#else", 5) == 0) {
@@ -146,7 +154,7 @@ char *make_dest_path(char *src, char *dst)
   return path;
 }
 
-int copy(char *src, char *dst, int n_extra_args, char **extra_args, Define **defs)
+int copy(char *src, char *dst, Define **defs)
 {
   char *dest = make_dest_path(src, dst);
   FILE *src_file = fopen(src, "r");
@@ -167,13 +175,18 @@ int copy(char *src, char *dst, int n_extra_args, char **extra_args, Define **def
   char line[1024];
   int should_write = 1;
   while(fgets(line, 1024, src_file) != NULL) {
-    should_write = should_write_line(should_write, line, n_extra_args, extra_args);
+    should_write = should_write_line(should_write, line, defs);
     define(defs, line);
     char *processed = define_replace(defs, line);
 
     if(!should_write) {
       free(processed);
       continue;
+    }
+
+    size_t len = strlen(processed);
+    if(len > 0 && processed[len - 1] != '\n') {
+      processed[len - 1] = '\n';
     }
 
     if(fputs(processed, dst_file) == EOF) {
@@ -191,7 +204,7 @@ int copy(char *src, char *dst, int n_extra_args, char **extra_args, Define **def
   return 0;
 }
 
-int walk(char *src_dir, char *dst_dir, int n_extra_args, char **extra_args, Callback func, Define **defs)
+int walk(char *src_dir, char *dst_dir, Callback func, Define **defs)
 {
   DIR *source;
   struct dirent *entry;
@@ -214,9 +227,9 @@ int walk(char *src_dir, char *dst_dir, int n_extra_args, char **extra_args, Call
 
     // it's a directory, recurse
     if (entry->d_type == DT_DIR) {
-      walk(path, dst_dir, n_extra_args, extra_args, func, defs);
+      walk(path, dst_dir, func, defs);
     } else {
-      func(path, dst_dir, n_extra_args, extra_args, defs);
+      func(path, dst_dir, defs);
     }
   }
   
