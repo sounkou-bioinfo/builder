@@ -132,6 +132,17 @@ char *make_dest_path(char *src, char *dst)
   }
 
   snprintf(path, l, "%s%s", dst, replace_slash(src));
+
+  char *slash = strchr(path, '/');
+  char *start = (slash != NULL) ? slash + 1 : path;
+  char *hyphen = strchr(start, '-');
+
+  if(hyphen == NULL) {
+    return path;
+  }
+
+  memmove(start, hyphen + 1, strlen(hyphen + 1) + 1);
+
   return path;
 }
 
