@@ -4,6 +4,8 @@
 #include "parser.h"
 #include "define.h"
 
+const char *NO_DEFINITION = "<UNDEFINED>";
+
 int include(char *arg, char value)
 {
   const int l = strlen(arg);
@@ -95,7 +97,7 @@ void get_definitions(Define *arr, int argc, char *argv[])
       }
 
       char *name = strdup(argv[i] + 2);
-      char *undefined = strdup("<UNDEFINED>");
+      char *undefined = strdup(NO_DEFINITION);
       if(name == NULL || undefined == NULL) {
         free(name);
         free(undefined);

@@ -65,7 +65,6 @@ int main(int argc, char *argv[])
   Define *defines = create_define();
 
   get_definitions(defines, argc, argv);
-  print_defines(defines);
 
   int must_clean = !has_arg(argc, argv, "-noclean");
 

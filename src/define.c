@@ -217,7 +217,6 @@ char *get_define_value(Define **defines, char *name)
 
   for(int i = 0; i < (*defines)->size; i++) {
     if(strcmp((*defines)->name[i], name) == 0) {
-      printf("Found def for `%s`\n", name);
       return (*defines)->value[i];
     }
   }
