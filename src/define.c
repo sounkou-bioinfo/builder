@@ -102,6 +102,15 @@ void define(Define **defines, char *line)
     return;
   }
 
+  // checkjs if already defined
+  // CLI overrides defines
+  if(get_define_value(defines, name_copy) != NULL) {
+    printf("[WARNING] %s is already defined by the command line\n", name_copy);
+    free(name_copy);
+    free(copy);
+    return;
+  }
+
   // Get value - capture everything after the name
   char *value_copy = NULL;
   char *rest = strtok(NULL, "");  // Get rest of line
