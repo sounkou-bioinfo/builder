@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
   output = ensure_dir(output);
 
   Define *defines = create_define();
-  push_standards(defines);
+  push_builtins(defines);
   get_definitions(defines, argc, argv);
 
   int must_clean = !has_arg(argc, argv, "-noclean");

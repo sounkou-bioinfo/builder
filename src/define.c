@@ -33,7 +33,7 @@ Define *create_define()
   return arr;
 }
 
-void push_standards(Define *arr)
+void push_builtins(Define *arr)
 {
   push(arr, strdup("__FILE__"), strdup(DYNAMIC_DEFINITION));
   push(arr, strdup("__LINE__"), strdup(DYNAMIC_DEFINITION));
