@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Builder</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/styles/atom-one-light.min.css"
+      media="(prefers-color-scheme: light)"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/styles/atom-one-dark.min.css"
+      media="(prefers-color-scheme: dark)"
+    />
+    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/highlight.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/languages/r.min.js"></script>
+  </head>
+  <body>
+    <main class="container">
+      <nav>
+        <ul>
+          <li><strong>Builder</strong></li>
+        </ul>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/packages">R packages</a></li>
+          <li><a href="/directives">Directives</a></li>
+        </ul>
+      </nav>
+      <h1>Directives</h1>
+      <p>
+        Builder lets you use directives in your R files and via the command
+        line.
+      </p>
+      <h2>Command line</h2>
+      <p>
+        You can pass definitions via the command line using <code>-D</code>
+        flags. This is useful for setting build-time constants without modifying
+        your source files.
+      </p>
+      <p>
+        <strong>Syntax:</strong> <code>-D&lt;NAME&gt;</code> for boolean flags,
+        or <code>-D&lt;NAME&gt; &lt;value&gt;</code> for valued definitions.
+      </p>
+      <pre><code class="language-bash">./builder -input srcr -output R -DDEBUG -DTEST "a string" -DXXX 42</code></pre>
+      <p>
+        Note: Command-line definitions override file-based
+        <code>#define</code> directives.
+      </p>
+      <h2>#define</h2>
+      <p>
+        Define macros or constants that will be replaced throughout your code.
+        All occurrences of the defined name will be replaced with the specified
+        value.
+      </p>
+      <p><strong>Syntax:</strong> <code>#define NAME value</code></p>
+      <pre><code class="language-r">#define PI 3.14159
+#define STRING "hello world!"
+
+x &lt;- PI  # becomes: x &lt;- 3.14159
+print(STRING)  # becomes: print("hello world!")</code></pre>
+      <h2>#ifdef</h2>
+      <p>
+        Include a code block only if the specified name is defined (either via
+        <code>#define</code> or command-line <code>-D</code> flag).
+      </p>
+      <p><strong>Syntax:</strong> <code>#ifdef NAME ... #endif</code></p>
+      <pre><code class="language-r">#ifdef DEBUG
+cat("debugging!\n")
+#endif
+
+# With #else for alternative path
+#ifdef DEBUG
+cat("debug!")
+#else
+cat("world!")
+#endif</code></pre>
+      <h2>#ifndef</h2>
+      <p>
+        Include a code block only if the specified name is NOT defined. This is
+        the opposite of <code>#ifdef</code>.
+      </p>
+      <p><strong>Syntax:</strong> <code>#ifndef NAME ... #endif</code></p>
+      <pre><code class="language-r">#ifndef PROD
+cat("Not in production mode")
+#endif</code></pre>
+      <h2>#if</h2>
+      <p>
+        Evaluate an R expression and include the code block if the result is
+        TRUE. The expression is evaluated using the embedded R interpreter and
+        supports any valid R expression that returns a logical value.
+      </p>
+      <p><strong>Syntax:</strong> <code>#if R_EXPRESSION ... #endif</code></p>
+      <pre><code class="language-r">#define VERSION 3
+
+#if VERSION &gt; 2
+cat("Using new API\n")
+#endif
+
+#if XXX &gt; 1
+cat("it's 1!\n")
+#endif</code></pre>
+      <h2>#else</h2>
+      <p>
+        Provide an alternative code path for conditional blocks. Used with
+        <code>#ifdef</code>, <code>#ifndef</code>, or <code>#if</code> to
+        specify code that should be included when the condition is false.
+      </p>
+      <p>See the <code>#ifdef</code> example above for usage.</p>
+      <h2>#endif</h2>
+      <p>
+        Close a conditional compilation block. Required for all conditional
+        directives (<code>#ifdef</code>, <code>#ifndef</code>,
+        <code>#if</code>).
+      </p>
+      <h2>Complete Example</h2>
+      <p>Here's a complete example showing all directives working together:</p>
+      <p><strong>Input file (srcr/main.R):</strong></p>
+      <pre><code class="language-r">#define PI 3.14159
+#define STRING "hello world!"
+
+#ifdef DEBUG
+cat("debugging!\n")
+#endif
+
+#ifndef PROD
+cat("Not debugging duhhh!")
+#endif
+
+x &lt;- PI
+
+print(STRING)
+
+# here we print our test value
+#ifdef TEST
+print(TEST)
+#endif
+
+#if XXX &gt; 1
+cat("it's 1!\n")
+#endif
+
+foo &lt;- function() {
+  cat("Hello, ")
+
+  #ifdef DEBUG
+  cat("debug!")
+  #else
+  cat("world!")
+  #endif
+
+  cat("\n")
+}</code></pre>
+      <p><strong>Command:</strong></p>
+      <pre><code class="language-bash">./builder -input srcr -output R -DDEBUG -DTEST "a string" -DXXX 42</code></pre>
+      <p><strong>Output file (R/main.R):</strong></p>
+      <pre><code class="language-r">#define PI 3.14159
+#define STRING "hello world!"
+
+#ifdef DEBUG
+cat("debugging!\n")
+#endif
+
+#ifndef PROD
+cat("Not debugging duhhh!")
+#endif
+
+x &lt;- 3.14159
+
+print("hello world!")
+
+# here we print our test value
+#ifdef TEST
+print("a string")
+#endif
+
+#if 42 &gt; 1
+cat("it's 1!\n")
+#endif
+
+foo &lt;- function() {
+  cat("Hello, ")
+
+  #ifdef DEBUG
+  cat("debug!")
+  #endif
+
+  cat("\n")
+}</code></pre>
+      <p>
+        Notice how <code>PI</code> was replaced with <code>3.14159</code>,
+        <code>STRING</code> with <code>"hello world!"</code>,
+        <code>TEST</code> with <code>"a string"</code> from the CLI, and
+        <code>XXX</code> with <code>42</code>. The <code>#else</code> branch in
+        the <code>foo</code> function was removed since <code>DEBUG</code> was
+        defined.
+      </p>
+    </main>
+    <script>
+      hljs.highlightAll();
+    </script>
+  </body>
+</html>

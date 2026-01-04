@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Builder</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+    />
+  </head>
+  <body>
+    <main class="container">
+      <nav>
+        <ul>
+          <li><strong>Builder</strong></li>
+        </ul>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/packages">R packages</a></li>
+          <li><a href="/directives">Directives</a></li>
+        </ul>
+      </nav>
+      <h1>Packages</h1>
+      <p>
+        Builder reads your R files from the srcr (default) directory and writes
+        the output to the R (default) directory.
+      </p>
+      <pre><code>./builder -input srcr -output R</code></pre>
+      <p>
+        This allows building R packages from <strong>multiple</strong>,
+        <strong>nested</strong>
+        directories such as:
+      </p>
+      <pre>
+        <code>srcr
+├── main.R
+└── sub
+    └── main.R</code>
+      </pre>
+      <p>That will produce:</p>
+      <pre>
+        <code>R
+├── main.R
+└── sub-main.R</code>
+      </pre>
+      <p>
+        Note that the file order is preserved, though it's unlikely to matter in
+        an R package.
+      </p>
+    </main>
+  </body>
+</html>
