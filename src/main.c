@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
     printf("  -input <path>         Input directory (default: srcr/)\n");
     printf("  -output <path>        Output directory (default: R/)\n");
     printf("  -noclean              Skip cleaning output directory before processing\n");
-    printf("  -D<NAME>              Define boolean\n");
+    printf("  -D<NAME>              Define directives, e.g.: -DDEBUG -DVALUE 42\n");
     printf("  -help                 Show this help message\n");
     printf("\n");
     printf("Example:\n");
