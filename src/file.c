@@ -169,15 +169,20 @@ int copy(char *src, char *dst, Define **defs)
     return 1;
   }
 
+  overwrite(defs, "__FILE__", strdup(src));
+
   printf("%s Copying %s to %s\n", LOG_INFO, src, dest);
 
   char line[1024];
   int should_write = 1;
   int i = 0;
+  char istr[32];
   while(fgets(line, 1024, src_file) != NULL) {
     i++;
+    sprintf(istr, "%d", i);
+    overwrite(defs, "__LINE__", istr);
     define(defs, line);
-    char *processed = define_replace(defs, line, i, strdup(src));
+    char *processed = define_replace(defs, line);
     should_write = should_write_line(should_write, strdup(processed), defs);
 
     if(!should_write) {
