@@ -176,10 +176,10 @@ int copy(char *src, char *dst, Define **defs)
   char line[1024];
   int should_write = 1;
   int i = 0;
-  char istr[32];
+  char *istr;
   while(fgets(line, 1024, src_file) != NULL) {
     i++;
-    sprintf(istr, "%d", i);
+    asprintf(&istr, "%d", i);
     overwrite(defs, "__LINE__", istr);
     define(defs, line);
     char *processed = define_replace(defs, line);
@@ -199,6 +199,7 @@ int copy(char *src, char *dst, Define **defs)
     free(processed);
   }
 
+  free(istr);
   fclose(dst_file);
   fclose(src_file);
 
