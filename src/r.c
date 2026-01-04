@@ -3,6 +3,7 @@
 #include <string.h>
 #include <Rinternals.h>
 #include <R_ext/Parse.h>
+#include "log.h"
 
 void set_R_home()
 {
@@ -10,7 +11,7 @@ void set_R_home()
 
   FILE *fp = popen("R RHOME", "r");
   if(fp == NULL) {
-    printf("[ERROR] Failed to run R RHOME and R_HOME environment variables are not set\n");
+    printf("%s Failed to run R RHOME and R_HOME environment variables are not set\n", LOG_ERROR);
     return;
   }
 
@@ -18,9 +19,9 @@ void set_R_home()
   if(fgets(path, sizeof(path), fp) != NULL) {
     path[strcspn(path, "\n")] = 0;
     setenv("R_HOME", path, 1);
-    printf("[INFO] Setting R_HOME to `%s`\n", path);
+    printf("%s Setting R_HOME to `%s`\n", LOG_INFO, path);
   } else {
-    printf("[ERROR] Failed to run R RHOME and R_HOME environment variables are not set\n");
+    printf("%s Failed to run R RHOME and R_HOME environment variables are not set\n", LOG_ERROR);
   }
 
   pclose(fp);
@@ -47,7 +48,7 @@ int eval_if(char *expr)
 
   if (status != PARSE_OK) {
     UNPROTECT(2);
-    printf("[ERROR] Parsing expression `%s`\n", remove_trailing_newline(expr));
+    printf("%s Parsing expression `%s`\n", remove_trailing_newline(expr), LOG_ERROR);
     return 0;
   }
 
@@ -55,14 +56,14 @@ int eval_if(char *expr)
 
   if (has_error) {
     UNPROTECT(3);
-    printf("[ERROR] Evaluating expression `%s`\n", remove_trailing_newline(expr));
+    printf("%s Evaluating expression `%s`\n", remove_trailing_newline(expr), LOG_ERROR);
     return 0;
   }
 
   UNPROTECT(3);
 
   if(TYPEOF(result) != LGLSXP) {
-    printf("[ERROR] Expression `%s` did not evaluate to a logical value\n", remove_trailing_newline(expr));
+    printf("%s Expression `%s` did not evaluate to a logical value\n", remove_trailing_newline(expr), LOG_ERROR);
     return 0;
   }
 

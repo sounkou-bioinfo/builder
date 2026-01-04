@@ -137,7 +137,7 @@ char *make_dest_path(char *src, char *dst)
   char *path = malloc(l);
 
   if(path == NULL) {
-    log_error("Failed to allocate memory");
+    printf("%s Failed to allocate memory\n", LOG_ERROR);
     return NULL;
   }
 
@@ -165,14 +165,11 @@ int copy(char *src, char *dst, Define **defs)
   if(src_file == NULL) {
     fclose(dst_file);
     fclose(src_file);
-    log_error("Failed to open source file");
+    printf("%s Failed to open source file\n", LOG_ERROR);
     return 1;
   }
 
-  char *msg = malloc(strlen(src) + strlen(dst) + 64);
-  snprintf(msg, strlen(src) + strlen(dst) + 64, "Copying %s to %s", src, dest);
-  log_info(msg);
-  free(msg);
+  printf("%s Copying %s to %s\n", LOG_INFO, src, dest);
 
   char line[1024];
   int should_write = 1;
@@ -188,7 +185,7 @@ int copy(char *src, char *dst, Define **defs)
 
     if(fputs(processed, dst_file) == EOF) {
       free(processed);
-      log_error("Failed to write to destination file");
+      printf("%s Failed to write to destination file\n", LOG_ERROR);
       return 1;
     }
 
@@ -209,9 +206,7 @@ int walk(char *src_dir, char *dst_dir, Callback func, Define **defs)
   
   source = opendir(src_dir);
   if (source == NULL) {
-    char msg[PATH_MAX + 64];
-    snprintf(msg, sizeof(msg), "Failed to open source directory: %s", src_dir);
-    log_error(msg);
+    printf("%s Failed to open source directory: %s\n", LOG_ERROR, src_dir);
     return 1;
   }
 

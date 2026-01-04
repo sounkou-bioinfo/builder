@@ -1,16 +1,3 @@
-#include <stdio.h>
-
-void log_info(const char *message)
-{
-  printf("[INFO] %s\n", message);
-}
-
-void log_error(const char *message)
-{
-  printf("[ERROR] %s\n", message);
-}
-
-void log_warning(const char *message)
-{
-  printf("[WARNING] %s\n", message);
-}
+char *LOG_INFO = "\033[34m[INFO]\033[0m";
+char *LOG_ERROR = "\033[31m[ERROR]\033[0m";
+char *LOG_WARNING = "\033[33m[WARNING]\033[0m";

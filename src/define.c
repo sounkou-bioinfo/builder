@@ -3,6 +3,7 @@
 #include <stdlib.h> 
 #include "define.h"
 #include "parser.h"
+#include "log.h"
 
 Define *create_define()
 {
@@ -105,7 +106,7 @@ void define(Define **defines, char *line)
   // checkjs if already defined
   // CLI overrides defines
   if(get_define_value(defines, name_copy) != NULL) {
-    printf("[WARNING] %s is already defined by the command line\n", name_copy);
+    printf("%s %s is already defined by the command line\n", name_copy, LOG_WARNING);
     free(name_copy);
     free(copy);
     return;

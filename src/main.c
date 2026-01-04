@@ -35,18 +35,18 @@ int main(int argc, char *argv[])
 
   if(input == NULL) {
     input = strdup("srcr/");
-    log_info("No -input, defaulting to srcr");
+    printf("%s No -input, defaulting to srcr\n", LOG_INFO);
   }
 
   if(input == NULL) {
-    log_error("Failed to allocate memory");
+    printf("%s Failed to allocate memory\n", LOG_ERROR);
     return 1;
   }
 
   input = strip_last_slash(input);
 
   if(!exists(input)) {
-    log_error("Input directory does not exist");
+    printf("%s Input directory does not exist\n", LOG_ERROR);
     return 1;
   }
 
@@ -54,16 +54,16 @@ int main(int argc, char *argv[])
 
   if(output == NULL) {
     output = strdup("R/");
-    log_info("No -output, defaulting to R");
+    printf("%s No -output, defaulting to R\n", LOG_INFO);
   }
   
   if(output == NULL) {
-    log_error("Failed to allocate memory");
+    printf("%s Failed to allocate memory\n", LOG_ERROR);
     return 1;
   }
 
   if(!exists(output)) {
-    log_error("Output directory does not exist");
+    printf("%s Output directory does not exist\n", LOG_ERROR);
     return 1;
   }
 
@@ -76,26 +76,10 @@ int main(int argc, char *argv[])
   int must_clean = !has_arg(argc, argv, "-noclean");
 
   if(must_clean) {
-    size_t msg_len = strlen("Cleaning: ") + strlen(output) + 1;
-    char *msg = malloc(msg_len);
-    if(msg == NULL) {
-      log_error("Failed to allocate memory");
-      return 1;
-    }
-    snprintf(msg, msg_len, "Cleaning: %s", output);
-    log_info(msg);
-    free(msg);
+    printf("%s Cleaning: %s\n", LOG_INFO, output);
     walk(output, output, clean, NULL);
   } else {
-    size_t msg_len = strlen("Not cleaning: ") + strlen(output) + 1;
-    char *msg = malloc(msg_len);
-    if(msg == NULL) {
-      log_error("Failed to allocate memory");
-      return 1;
-    }
-    snprintf(msg, msg_len, "Not cleaning: %s", output);
-    log_info(msg);
-    free(msg);
+    printf("%s Not cleaning: %s\n", LOG_INFO, output);
   }
 
   walk(input, output, copy, &defines);

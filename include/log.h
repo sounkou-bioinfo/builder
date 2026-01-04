@@ -1,8 +1,8 @@
 #ifndef LOG_H
 #define LOG_H
 
-void log_info(const char *message);
-void log_error(const char *message);
-void log_warning(const char *message);
+extern char *LOG_INFO;
+extern char *LOG_ERROR;
+extern char *LOG_WARNING;
 
 #endif
