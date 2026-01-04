@@ -1,4 +1,4 @@
-CC = cc
+CC = $(shell R CMD config CC)
 CFLAGS = $(shell R CMD config --cppflags)
 LDFLAGS = $(shell R CMD config --ldflags)
 FLS = -Wall -Iinclude

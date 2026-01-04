@@ -9,9 +9,8 @@
 
 int main(int argc, char *argv[])
 {
-  if (!getenv("R_HOME")) {
-    setenv("R_HOME", "/usr/lib/R", 1);
-  }
+  set_R_home();
+
   // Initialize R embedded environment
   char *r_argv[] = {"R", "--silent", "--no-save"};
   Rf_initEmbeddedR(3, r_argv); 

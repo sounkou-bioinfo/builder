@@ -1,7 +1,30 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <Rinternals.h>
 #include <R_ext/Parse.h>
+
+void set_R_home()
+{
+  if(getenv("R_HOME") != NULL) return;
+
+  FILE *fp = popen("R RHOME", "r");
+  if(fp == NULL) {
+    printf("[ERROR] Failed to run R RHOME and R_HOME environment variables are not set\n");
+    return;
+  }
+
+  char path[512];
+  if(fgets(path, sizeof(path), fp) != NULL) {
+    path[strcspn(path, "\n")] = 0;
+    setenv("R_HOME", path, 1);
+    printf("[INFO] Setting R_HOME to `%s`\n", path);
+  } else {
+    printf("[ERROR] Failed to run R RHOME and R_HOME environment variables are not set\n");
+  }
+
+  pclose(fp);
+}
 
 char *remove_trailing_newline(char *line)
 {

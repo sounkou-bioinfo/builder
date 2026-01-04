@@ -6,5 +6,6 @@
 #include <Rembedded.h>
 
 int eval_if(char *expr);
+void set_R_home();
 
 #endif
