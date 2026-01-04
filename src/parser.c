@@ -49,12 +49,10 @@ char *get_arg_value(int argc, char *argv[], char *arg)
   {
     if (strcmp(argv[i], arg) == 0)
     {
-      char *value = strdup(argv[i + 1]);
-      if(argc < i + 1) {
+      if(i + 1 >= argc) {
         return NULL;
       }
-      strcpy(value, argv[i + 1]);
-      return value;
+      return strdup(argv[i + 1]);
     }
   }
   return NULL;

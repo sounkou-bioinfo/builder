@@ -32,10 +32,12 @@ char *strip_last_slash(char *path)
     }
     strncpy(dir, path, len - 1);
     dir[len - 1] = '\0';
+    free(path);  // Free the input since we're returning a new allocation
     return dir;
   }
 
-  return strdup(path);
+  // No change needed, just return the same pointer
+  return path;
 }
 
 char *ensure_dir(char *path)
@@ -49,10 +51,12 @@ char *ensure_dir(char *path)
     }
     strcpy(dir, path);
     strcat(dir, "/");
+    free(path);  // Free the input since we're returning a new allocation
     return dir;
   }
 
-  return strdup(path);
+  // Already ends with '/', return the same pointer
+  return path;
 }
 
 int clean(char *src, char *dst, Define **defs)
@@ -94,11 +98,17 @@ int should_write_line(int state, char line[1024], Define **defs)
   }
 
   if(strncmp(trimmed, "#ifdef", 6) == 0) {
-    return get_define_value(defs, remove_keyword(trimmed)) != NULL;
+    char *keyword = remove_keyword(trimmed);
+    int result = get_define_value(defs, keyword) != NULL;
+    free(keyword);
+    return result;
   }
 
   if(strncmp(trimmed, "#ifndef", 7) == 0) {
-    return get_define_value(defs, remove_keyword(trimmed)) == NULL;
+    char *keyword = remove_keyword(trimmed);
+    int result = get_define_value(defs, keyword) == NULL;
+    free(keyword);
+    return result;
   }
 
   if(strncmp(trimmed, "#else", 5) == 0) {
@@ -141,7 +151,9 @@ char *make_dest_path(char *src, char *dst)
     return NULL;
   }
 
-  snprintf(path, l, "%s%s", dst, replace_slash(src));
+  char *replaced = replace_slash(src);
+  snprintf(path, l, "%s%s", dst, replaced);
+  free(replaced);
 
   char *slash = strchr(path, '/');
   char *start = (slash != NULL) ? slash + 1 : path;
@@ -165,25 +177,29 @@ int copy(char *src, char *dst, Define **defs)
   if(src_file == NULL) {
     fclose(dst_file);
     fclose(src_file);
+    free(dest);
     printf("%s Failed to open source file\n", LOG_ERROR);
     return 1;
   }
 
-  overwrite(defs, "__FILE__", strdup(src));
+  overwrite(defs, "__FILE__", src);
 
   printf("%s Copying %s to %s\n", LOG_INFO, src, dest);
 
   char line[1024];
   int should_write = 1;
   int i = 0;
-  char *istr;
+  char *istr = NULL;
   while(fgets(line, 1024, src_file) != NULL) {
     i++;
     asprintf(&istr, "%d", i);
     overwrite(defs, "__LINE__", istr);
+    free(istr);
     define(defs, line);
     char *processed = define_replace(defs, line);
-    should_write = should_write_line(should_write, strdup(processed), defs);
+    char *processed_copy = strdup(processed);
+    should_write = should_write_line(should_write, processed_copy, defs);
+    free(processed_copy);
 
     if(!should_write) {
       free(processed);
@@ -192,6 +208,7 @@ int copy(char *src, char *dst, Define **defs)
 
     if(fputs(processed, dst_file) == EOF) {
       free(processed);
+      free(dest);
       printf("%s Failed to write to destination file\n", LOG_ERROR);
       return 1;
     }
@@ -199,7 +216,7 @@ int copy(char *src, char *dst, Define **defs)
     free(processed);
   }
 
-  free(istr);
+  free(dest);
   fclose(dst_file);
   fclose(src_file);
 
