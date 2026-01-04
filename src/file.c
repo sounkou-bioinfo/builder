@@ -173,9 +173,11 @@ int copy(char *src, char *dst, Define **defs)
 
   char line[1024];
   int should_write = 1;
+  int i = 0;
   while(fgets(line, 1024, src_file) != NULL) {
+    i++;
     define(defs, line);
-    char *processed = define_replace(defs, line);
+    char *processed = define_replace(defs, line, i, strdup(src));
     should_write = should_write_line(should_write, strdup(processed), defs);
 
     if(!should_write) {

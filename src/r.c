@@ -48,7 +48,7 @@ int eval_if(char *expr)
 
   if (status != PARSE_OK) {
     UNPROTECT(2);
-    printf("%s Parsing expression `%s`\n", remove_trailing_newline(expr), LOG_ERROR);
+    printf("%s Parsing expression `%s`\n", LOG_ERROR, remove_trailing_newline(expr));
     return 0;
   }
 
@@ -56,14 +56,14 @@ int eval_if(char *expr)
 
   if (has_error) {
     UNPROTECT(3);
-    printf("%s Evaluating expression `%s`\n", remove_trailing_newline(expr), LOG_ERROR);
+    printf("%s Evaluating expression `%s`\n", LOG_ERROR, remove_trailing_newline(expr));
     return 0;
   }
 
   UNPROTECT(3);
 
   if(TYPEOF(result) != LGLSXP) {
-    printf("%s Expression `%s` did not evaluate to a logical value\n", remove_trailing_newline(expr), LOG_ERROR);
+    printf("%s Expression `%s` did not evaluate to a logical value\n", LOG_ERROR, remove_trailing_newline(expr));
     return 0;
   }
 

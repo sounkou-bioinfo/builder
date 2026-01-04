@@ -49,7 +49,7 @@
         <strong>Syntax:</strong> <code>-D&lt;NAME&gt;</code> for boolean flags,
         or <code>-D&lt;NAME&gt; &lt;value&gt;</code> for valued definitions.
       </p>
-      <pre><code class="language-bash">./builder -input srcr -output R -DDEBUG -DTEST "a string" -DXXX 42</code></pre>
+      <pre><code class="language-bash">./builder -input srcr -output R -DDEBUG -DTEST '"a string"' -DXXX 42</code></pre>
       <p>
         Note: Command-line definitions override file-based
         <code>#define</code> directives.
@@ -159,7 +159,7 @@ foo &lt;- function() {
   cat("\n")
 }</code></pre>
       <p><strong>Command:</strong></p>
-      <pre><code class="language-bash">./builder -input srcr -output R -DDEBUG -DTEST "a string" -DXXX 42</code></pre>
+      <pre><code class="language-bash">./builder -input srcr -output R -DDEBUG -DTEST '"a string"' -DXXX 42</code></pre>
       <p><strong>Output file (R/main.R):</strong></p>
       <pre><code class="language-r">#define PI 3.14159
 #define STRING "hello world!"

@@ -5,6 +5,8 @@
 #include "parser.h"
 #include "log.h"
 
+const char *DYNAMIC_DEFINITION = "<DYNAMIC>";
+
 Define *create_define()
 {
   Define *arr = malloc(sizeof(Define));
@@ -29,6 +31,12 @@ Define *create_define()
   }
 
   return arr;
+}
+
+void push_standards(Define *arr)
+{
+  push(arr, strdup("__FILE__"), strdup(DYNAMIC_DEFINITION));
+  push(arr, strdup("__LINE__"), strdup(DYNAMIC_DEFINITION));
 }
 
 void push(Define *arr, char *name, char *value)
@@ -185,7 +193,7 @@ char* str_replace(const char *orig, const char *find, const char *replace) {
   return result;
 }
 
-char *define_replace(Define **defines, char *line)
+char *define_replace(Define **defines, char *line, int line_number, char *src)
 {
   if(*defines == NULL) {
     return strdup(line);
@@ -214,6 +222,15 @@ char *define_replace(Define **defines, char *line)
 
     if(name == NULL || value == NULL || strcmp(value, NO_DEFINITION) == 0) {
       continue;
+    }
+
+    if(strcmp(name, "__LINE__") == 0) {
+      value = malloc(32);
+      snprintf(value, 32, "%d", line_number);
+    }
+
+    if(strcmp(name, "__FILE__") == 0) {
+      value = strdup(src);
     }
 
     char *replaced = str_replace(current, name, value);
