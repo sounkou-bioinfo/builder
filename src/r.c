@@ -19,7 +19,7 @@ void set_R_home()
   if(fgets(path, sizeof(path), fp) != NULL) {
     path[strcspn(path, "\n")] = 0;
     setenv("R_HOME", path, 1);
-    printf("%s Setting R_HOME to `%s`\n", LOG_INFO, path);
+    printf("%s Setting R_HOME environment variable to `%s` (R RHOME)\n", LOG_WARNING, path);
   } else {
     printf("%s Failed to run R RHOME and R_HOME environment variables are not set\n", LOG_ERROR);
   }

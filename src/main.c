@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
 
   if(output == NULL) {
     output = strdup("R/");
-    printf("%s No -output, defaulting to R\n", LOG_INFO);
+    printf("%s No -output, defaulting to R\n", LOG_WARNING);
   }
   
   if(output == NULL) {
