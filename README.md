@@ -24,11 +24,17 @@ You can also use the `# ifdef` directives.
 
 foo <- function(){
     #ifdef DEBUG
-    print("debuging")
+    print("debuging\n")
     #endif
 
     #ifdef TEST
     print(TEST)
+    #else
+    print("no value\n")
+    #endif
+
+    #if LOG_LEVEL > 2
+    cat("debuging level 2\n")
     #endif
 
     PI + 1L
@@ -38,4 +44,4 @@ foo <- function(){
 Then build with `./builder -input srcr -DDEBUG -DTEST '"hello world"'` 
 to include the `DEBUG`, and `TEST` directives in the `output` directory.
 
-Currently supports `#ifdef`, `#ifndef`, `#else`, `#endif`, `#define` only.
+Currently supports `#if`, `#ifdef`, `#ifndef`, `#else`, `#endif`, `#define` only.

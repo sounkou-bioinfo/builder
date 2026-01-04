@@ -7,6 +7,7 @@
 #include "define.h"
 #include "file.h"
 #include "log.h"
+#include "r.h"
 
 int exists(char *path)
 {
@@ -85,11 +86,6 @@ char *remove_keyword(char *line)
 
 int should_write_line(int state, char line[1024], Define **defs)
 {
-  // line is too short to include a directive
-  if(strlen(line) < 6) {
-    return state;
-  }
-
   char *trimmed = remove_leading_spaces(line);
 
   // line is not a comment
@@ -112,6 +108,12 @@ int should_write_line(int state, char line[1024], Define **defs)
 
   if(strncmp(trimmed, "#endif", 6) == 0) {
     return 1;
+  }
+
+  if(strncmp(trimmed, "#if", 3) == 0) {
+    // remove #if
+    memmove(trimmed, trimmed + 4, strlen(trimmed + 4) + 1);
+    return eval_if(trimmed);
   }
 
   return state;
@@ -175,9 +177,9 @@ int copy(char *src, char *dst, Define **defs)
   char line[1024];
   int should_write = 1;
   while(fgets(line, 1024, src_file) != NULL) {
-    should_write = should_write_line(should_write, strdup(line), defs);
     define(defs, line);
     char *processed = define_replace(defs, line);
+    should_write = should_write_line(should_write, strdup(processed), defs);
 
     if(!should_write) {
       free(processed);

@@ -190,6 +190,14 @@ char *define_replace(Define **defines, char *line)
     return strdup(line);
   }
 
+  if(strncmp(line, "#ifdef", 6) == 0) {
+    return strdup(line);
+  }
+
+  if(strncmp(line, "#ifndef", 6) == 0) {
+    return strdup(line);
+  }
+
   if(strncmp(line, "#define", 7) == 0) {
     return strdup(line);
   }

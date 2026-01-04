@@ -5,9 +5,17 @@
 #include "define.h"
 #include "log.h"
 #include "file.h"
+#include "r.h"
 
 int main(int argc, char *argv[])
 {
+  if (!getenv("R_HOME")) {
+    setenv("R_HOME", "/usr/lib/R", 1);
+  }
+  // Initialize R embedded environment
+  char *r_argv[] = {"R", "--silent", "--no-save"};
+  Rf_initEmbeddedR(3, r_argv); 
+
   int help = has_arg(argc, argv, "-help");
 
   if(help) {
@@ -96,6 +104,9 @@ int main(int argc, char *argv[])
   free(input);
   free(output);
   free_array(defines);
+
+  // Terminate R embedded environment
+  Rf_endEmbeddedR(0);
 
   return 0;
 }
