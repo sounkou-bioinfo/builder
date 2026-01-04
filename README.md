@@ -1,6 +1,8 @@
 # builder
 
-A small CLI tool to build R packages from multiple directories and preprocessor directives.
+A small CLI tool to build R packages from multiple directories and use preprocessor directives.
+
+Only works on Linux and macOS.
 
 ## Installation
 
