@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
     printf("  -help                 Show this help message\n");
     printf("\n");
     printf("Example:\n");
-    printf("  builder -input src/ -output build/ -DDEBUG\n");
+    printf("  builder -input srcr/ -output R/ -DDEBUG\n");
     return 0;
   }
 
