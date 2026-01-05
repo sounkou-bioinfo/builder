@@ -30,6 +30,14 @@ Define *create_define()
     return NULL;
   }
 
+  arr->type = (DefineType*)malloc(arr->capacity * sizeof(DefineType));
+  if(arr->type == NULL) {
+    free(arr->name);
+    free(arr->value);
+    free(arr);
+    return NULL;
+  }
+
   push_builtins(arr);
 
   return arr;
@@ -48,11 +56,11 @@ void overwrite(Define **arr, char *name, char *value)
 
 void push_builtins(Define *arr)
 {
-  push(arr, strdup("__FILE__"), strdup(DYNAMIC_DEFINITION));
-  push(arr, strdup("__LINE__"), strdup(DYNAMIC_DEFINITION));
+  push(arr, strdup("__FILE__"), strdup(DYNAMIC_DEFINITION), DEF_VARIABLE);
+  push(arr, strdup("__LINE__"), strdup(DYNAMIC_DEFINITION), DEF_VARIABLE);
 }
 
-void push(Define *arr, char *name, char *value)
+void push(Define *arr, char *name, char *value, DefineType type)
 {
   if(arr->size == arr->capacity) {
     arr->capacity += 8;
@@ -70,10 +78,18 @@ void push(Define *arr, char *name, char *value)
       return;
     }
     arr->value = tmp_value;
+
+    DefineType *tmp_type = realloc(arr->type, arr->capacity * sizeof(DefineType));
+    if(tmp_type == NULL) {
+      arr->capacity -= 8;
+      return;
+    }
+    arr->type = tmp_type;
   }
 
   arr->name[arr->size] = name;
   arr->value[arr->size] = value;
+  arr->type[arr->size] = type;
   arr->size++;
 }
 
@@ -94,6 +110,7 @@ void free_array(Define *arr)
 
   free(arr->name);
   free(arr->value);
+  free(arr->type);
 
   free(arr);
 }
@@ -160,7 +177,8 @@ void define(Define **defines, char *line)
     }
   }
 
-  push(*defines, name_copy, value_copy);
+  // TODO: switch variable/function
+  push(*defines, name_copy, value_copy, DEF_VARIABLE);
   free(copy);
 }
 

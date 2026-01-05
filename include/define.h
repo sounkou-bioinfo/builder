@@ -3,15 +3,21 @@
 
 extern const char *DYNAMIC_DEFINITION;
 
+typedef enum {
+  DEF_VARIABLE,
+  DEF_FUNCTION
+} DefineType;
+
 typedef struct {
     char **name;
     char **value;
+    DefineType *type;
     int size;
     int capacity;
 } Define;
 
 Define *create_define();
-void push(Define *arr, char *name, char *value);
+void push(Define *arr, char *name, char *value, DefineType type);
 void overwrite(Define **arr, char *name, char *value);
 void push_builtins(Define *arr);
 void free_array(Define *arr);
