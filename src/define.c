@@ -115,16 +115,27 @@ void free_array(Define *arr)
   free(arr);
 }
 
-void define(Define **defines, char *line)
+int is_macro(char *name)
+{
+  for(int i = 0; i < strlen(name); i++) {
+    if(name[i] == '(') {
+      return 1;
+    }
+  }
+
+  return 0;
+}
+
+int define(Define **defines, char *line)
 {
   if(strncmp(line, "#define", 7) != 0) {
-    return;
+    return 0;
   }
 
   char *token;
   char *copy = strdup(line);
   if(copy == NULL) {
-    return;
+    return 0;
   }
 
   // Skip "#define"
@@ -132,22 +143,29 @@ void define(Define **defines, char *line)
   token = strtok(NULL, " ");
   if(token == NULL) {
     free(copy);
-    return;
+    return 0;
   }
 
   char *name_copy = strdup(token);
   if(name_copy == NULL) {
     free(copy);
-    return;
+    return 0;
   }
 
-  // checkjs if already defined
+  if(is_macro(name_copy)) {
+    // it's ugly but will do for now
+    // we just flag upstream that it's a function
+    // we do so because it may be multiline
+    return 1;
+  }
+
+  // check if already defined
   // CLI overrides defines
   if(get_define_value(defines, name_copy) != NULL) {
     printf("%s %s is already defined by the command line\n", name_copy, LOG_WARNING);
     free(name_copy);
     free(copy);
-    return;
+    return 0;
   }
 
   // Get value - capture everything after the name
@@ -171,7 +189,7 @@ void define(Define **defines, char *line)
         if(value_copy == NULL) {
           free(name_copy);
           free(copy);
-          return;
+          return 0;
         }
       }
     }
@@ -180,6 +198,8 @@ void define(Define **defines, char *line)
   // TODO: switch variable/function
   push(*defines, name_copy, value_copy, DEF_VARIABLE);
   free(copy);
+
+  return 0;
 }
 
 char* str_replace(const char *orig, const char *find, const char *replace) {

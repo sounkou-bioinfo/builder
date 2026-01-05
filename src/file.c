@@ -190,12 +190,20 @@ int copy(char *src, char *dst, Define **defs)
   int should_write = 1;
   int i = 0;
   char *istr = NULL;
+  int is_macro = 0;
   while(fgets(line, 1024, src_file) != NULL) {
     i++;
     asprintf(&istr, "%d", i);
     overwrite(defs, "__LINE__", istr);
     free(istr);
-    define(defs, line);
+
+    // TODO: find a better way to handle this
+    is_macro = define(defs, line);
+    if(is_macro) {
+      printf("%s got a macro on file %s\n", LOG_WARNING, line);
+      continue;
+    }
+
     char *processed = define_replace(defs, line);
     char *processed_copy = strdup(processed);
     should_write = should_write_line(should_write, processed_copy, defs);
