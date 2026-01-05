@@ -20,18 +20,6 @@ int include(char *arg, char value)
   return 0;
 }
 
-int is_arg_name(char *arg) {
-  if(strlen(arg) < 1) {
-    return 0;
-  }
-
-  if(arg[0] == '-') {
-    return 1;
-  }
-
-  return 0;
-}
-
 int is_directive(char *arg) {
   if(strlen(arg) < 2) {
     return 0;
@@ -93,7 +81,7 @@ void get_definitions(Define *arr, int argc, char *argv[])
 
     // these are directives
     if(is_directive(argv[i])) {
-      if(i < argc - 1 && !is_arg_name(argv[i + 1])) {
+      if(i < argc - 1 && !is_directive(argv[i + 1])) {
         char *name = strdup(argv[i] + 2);
         char *value = strdup(argv[i + 1]);
         if(name == NULL || value == NULL) {

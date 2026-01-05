@@ -250,18 +250,24 @@ char *define_replace(Define **defines, char *line)
   for(int i = 0; i < (*defines)->size; i++) {
     char *name = (*defines)->name[i];
     char *value = (*defines)->value[i];
+    char type = (*defines)->type[i];
 
     if(name == NULL || value == NULL || strcmp(value, NO_DEFINITION) == 0) {
       continue;
     }
 
-    char *replaced = str_replace(current, name, value);
-    if(replaced == NULL) {
+    if(type == DEF_VARIABLE) {
+      char *replaced = str_replace(current, name, value);
+      if(replaced == NULL) {
+        continue;
+      }
+
+      free(current);
+      current = replaced;
       continue;
     }
 
-    free(current);
-    current = replaced;
+    // TODO: handle function
   }
 
   return current;
