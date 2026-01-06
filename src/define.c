@@ -4,6 +4,7 @@
 #include "define.h"
 #include "parser.h"
 #include "log.h"
+#include "r.h"
 
 const char *DYNAMIC_DEFINITION = "<DYNAMIC>";
 
@@ -269,6 +270,31 @@ char* str_replace(const char *orig, const char *find, const char *replace) {
   return result;
 }
 
+char* extract_first_line(const char *str, char *buffer, size_t buffer_size) 
+{
+  if (str == NULL || buffer == NULL || buffer_size == 0) {
+    return NULL;
+  }
+  
+  char *newline_pos = strchr(str, '\n');
+  size_t length;
+  
+  if (newline_pos != NULL) {
+    length = newline_pos - str;
+  } else {
+    length = strlen(str);
+  }
+  
+  if (length >= buffer_size) {
+    length = buffer_size - 1;
+  }
+  
+  strncpy(buffer, str, length);
+  buffer[length] = '\0';
+  
+  return buffer;
+}
+
 char *define_replace(Define **defines, char *line)
 {
   if(*defines == NULL) {
@@ -312,7 +338,34 @@ char *define_replace(Define **defines, char *line)
       continue;
     }
 
-    // TODO: handle function
+    if(strstr(line, name) == NULL) {
+      continue;
+    }
+
+    printf("%s macro %s is defined here: %s\n", LOG_WARNING, name, current);
+    // we cleanup the function name
+    char fn[1028];
+    extract_first_line(value, fn, sizeof(fn));
+    int nargs_macro;
+    // we extract the macro arguments
+    char **args_macro = extract_macro_args(fn, &nargs_macro);
+    for(int i = 0; i < nargs_macro; i++) {
+      printf("%s arg %d: %s\n", LOG_INFO, i, args_macro[i]);
+    }
+
+    char *body_macro = extract_function_body(value);
+    printf("%s macro body: %s\n", LOG_INFO, body_macro);
+
+    // we extract the function arguments
+    int nargs;
+    char **args = extract_macro_args(current, &nargs);
+    for(int i = 0; i < nargs; i++) {
+      printf("%s arg %d: %s\n", LOG_INFO, i, args[i]);
+      body_macro = str_replace(body_macro, args_macro[i], args[i]);
+    }
+
+    printf("%s macro body: %s\n", LOG_INFO, body_macro);
+    return body_macro;
   }
 
   return current;

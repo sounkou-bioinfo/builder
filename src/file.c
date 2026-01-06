@@ -219,8 +219,6 @@ int copy(char *src, char *dst, Define **defs)
     // this is such a fukcing mess man
     is_macro = define(defs, line);
     if(is_macro) {
-      printf("%s got a macro on file %s\n", LOG_WARNING, line);
-
       char *macro;
       define_macro_init(&macro, line);
 
