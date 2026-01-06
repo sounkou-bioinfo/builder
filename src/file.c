@@ -168,6 +168,22 @@ char *make_dest_path(char *src, char *dst)
   return path;
 }
 
+int count_braces(char *line)
+{
+  int count = 0;
+  for(int i = 0; i < strlen(line); i++) {
+    if(line[i] == '{') {
+      count++;
+    }
+
+    if(line[i] == '}') {
+      count--;
+    }
+  }
+
+  return count;
+}
+
 int copy(char *src, char *dst, Define **defs)
 {
   char *dest = make_dest_path(src, dst);
@@ -186,21 +202,62 @@ int copy(char *src, char *dst, Define **defs)
 
   printf("%s Copying %s to %s\n", LOG_INFO, src, dest);
 
-  char line[1024];
+  size_t line_len = 1024;
+  char line[line_len];
   int should_write = 1;
   int i = 0;
   char *istr = NULL;
+
   int is_macro = 0;
-  while(fgets(line, 1024, src_file) != NULL) {
+  int max_macro_lines = 1024;
+  while(fgets(line, line_len, src_file) != NULL) {
     i++;
     asprintf(&istr, "%d", i);
     overwrite(defs, "__LINE__", istr);
     free(istr);
 
-    // TODO: find a better way to handle this
+    // this is such a fukcing mess man
     is_macro = define(defs, line);
     if(is_macro) {
       printf("%s got a macro on file %s\n", LOG_WARNING, line);
+
+      char *macro;
+      define_macro_init(&macro, line);
+
+      // initial number of braces on first line
+      // #define macro_name(args) {...}
+      int braces = count_braces(line);
+      char *macro_name = define_macro(line);
+      printf("%s macro name: %s\n", LOG_INFO, macro_name);
+      printf("%s macro init: %s\n", LOG_INFO, macro);
+
+      int macro_lines = 0;
+      while(braces > 0 && macro_lines < max_macro_lines) {
+        while(fgets(line, line_len, src_file) != NULL) {
+          macro_lines++;
+          braces += count_braces(line);
+          printf("Number of braces: %d\n", braces);
+
+          size_t l = strlen(macro) + strlen(line) + 1;
+          macro = realloc(macro, l);
+          strcat(macro, line);
+
+          // we're closing the macro
+          if(braces <= 0) {
+            break;
+          }
+        }
+      }
+
+      is_macro = 0;
+      if(macro_lines == max_macro_lines) {
+        printf("%s macro %s is too long (or failed to parse), reached %d lines\n", LOG_WARNING, macro, macro_lines);
+        free(macro);
+        free(macro_name);
+      }
+
+      push((*defs), macro_name, macro, DEF_FUNCTION);
+
       continue;
     }
 

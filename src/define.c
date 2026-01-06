@@ -126,6 +126,34 @@ int is_macro(char *name)
   return 0;
 }
 
+void *define_macro_init(char **macro, char *line)
+{
+  *macro = malloc(strlen(line + 8) + 1);
+  if(*macro == NULL) {
+      return NULL;
+  }
+  strcpy(*macro, line + 8);
+  return *macro;
+}
+
+char *define_macro(char *line)
+{
+  char *p = strstr(line, "#define");
+  if(!p) {
+    return p;
+  }
+
+  p+=8;
+  const char *start = p;
+
+  while (*p && *p != '(') {
+    p++;
+  }
+
+  int len = p - start;
+  return strndup(start, len);
+}
+
 int define(Define **defines, char *line)
 {
   if(strncmp(line, "#define", 7) != 0) {
@@ -170,14 +198,12 @@ int define(Define **defines, char *line)
 
   // Get value - capture everything after the name
   char *value_copy = NULL;
-  char *rest = strtok(NULL, "");  // Get rest of line
+  char *rest = strtok(NULL, "");
   if(rest != NULL) {
-    // Skip leading whitespace
     while(*rest == ' ' || *rest == '\t') {
       rest++;
     }
     if(*rest != '\0') {
-      // Remove trailing newline/carriage return
       int len = strlen(rest);
       while(len > 0 && (rest[len-1] == '\n' || rest[len-1] == '\r')) {
         rest[len-1] = '\0';
@@ -195,7 +221,6 @@ int define(Define **defines, char *line)
     }
   }
 
-  // TODO: switch variable/function
   push(*defines, name_copy, value_copy, DEF_VARIABLE);
   free(copy);
 
