@@ -228,15 +228,20 @@ int copy(char *src, char *dst, Define **defs)
       // #define macro_name(args) {...}
       int braces = count_braces(line);
       char *macro_name = define_macro(line);
-      printf("%s macro name: %s\n", LOG_INFO, macro_name);
-      printf("%s macro init: %s\n", LOG_INFO, macro);
 
       int macro_lines = 0;
       while(braces > 0 && macro_lines < max_macro_lines) {
         while(fgets(line, line_len, src_file) != NULL) {
           macro_lines++;
           braces += count_braces(line);
-          printf("Number of braces: %d\n", braces);
+
+          if(strncmp(line, "# ", 2) == 0) {
+            memmove(line, line + 2, strlen(line + 2) + 1);
+          }
+
+          if(strncmp(line, "#", 1) == 0) {
+            memmove(line, line + 1, strlen(line + 1) + 1);
+          }
 
           size_t l = strlen(macro) + strlen(line) + 1;
           macro = realloc(macro, l);
@@ -256,6 +261,8 @@ int copy(char *src, char *dst, Define **defs)
         free(macro_name);
       }
 
+      printf("%s macro name: %s\n", LOG_INFO, macro_name);
+      printf("%s macro: %s\n", LOG_INFO, macro);
       push((*defs), macro_name, macro, DEF_FUNCTION);
 
       continue;
