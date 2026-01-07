@@ -79,13 +79,12 @@ sum(1, 1, 1)</code></pre>
       <h2>Multiline Macro Bodies</h2>
       <p>
         Macro bodies can contain multiple lines of R code. Lines within the
-        macro body should be prefixed with <code>#</code> or
-        <code># </code> (hash followed by space). These prefixes are stripped
-        during expansion.
+        macro body should be prefixed with <code>#</code>. These prefixes are
+        stripped during expansion.
       </p>
       <pre><code class="language-r">#define DEBUG_BLOCK(var, message) {
 # cat("Debug:", message, "\n")
-# cat("Value of", var, "=", var, "\n")
+# cat("Value is", var, "\n")
 # cat("Type:", typeof(var), "\n")
 #}
 
@@ -94,7 +93,7 @@ DEBUG_BLOCK(x, "Checking variable")</code></pre>
       <p><strong>Expands to:</strong></p>
       <pre><code class="language-r">x &lt;- 42
 cat("Debug:", "Checking variable", "\n")
-cat("Value of", x, "=", x, "\n")
+cat("Value is, x, "\n")
 cat("Type:", typeof(x), "\n")</code></pre>
       <h2>Parameter Substitution</h2>
       <p>
