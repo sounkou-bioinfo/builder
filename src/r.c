@@ -164,74 +164,68 @@ char** extract_macro_args(const char *call_text, int *nargs) {
 
 char* extract_function_body(const char *func_text) 
 {
-    // Find the first opening brace
-    const char *brace_start = strchr(func_text, '{');
-    if (!brace_start) {
-        return NULL;
-    }
-    
-    // Find the matching closing brace
-    int brace_depth = 0;
-    int in_string = 0;
-    char string_char = 0;
-    const char *brace_end = NULL;
-    
-    for (const char *p = brace_start; *p; p++) {
-        if (in_string) {
-            if (*p == '\\') { 
-                p++; 
-                continue; 
-            }
-            if (*p == string_char) in_string = 0;
-        } else {
-            if (*p == '"' || *p == '\'') { 
-                in_string = 1; 
-                string_char = *p; 
-            }
-            else if (*p == '{') {
-                brace_depth++;
-            }
-            else if (*p == '}') {
-                brace_depth--;
-                if (brace_depth == 0) {
-                    brace_end = p;
-                    break;
-                }
-            }
+  const char *brace_start = strchr(func_text, '{');
+  if (!brace_start) {
+    return NULL;
+  }
+  
+  int brace_depth = 0;
+  int in_string = 0;
+  char string_char = 0;
+  const char *brace_end = NULL;
+  
+  for (const char *p = brace_start; *p; p++) {
+    if (in_string) {
+      if (*p == '\\') { 
+        p++; 
+        continue; 
+      }
+      if (*p == string_char) in_string = 0;
+    } else {
+      if (*p == '"' || *p == '\'') { 
+        in_string = 1; 
+        string_char = *p; 
+      }
+      else if (*p == '{') {
+        brace_depth++;
+      }
+      else if (*p == '}') {
+        brace_depth--;
+        if (brace_depth == 0) {
+          brace_end = p;
+          break;
         }
+      }
     }
-    
-    if (!brace_end || brace_depth != 0) {
-        return NULL;  // Unmatched braces
-    }
-    
-    // Extract content between braces (excluding the braces themselves)
-    const char *content_start = brace_start + 1;
-    const char *content_end = brace_end - 1;
-    
-    // Trim leading whitespace/newlines
-    while (content_start <= content_end && 
-           (*content_start == ' ' || *content_start == '\t' || 
-            *content_start == '\n' || *content_start == '\r')) {
-        content_start++;
-    }
-    
-    // Trim trailing whitespace/newlines
-    while (content_end >= content_start && 
-           (*content_end == ' ' || *content_end == '\t' || 
-            *content_end == '\n' || *content_end == '\r')) {
-        content_end--;
-    }
-    
-    // Copy the content
-    int len = content_end - content_start + 1;
-    if (len <= 0) {
-        return strdup("");  // Empty body
-    }
-    
-    char *result = malloc(len + 1);
-    strncpy(result, content_start, len);
-    result[len] = '\0';
-    
-    return result;
+  }
+  
+  if (!brace_end || brace_depth != 0) {
+    return NULL;
+  }
+  
+  const char *content_start = brace_start + 1;
+  const char *content_end = brace_end - 1;
+  
+  while (content_start <= content_end && 
+         (*content_start == ' ' || *content_start == '\t' || 
+          *content_start == '\n' || *content_start == '\r')) {
+    content_start++;
+  }
+  
+  while (content_end >= content_start && 
+         (*content_end == ' ' || *content_end == '\t' || 
+          *content_end == '\n' || *content_end == '\r')) {
+    content_end--;
+  }
+  
+  int len = content_end - content_start + 1;
+  if (len <= 0) {
+    return strdup("");
+  }
+  
+  char *result = malloc(len + 1);
+  strncpy(result, content_start, len);
+  result[len] = '\0';
+  
+  return result;
 }
