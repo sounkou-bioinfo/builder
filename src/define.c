@@ -356,6 +356,12 @@ char *define_replace(Define **defines, char *line)
     // we extract the function arguments
     int nargs;
     char **args = extract_macro_args(current, &nargs);
+
+    if(nargs != nargs_macro) {
+      printf("%s Macro %s has %d arguments but function %s has %d arguments\n", LOG_ERROR, name, nargs_macro, fn, nargs);
+      return current;
+    }
+
     for(int i = 0; i < nargs; i++) {
       char *old_body = body_macro;
       body_macro = str_replace(body_macro, args_macro[i], args[i]);
