@@ -185,6 +185,8 @@ int define(Define **defines, char *line)
     // it's ugly but will do for now
     // we just flag upstream that it's a function
     // we do so because it may be multiline
+    free(name_copy);
+    free(copy);
     return 1;
   }
 
@@ -342,29 +344,39 @@ char *define_replace(Define **defines, char *line)
       continue;
     }
 
-    printf("%s macro %s is defined here: %s\n", LOG_WARNING, name, current);
     // we cleanup the function name
     char fn[1028];
     extract_first_line(value, fn, sizeof(fn));
     int nargs_macro;
     // we extract the macro arguments
     char **args_macro = extract_macro_args(fn, &nargs_macro);
-    for(int i = 0; i < nargs_macro; i++) {
-      printf("%s arg %d: %s\n", LOG_INFO, i, args_macro[i]);
-    }
 
     char *body_macro = extract_function_body(value);
-    printf("%s macro body: %s\n", LOG_INFO, body_macro);
 
     // we extract the function arguments
     int nargs;
     char **args = extract_macro_args(current, &nargs);
     for(int i = 0; i < nargs; i++) {
-      printf("%s arg %d: %s\n", LOG_INFO, i, args[i]);
+      char *old_body = body_macro;
       body_macro = str_replace(body_macro, args_macro[i], args[i]);
+      free(old_body);
     }
 
-    printf("%s macro body: %s\n", LOG_INFO, body_macro);
+    // Free args_macro array and individual strings
+    for(int i = 0; i < nargs_macro; i++) {
+      free(args_macro[i]);
+    }
+    free(args_macro);
+
+    // Free args array and individual strings
+    for(int i = 0; i < nargs; i++) {
+      free(args[i]);
+    }
+    free(args);
+
+    // Free current since we're returning body_macro instead
+    free(current);
+
     return body_macro;
   }
 

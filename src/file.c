@@ -259,8 +259,6 @@ int copy(char *src, char *dst, Define **defs)
         free(macro_name);
       }
 
-      printf("%s macro name: %s\n", LOG_INFO, macro_name);
-      printf("%s macro: %s\n", LOG_INFO, macro);
       push((*defs), macro_name, macro, DEF_FUNCTION);
 
       continue;
