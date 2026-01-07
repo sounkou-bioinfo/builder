@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Builder - Macros</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/styles/atom-one-light.min.css"
+      media="(prefers-color-scheme: light)"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/styles/atom-one-dark.min.css"
+      media="(prefers-color-scheme: dark)"
+    />
+    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/highlight.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/languages/r.min.js"></script>
+  </head>
+  <body>
+    <main class="container">
+      <nav>
+        <ul>
+          <li><strong>Builder</strong></li>
+        </ul>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/packages">R packages</a></li>
+          <li><a href="/directives">Directives</a></li>
+          <li><a href="/macros">Macros</a></li>
+        </ul>
+      </nav>
+      <h1>Macros</h1>
+      <p>
+        Macros are function-like preprocessor directives that allow you to
+        define reusable code templates with parameters. Unlike simple
+        <code>#define</code> replacements, macros can accept arguments and
+        expand into multiple lines of code.
+      </p>
+      <h2>Basic Syntax</h2>
+      <p>
+        Macros are defined using <code>#define</code> with a function-like
+        syntax. The macro body is enclosed in curly braces and can span
+        multiple lines.
+      </p>
+      <p>
+        <strong>Syntax:</strong>
+        <code>#define MACRO_NAME(arg1, arg2, ...) { body }</code>
+      </p>
+      <pre><code class="language-r">#define LOG_EVAL(expr) {
+# cat("Evaluating stuff\n")
+# expr
+#}
+
+LOG_EVAL(sum(1, 1, 1))</code></pre>
+      <p><strong>Expands to:</strong></p>
+      <pre><code class="language-r">cat("Evaluating stuff\n")
+sum(1, 1, 1)</code></pre>
+      <h2>Multiline Macro Bodies</h2>
+      <p>
+        Macro bodies can contain multiple lines of R code. Lines within the
+        macro body should be prefixed with <code>#</code> or
+        <code># </code> (hash followed by space). These prefixes are stripped
+        during expansion.
+      </p>
+      <pre><code class="language-r">#define DEBUG_BLOCK(var, message) {
+# cat("Debug:", message, "\n")
+# cat("Value of", var, "=", var, "\n")
+# cat("Type:", typeof(var), "\n")
+#}
+
+x &lt;- 42
+DEBUG_BLOCK(x, "Checking variable")</code></pre>
+      <p><strong>Expands to:</strong></p>
+      <pre><code class="language-r">x &lt;- 42
+cat("Debug:", "Checking variable", "\n")
+cat("Value of", x, "=", x, "\n")
+cat("Type:", typeof(x), "\n")</code></pre>
+      <h2>Parameter Substitution</h2>
+      <p>
+        Macro parameters are replaced throughout the macro body when the macro
+        is invoked. All occurrences of the parameter name will be substituted
+        with the corresponding argument.
+      </p>
+      <pre><code class="language-r">#define REPEAT(n, action) {
+# for (i in 1:n) {
+#   action
+# }
+#}
+
+REPEAT(3, print("Hello"))</code></pre>
+      <p><strong>Expands to:</strong></p>
+      <pre><code class="language-r">for (i in 1:3) {
+  print("Hello")
+}</code></pre>
+      <h2>Macros with Multiple Arguments</h2>
+      <p>
+        Macros can accept multiple arguments, which are separated by commas in
+        both the definition and invocation.
+      </p>
+      <pre><code class="language-r">#define VALIDATE(value, min, max) {
+# if (value &lt; min || value &gt; max) {
+#   stop("Value out of range: ", value)
+# }
+#}
+
+x &lt;- 15
+VALIDATE(x, 0, 100)</code></pre>
+      <p><strong>Expands to:</strong></p>
+      <pre><code class="language-r">x &lt;- 15
+if (x &lt; 0 || x &gt; 100) {
+  stop("Value out of range: ", x)
+}</code></pre>
+      <h2>Practical Examples</h2>
+      <h3>Logging Macro</h3>
+      <pre><code class="language-r">#define LOG(level, msg) {
+# cat("[", level, "] ", msg, "\n", sep = "")
+#}
+
+LOG("INFO", "Application started")
+LOG("ERROR", "Something went wrong")</code></pre>
+      <p><strong>Expands to:</strong></p>
+      <pre><code class="language-r">cat("[", "INFO", "] ", "Application started", "\n", sep = "")
+cat("[", "ERROR", "] ", "Something went wrong", "\n", sep = "")</code></pre>
+      <h3>Try-Catch Wrapper</h3>
+      <pre><code class="language-r">#define TRY_CATCH(code, error_msg) {
+# tryCatch({
+#   code
+# }, error = function(e) {
+#   cat(error_msg, ":", e$message, "\n")
+# })
+#}
+
+TRY_CATCH(risky_operation(), "Operation failed")</code></pre>
+      <p><strong>Expands to:</strong></p>
+      <pre><code class="language-r">tryCatch({
+  risky_operation()
+}, error = function(e) {
+  cat("Operation failed", ":", e$message, "\n")
+})</code></pre>
+      <h3>Timing Macro</h3>
+      <pre><code class="language-r">#define TIME_IT(expr) {
+# start &lt;- Sys.time()
+# result &lt;- expr
+# end &lt;- Sys.time()
+# cat("Execution time:", end - start, "\n")
+# result
+#}
+
+TIME_IT(slow_computation())</code></pre>
+      <p><strong>Expands to:</strong></p>
+      <pre><code class="language-r">start &lt;- Sys.time()
+result &lt;- slow_computation()
+end &lt;- Sys.time()
+cat("Execution time:", end - start, "\n")
+result</code></pre>
+      <h2>Important Notes</h2>
+      <ul>
+        <li>
+          Macro bodies must be enclosed in curly braces <code>{}</code>
+        </li>
+        <li>
+          Lines within macro bodies should start with <code>#</code> or
+          <code># </code>
+        </li>
+        <li>These line prefixes are automatically removed during expansion</li>
+        <li>
+          Macros support multiline definitions and can span many lines (up to
+          1024 lines)
+        </li>
+        <li>
+          Macro parameters are simple text substitution - be careful with
+          expressions that might be evaluated multiple times
+        </li>
+        <li>
+          Unlike simple <code>#define</code> constants, macros with parentheses
+          are treated as functions and expanded differently
+        </li>
+        <li>
+          <strong>Limitation:</strong> Macros do not currently work within
+          conditional directives (<code>#ifdef</code>, <code>#ifndef</code>,
+          <code>#if</code>, <code>#else</code>). They can only be used
+          standalone in your code.
+        </li>
+      </ul>
+    </main>
+    <script>
+      hljs.highlightAll();
+    </script>
+  </body>
+</html>
