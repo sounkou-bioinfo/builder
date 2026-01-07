@@ -24,9 +24,17 @@ You can also use the `# ifdef` directives.
 ```r
 # srcr/main.R
 
+#define LOGGER(msg){
+# cat("[INFO]", msg, "\n")
+#}
+
 #define PI 3.14
 
+PI + 1L
+
 foo <- function(){
+    LOGGER("Running foo")
+
     #ifdef DEBUG
     print("debuging\n")
     #endif
@@ -40,12 +48,10 @@ foo <- function(){
     #if LOG_LEVEL > 2
     cat("debuging level 2\n")
     #endif
-
-    PI + 1L
 }
 ```
 
 Then build with `./builder -input srcr -DDEBUG -DTEST '"hello world"' -DLOG_LEVEL 42` 
 to include the `DEBUG`, and `TEST` directives in the `output` directory.
 
-Currently supports `#if`, `#ifdef`, `#ifndef`, `#else`, `#endif`, `#define` only.
+Currently supports `#if`, `#ifdef`, `#ifndef`, `#else`, `#endif`, `#define` as well as macros.

@@ -42,6 +42,21 @@
         <code>#define</code> replacements, macros can accept arguments and
         expand into multiple lines of code.
       </p>
+      <h2>Advantages</h2>
+      <ul>
+        <li>
+          <strong>Easy metaprogramming:</strong> Write code that generates code,
+          enabling powerful abstractions and code generation patterns.
+        </li>
+        <li>
+          <strong>Zero overhead:</strong> Macros have no runtime performance
+          cost since they're expanded at compile time.
+        </li>
+        <li>
+          <strong>Compile time expansion:</strong> All macro processing happens
+          during preprocessing, before your code executes.
+        </li>
+      </ul>
       <h2>Basic Syntax</h2>
       <p>
         Macros are defined using <code>#define</code> with a function-like
@@ -175,12 +190,6 @@ result</code></pre>
         <li>
           Unlike simple <code>#define</code> constants, macros with parentheses
           are treated as functions and expanded differently
-        </li>
-        <li>
-          <strong>Limitation:</strong> Macros do not currently work within
-          conditional directives (<code>#ifdef</code>, <code>#ifndef</code>,
-          <code>#if</code>, <code>#else</code>). They can only be used
-          standalone in your code.
         </li>
       </ul>
     </main>
