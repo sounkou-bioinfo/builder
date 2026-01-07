@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h> 
+#include <sys/utsname.h>
+
 #include "define.h"
 #include "parser.h"
 #include "log.h"
@@ -59,6 +61,14 @@ void push_builtins(Define *arr)
 {
   push(arr, strdup("__FILE__"), strdup(DYNAMIC_DEFINITION), DEF_VARIABLE);
   push(arr, strdup("__LINE__"), strdup(DYNAMIC_DEFINITION), DEF_VARIABLE);
+
+  struct utsname buffer;
+
+  if(uname(&buffer) == -1) {
+    return;
+  }
+
+  push(arr, strdup("__OS__"), strdup(buffer.sysname), DEF_VARIABLE);
 }
 
 void push(Define *arr, char *name, char *value, DefineType type)

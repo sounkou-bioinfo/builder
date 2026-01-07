@@ -127,16 +127,24 @@ cat("it's 1!\n")
         source file path. Useful for debugging and logging to track which file
         generated specific code.
       </p>
-      <pre><code class="language-r">cat("Processing file:", __FILE__, "\n")
-# If in srcr/analysis.R, becomes: cat("Processing file:", srcr/analysis.R, "\n")</code></pre>
+      <pre><code class="language-r">cat("Processing file: __FILE__\n")
+# If in srcr/analysis.R, becomes: cat("Processing file: srcr/analysis.R \n")</code></pre>
       <h2>__LINE__</h2>
       <p>
         A built-in directive that is automatically replaced with the current
         line number in the source file. Useful for debugging and error tracking
         to identify the exact location of code execution.
       </p>
-      <pre><code class="language-r">cat("Executing line", __LINE__, "\n")
-# If on line 42, becomes: cat("Executing line", 42, "\n")</code></pre>
+      <pre><code class="language-r">cat("Executing line __LINE__\n")
+# If on line 42, becomes: cat("Executing line 42\n")</code></pre>
+      <h2>__OS__</h2>
+      <p>
+        A built-in directive that is automatically populated with the current
+        operating system. Useful for conditionally compiling code based on the
+        current OS.
+      </p>
+      <pre><code class="language-r">cat("Running on: __OS__\n")
+# becomes: cat("Processing file Linux\n")</code></pre>
       <h2>Complete Example</h2>
       <p>Here's a complete example showing all directives working together:</p>
       <p><strong>Input file (srcr/main.R):</strong></p>
