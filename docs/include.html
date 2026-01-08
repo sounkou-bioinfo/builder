@@ -26,11 +26,12 @@
     <main class="container">
       <nav>
         <ul>
-          <li><strong>Builder</strong></li>
+          <li>
+            <strong><a href="/">Builder</a></strong>
+          </li>
         </ul>
         <ul>
-          <li><a href="/">Home</a></li>
-          <li><a href="/packages">R packages</a></li>
+          <li><a href="/packages">packages</a></li>
           <li><a href="/directives">Directives</a></li>
           <li><a href="/macros">Macros</a></li>
           <li><a href="/include">Include</a></li>
@@ -38,17 +39,17 @@
       </nav>
       <h1>Include</h1>
       <p>
-        The <code>#include</code> directive allows you to read external files
-        at build time and process them using macros. This enables you to embed
-        file contents (like SQL queries, templates, or configuration) directly
-        into your R code as variables.
+        The <code>#include</code> directive allows you to read external files at
+        build time and process them using macros. This enables you to embed file
+        contents (like SQL queries, templates, or configuration) directly into
+        your R code as variables.
       </p>
       <h2>Advantages</h2>
       <ul>
         <li>
           <strong>Separation of concerns:</strong> Keep SQL queries, templates,
-          and other content in separate files while still embedding them in
-          your code at build time.
+          and other content in separate files while still embedding them in your
+          code at build time.
         </li>
         <li>
           <strong>Build-time processing:</strong> File contents are read and
@@ -60,23 +61,21 @@
           contents, enabling custom transformations and formatting.
         </li>
         <li>
-          <strong>Type safety:</strong> File contents are converted to R
-          objects at build time, catching errors early.
+          <strong>Type safety:</strong> File contents are converted to R objects
+          at build time, catching errors early.
         </li>
       </ul>
       <h2>Basic Syntax</h2>
       <p>
-        The <code>#include</code> directive uses a special syntax that
-        specifies a macro to apply, a file path to read, and a variable name
-        for the result.
+        The <code>#include</code> directive uses a special syntax that specifies
+        a macro to apply, a file path to read, and a variable name for the
+        result.
       </p>
       <p>
         <strong>Syntax:</strong>
         <code>#include:MACRO_NAME file_path variable_name</code>
       </p>
-      <p>
-        The directive consists of three space-separated parts:
-      </p>
+      <p>The directive consists of three space-separated parts:</p>
       <ul>
         <li>
           <code>MACRO_NAME</code> - The name of a previously defined macro that
@@ -84,8 +83,8 @@
         </li>
         <li><code>file_path</code> - The path to the file to include</li>
         <li>
-          <code>variable_name</code> - The R variable name that will be
-          assigned the processed result
+          <code>variable_name</code> - The R variable name that will be assigned
+          the processed result
         </li>
       </ul>
       <h2>Basic Example</h2>
@@ -106,7 +105,9 @@
         <code>dput()</code> function and assigned to the specified variable.
       </p>
       <h2>How It Works</h2>
-      <p>When the preprocessor encounters an <code>#include</code> directive:</p>
+      <p>
+        When the preprocessor encounters an <code>#include</code> directive:
+      </p>
       <ol>
         <li>It parses the macro name, file path, and variable name</li>
         <li>
@@ -115,7 +116,9 @@
         </li>
         <li>
           It constructs an R expression:
-          <code>MACRO_NAME('file_path') |&gt; dput() |&gt; capture.output()</code>
+          <code
+            >MACRO_NAME('file_path') |&gt; dput() |&gt; capture.output()</code
+          >
         </li>
         <li>It executes this R expression to process the file</li>
         <li>
@@ -124,8 +127,8 @@
         </li>
       </ol>
       <p>
-        This happens at build time, so the final R code contains no file
-        reading operations—just the processed data.
+        This happens at build time, so the final R code contains no file reading
+        operations—just the processed data.
       </p>
       <h2>Advanced Examples</h2>
       <h3>Reading and Collapsing SQL</h3>
@@ -138,9 +141,7 @@
 #}
 
 #include:READ_SQL queries/get_users.sql user_query</code></pre>
-      <p>
-        If <code>queries/get_users.sql</code> contains:
-      </p>
+      <p>If <code>queries/get_users.sql</code> contains:</p>
       <pre><code class="language-sql">SELECT id, name, email
 FROM users
 WHERE active = TRUE
@@ -157,9 +158,7 @@ ORDER BY name</code></pre>
 #}
 
 #include:READ_JSON config/settings.json app_config</code></pre>
-      <p>
-        If <code>config/settings.json</code> contains:
-      </p>
+      <p>If <code>config/settings.json</code> contains:</p>
       <pre><code class="language-json">{
   "api_url": "https://api.example.com",
   "timeout": 30,
@@ -175,9 +174,7 @@ ORDER BY name</code></pre>
 
 #include:READ_CSV data/lookup_table.csv lookup_data</code></pre>
       <h3>Reading Template Files</h3>
-      <p>
-        Read template strings for reports or emails:
-      </p>
+      <p>Read template strings for reports or emails:</p>
       <pre><code class="language-r">#define READ_TEMPLATE(path){
 # readLines(path) |&gt; paste(collapse = "\n")
 #}
@@ -224,8 +221,8 @@ ORDER BY name</code></pre>
       <ol>
         <li>First, all <code>#define</code> macros are defined and expanded</li>
         <li>
-          Then, <code>#include</code> directives are processed using the
-          defined macros
+          Then, <code>#include</code> directives are processed using the defined
+          macros
         </li>
         <li>
           The result is pure R code with all preprocessing directives removed
