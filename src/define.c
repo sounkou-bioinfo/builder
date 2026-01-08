@@ -240,7 +240,8 @@ int define(Define **defines, char *line)
   return 0;
 }
 
-char* str_replace(const char *orig, const char *find, const char *replace) {
+char* str_replace(const char *orig, const char *find, const char *replace) 
+{
   const char *pos = orig;
   int count = 0;
   int find_len = strlen(find);

@@ -265,8 +265,8 @@ int copy(char *src, char *dst, Define **defs)
       continue;
     }
 
-    char *processed = define_replace(defs, line);
-    include_replace(defs, processed);
+    char *replaced = define_replace(defs, line);
+    char *processed = include_replace(defs, replaced);
     char *processed_copy = strdup(processed);
     should_write = should_write_line(should_write, processed_copy, defs);
     free(processed_copy);

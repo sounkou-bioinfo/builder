@@ -36,7 +36,7 @@ char *remove_trailing_newline(char *line)
   return line;
 }
 
-int eval_if(char *expr)
+SEXP evaluate(char *expr)
 {
   SEXP code_sexp, result;
   ParseStatus status;
@@ -62,12 +62,39 @@ int eval_if(char *expr)
 
   UNPROTECT(3);
 
+  return result;
+}
+
+int eval_if(char *expr)
+{
+  SEXP result = evaluate(expr);
+
+  if(result == NULL) {
+    return 0;
+  }
+
   if(TYPEOF(result) != LGLSXP) {
     printf("%s Expression `%s` did not evaluate to a logical value\n", LOG_ERROR, remove_trailing_newline(expr));
     return 0;
   }
 
   return asLogical(result);
+}
+
+const char *eval_string(char *expr)
+{
+  SEXP result = evaluate(expr);
+
+  if(result == NULL) {
+    return 0;
+  }
+
+  if(TYPEOF(result) != STRSXP) {
+    printf("%s Expression `%s` did not evaluate to a character value\n", LOG_ERROR, remove_trailing_newline(expr));
+    return 0;
+  }
+
+  return CHAR(STRING_ELT(result, 0));
 }
 
 char** extract_macro_args(const char *call_text, int *nargs) {

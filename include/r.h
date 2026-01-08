@@ -5,6 +5,8 @@
 #include <R_ext/Parse.h>
 #include <Rembedded.h>
 
+const char *eval_string(char *expr);
+SEXP evaluate(char *expr);
 int eval_if(char *expr);
 void set_R_home();
 char** extract_macro_args(const char *args_text, int *nargs);
