@@ -54,4 +54,5 @@ foo <- function(){
 Then build with `./builder -input srcr -DDEBUG -DTEST '"hello world"' -DLOG_LEVEL 42` 
 to include the `DEBUG`, and `TEST` directives in the `output` directory.
 
-Currently supports `#if`, `#ifdef`, `#ifndef`, `#else`, `#endif`, `#define` as well as macros.
+Currently supports `#if`, `#ifdef`, `#ifndef`, `#else`, `#endif`, `#define` as well as macros,
+and `#include` to include static files.
