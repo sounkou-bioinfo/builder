@@ -5,6 +5,7 @@
 #include <limits.h>
 #include <regex.h>
 #include "define.h"
+#include "include.h"
 #include "file.h"
 #include "log.h"
 #include "r.h"
@@ -265,6 +266,7 @@ int copy(char *src, char *dst, Define **defs)
     }
 
     char *processed = define_replace(defs, line);
+    include_replace(defs, processed);
     char *processed_copy = strdup(processed);
     should_write = should_write_line(should_write, processed_copy, defs);
     free(processed_copy);

@@ -354,6 +354,18 @@ char *define_replace(Define **defines, char *line)
       continue;
     }
 
+    // if not a var it's a function call
+    // or is it?
+    // could be used in #include:MACRO
+    char *call = strdup(name);
+    strcat(call, "(");
+    if(strstr(line, call) == NULL) {
+      free(call);
+      continue;
+    }
+
+    free(call);
+
     // we cleanup the function name
     char fn[1028];
     extract_first_line(value, fn, sizeof(fn));
