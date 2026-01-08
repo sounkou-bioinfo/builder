@@ -6,6 +6,7 @@
 #include <regex.h>
 #include "define.h"
 #include "include.h"
+#include "fstring.h"
 #include "file.h"
 #include "log.h"
 #include "r.h"
@@ -265,7 +266,8 @@ int copy(char *src, char *dst, Define **defs)
       continue;
     }
 
-    char *replaced = define_replace(defs, line);
+    char *fstring_result = fstring_replace(line, 0);
+    char *replaced = define_replace(defs, fstring_result);
     char *processed = include_replace(defs, replaced);
     char *processed_copy = strdup(processed);
     should_write = should_write_line(should_write, processed_copy, defs);
@@ -273,17 +275,26 @@ int copy(char *src, char *dst, Define **defs)
 
     if(!should_write) {
       free(processed);
+      if(fstring_result != line) {
+        free(fstring_result);
+      }
       continue;
     }
 
     if(fputs(processed, dst_file) == EOF) {
       free(processed);
+      if(fstring_result != line) {
+        free(fstring_result);
+      }
       free(dest);
       printf("%s Failed to write to destination file\n", LOG_ERROR);
       return 1;
     }
 
     free(processed);
+    if(fstring_result != line) {
+      free(fstring_result);
+    }
   }
 
   free(dest);

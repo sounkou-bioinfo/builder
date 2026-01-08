@@ -4,7 +4,7 @@ LDFLAGS = $(shell R CMD config --ldflags)
 FLS = -Wall -Iinclude
 CMD = ./bin/builder -input srcr -DDEBUG -DTEST '"a string"' -DXXX 42
 
-build: src/main.c src/r.c src/parser.c src/log.c src/file.c src/define.c src/include.c
+build: src/main.c src/r.c src/parser.c src/log.c src/file.c src/define.c src/include.c src/fstring.c
 	$(CC) $(CFLAGS) $(FLS) $^ -o bin/builder $(LDFLAGS)
 
 dev: build
