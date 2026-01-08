@@ -98,7 +98,7 @@
 
 #include:READ sql/query.sql my_query</code></pre>
       <p><strong>Expands to:</strong></p>
-      <pre><code class="language-r">my_query &lt;- c("SELECT * FROM users", "WHERE status = 'active'", "ORDER BY created_at DESC")</code></pre>
+      <pre><code class="language-r">my_query &lt;- c("SELECT * FROM users")</code></pre>
       <p>
         The <code>READ</code> macro uses R's <code>readLines()</code> function
         to read the file. The result is captured using R's
