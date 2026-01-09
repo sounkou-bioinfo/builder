@@ -1,6 +1,8 @@
 #ifndef FILE_H
 #define FILE_H
 
+#include "define.h"
+
 typedef int(*Callback)(char *src, char *dst, Define **defs);
 
 int exists(char *path);
@@ -9,5 +11,6 @@ char *ensure_dir(char *path);
 int walk(char *src_dir, char *dst_dir, Callback func, Define **defs);
 int copy(char *src, char *dst, Define **defs);
 int clean(char *src, char *dst, Define **defs);
+char *remove_leading_spaces(char *line);
 
 #endif

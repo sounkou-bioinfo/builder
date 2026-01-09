@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "deconstruct.h"
+#include "file.h"
 
 Var *create_var(char *value)
 {
@@ -54,7 +55,8 @@ char *deconstruct_replace(char *line)
     return NULL;
   }
 
-  if(line[0] != '.'){
+  char *trimmed = remove_leading_spaces(line);
+  if(trimmed[0] != '.') {
     return line;
   }
 
