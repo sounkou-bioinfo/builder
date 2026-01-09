@@ -358,7 +358,8 @@ char *define_replace(Define **defines, char *line)
     // if not a var it's a function call
     // or is it?
     // could be used in #include:MACRO
-    char *call = strdup(name);
+    char *call = malloc(strlen(name) + 2);  // +1 for '(', +1 for '\0'
+    strcpy(call, name);
     strcat(call, "(");
     if(strstr(line, call) == NULL) {
       free(call);

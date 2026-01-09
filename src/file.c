@@ -270,13 +270,19 @@ int copy(char *src, char *dst, Define **defs)
     char *fstring_result = fstring_replace(line, 0);
     char *replaced = define_replace(defs, fstring_result);
     char *processed = include_replace(defs, replaced);
+    if(processed != replaced) {
+      free(replaced);
+    }
     char *deconstructed = deconstruct_replace(processed);
     char *processed_copy = strdup(deconstructed);
     should_write = should_write_line(should_write, processed_copy, defs);
     free(processed_copy);
 
     if(!should_write) {
-      free(processed);
+      free(deconstructed);
+      if(processed != deconstructed) {
+        free(processed);
+      }
       if(fstring_result != line) {
         free(fstring_result);
       }
@@ -284,7 +290,10 @@ int copy(char *src, char *dst, Define **defs)
     }
 
     if(fputs(deconstructed, dst_file) == EOF) {
-      free(processed);
+      free(deconstructed);
+      if(processed != deconstructed) {
+        free(processed);
+      }
       if(fstring_result != line) {
         free(fstring_result);
       }
@@ -293,7 +302,10 @@ int copy(char *src, char *dst, Define **defs)
       return 1;
     }
 
-    free(processed);
+    free(deconstructed);
+    if(processed != deconstructed) {
+      free(processed);
+    }
     if(fstring_result != line) {
       free(fstring_result);
     }

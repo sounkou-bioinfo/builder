@@ -113,5 +113,7 @@ char *deconstruct_replace(char *line)
     i++;
   }
 
-  return strdup(new);
+  char *result = strdup(new);
+  free_var(vars);
+  return result;
 }

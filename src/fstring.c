@@ -161,7 +161,9 @@ char *fstring_replace(char *str, int n)
     while(curr != NULL) {
       replacement = (char*)realloc(replacement, strlen(curr->value) + 3);
       sprintf(replacement, "{%s}", curr->value);
+      char *old_newstr = newstr;
       newstr = str_replace(newstr, replacement, "%s");
+      free(old_newstr);
       curr = curr->next;
     }
 
@@ -196,6 +198,7 @@ char *fstring_replace(char *str, int n)
       return str;
     }
     sprintf(sprintf_call, "sprintf('%s'%s)", newstr, args_list);
+    free(newstr);
 
     // Replace the entire f'...' with sprintf(...)
     int prefix_len = fstring_start - str;
