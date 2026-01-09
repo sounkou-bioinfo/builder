@@ -50,6 +50,14 @@ void free_var(Var *f)
 
 char *deconstruct_replace(char *line)
 {
+  if(line == NULL) {
+    return NULL;
+  }
+
+  if(line[0] != '.'){
+    return line;
+  }
+
   Var *vars = NULL;
 
   int deconstruct = 0;
