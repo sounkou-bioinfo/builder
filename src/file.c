@@ -4,6 +4,8 @@
 #include <string.h>
 #include <limits.h>
 #include <regex.h>
+
+#include "deconstruct.h"
 #include "define.h"
 #include "include.h"
 #include "fstring.h"
@@ -28,17 +30,16 @@ char *strip_last_slash(char *path)
   size_t len = strlen(path);
 
   if(len > 0 && path[len - 1] == '/') {
-    char *dir = malloc(len);  // len - 1 for string + 1 for null = len
+    char *dir = malloc(len);
     if(dir == NULL) {
       return NULL;
     }
     strncpy(dir, path, len - 1);
     dir[len - 1] = '\0';
-    free(path);  // Free the input since we're returning a new allocation
+    free(path);
     return dir;
   }
 
-  // No change needed, just return the same pointer
   return path;
 }
 
@@ -269,7 +270,8 @@ int copy(char *src, char *dst, Define **defs)
     char *fstring_result = fstring_replace(line, 0);
     char *replaced = define_replace(defs, fstring_result);
     char *processed = include_replace(defs, replaced);
-    char *processed_copy = strdup(processed);
+    char *deconstructed = deconstruct_replace(processed);
+    char *processed_copy = strdup(deconstructed);
     should_write = should_write_line(should_write, processed_copy, defs);
     free(processed_copy);
 
@@ -281,7 +283,7 @@ int copy(char *src, char *dst, Define **defs)
       continue;
     }
 
-    if(fputs(processed, dst_file) == EOF) {
+    if(fputs(deconstructed, dst_file) == EOF) {
       free(processed);
       if(fstring_result != line) {
         free(fstring_result);

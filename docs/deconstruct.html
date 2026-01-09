@@ -46,18 +46,16 @@
           </li>
         </ul>
       </nav>
-      <h1>f-strings</h1>
-      <p>Builder accepts f-strings</p>
-      <pre><code class="language-r">x <- 1
-y <- 2
-print(f'{x} + {y} = {x + y}')</code></pre>
+      <h1>Deconstruct</h1>
+      <p>Builder supports destructuring assignment syntax for R, similar to JavaScript and Python.</p>
+      <p>Use the <code>.[var1, var2, ...]</code> syntax to extract multiple values from a list:</p>
+      <pre><code class="language-r">.[x, my_var] <- call()</code></pre>
       <p>That will produce:</p>
-      <pre><code class="language-r">x <- 1
-y <- 2
-print(sprintf('%s + %s = %s', x, y, x + y))</code></pre>
+      <pre><code class="language-r">x <- call()[[1]]
+my_var <- call()[[2]]</code></pre>
       <p>
-        Note that it's currently simple in its implementation and just uses
-        <code>%s</code> formats.
+        Variables are assigned in order using list accessor <code>[[1]]</code>, <code>[[2]]</code>, etc.
+        This makes it convenient to work with functions that return multiple values in a list.
       </p>
     </main>
     <script>

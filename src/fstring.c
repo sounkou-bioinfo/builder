@@ -56,28 +56,25 @@ static char* find_closing_quote(const char *str)
 
   while(*p != '\0') {
     if(escaped) {
-      // Previous char was backslash, this char is escaped
       escaped = 0;
       p++;
       continue;
     }
 
     if(*p == '\\') {
-      // Start of escape sequence
       escaped = 1;
       p++;
       continue;
     }
 
     if(*p == '\'') {
-      // Found unescaped quote - this is the closing quote
       return (char*)p;
     }
 
     p++;
   }
 
-  return NULL;  // No closing quote found
+  return NULL;
 }
 
 char *fstring_replace(char *str, int n)
@@ -102,8 +99,8 @@ char *fstring_replace(char *str, int n)
 
     if(was_f && (str[i] == '\'')) {
       was_f = 0;
-      ptr = str + i + 1;  // Point to character after f'
-      break;  // Exit the loop once found
+      ptr = str + i + 1;
+      break;
     }
 
     if(was_f) {
@@ -160,7 +157,6 @@ char *fstring_replace(char *str, int n)
     sprintf(replacement, "{%s}", f->value);
     char *newstr = str_replace(content, replacement, "%s");
 
-    printf("%s\n", newstr);
     Fstring *curr = f->next;
     while(curr != NULL) {
       replacement = (char*)realloc(replacement, strlen(curr->value) + 3);
@@ -220,14 +216,12 @@ char *fstring_replace(char *str, int n)
     free(content);
     free_fstring(f);
 
-    // Recursively process any remaining f-strings
     char *final_result = fstring_replace(result, n + 1);
     if(final_result != result) {
       free(result);
     }
     return final_result;
   } else {
-    // No variables, but still transform f'text' to sprintf('text')
     char *fstring_start = strstr(str, "f'");
     if(fstring_start == NULL) {
       free(content);
@@ -239,10 +233,9 @@ char *fstring_replace(char *str, int n)
 
     if(quote_end == NULL) {
       free(content);
-      return str;  // Malformed, return unchanged
+      return str;
     }
 
-    // Build sprintf call without arguments (use already-extracted content)
     int sprintf_len = strlen("sprintf('") + strlen(content) + strlen("')") + 1;
     char *sprintf_call = (char*)malloc(sprintf_len);
     if(sprintf_call == NULL) {
@@ -251,7 +244,6 @@ char *fstring_replace(char *str, int n)
     }
     sprintf(sprintf_call, "sprintf('%s')", content);
 
-    // Replace the entire f'...' with sprintf(...)
     int prefix_len = fstring_start - str;
     int suffix_start = (quote_end - str) + 1;
     char *result = (char*)malloc(prefix_len + strlen(sprintf_call) + strlen(str + suffix_start) + 1);
