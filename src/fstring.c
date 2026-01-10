@@ -89,6 +89,7 @@ char *fstring_replace(char *str, int n)
   }
 
   char *ptr = str;
+  char *fstring_start = NULL;
 
   int was_f = 0;
   for(int i = 0; i < strlen(str); i++) {
@@ -99,6 +100,7 @@ char *fstring_replace(char *str, int n)
 
     if(was_f && (str[i] == '\'')) {
       was_f = 0;
+      fstring_start = str + i - 1;  // Store position of 'f'
       ptr = str + i + 1;
       break;
     }
@@ -152,7 +154,10 @@ char *fstring_replace(char *str, int n)
     }
   }
 
+  // Build format string (conditional on whether variables exist)
+  char *format_string;
   if(f != NULL) {
+    // Replace {var} with %s in content
     char *replacement = (char*)malloc(strlen(f->value) + 3);
     sprintf(replacement, "{%s}", f->value);
     char *newstr = str_replace(content, replacement, "%s");
@@ -168,106 +173,61 @@ char *fstring_replace(char *str, int n)
     }
 
     free(replacement);
+    format_string = newstr;
+  } else {
+    // No variables, use content as-is
+    format_string = content;
+    content = NULL;  // Prevent double-free later
+  }
 
-    // Build argument list: ", var1, var2, var3"
-    char args_list[1024] = "";
+  // Build argument list (conditional on whether variables exist)
+  char args_list[1024] = "";
+  if(f != NULL) {
     Fstring *arg_curr = f;
     while(arg_curr != NULL) {
       strcat(args_list, ", ");
       strcat(args_list, arg_curr->value);
       arg_curr = arg_curr->next;
     }
+  }
 
-    // Find where the f-string starts and ends
-    char *fstring_start = strstr(str, "f'");
-    char *content_start = fstring_start + 2;
-    char *quote_end = find_closing_quote(content_start);
-
-    if(fstring_start == NULL || quote_end == NULL) {
-      free(content);
-      free_fstring(f);
-      return str;  // Malformed, return unchanged
-    }
-
-    // Build sprintf call: sprintf('format_string', arg1, arg2, ...)
-    int sprintf_len = strlen("sprintf('") + strlen(newstr) + strlen("')") + strlen(args_list) + 1;
-    char *sprintf_call = (char*)malloc(sprintf_len);
-    if(sprintf_call == NULL) {
-      free(content);
-      free_fstring(f);
-      return str;
-    }
-    sprintf(sprintf_call, "sprintf('%s'%s)", newstr, args_list);
-    free(newstr);
-
-    // Replace the entire f'...' with sprintf(...)
-    int prefix_len = fstring_start - str;
-    int suffix_start = (quote_end - str) + 1;
-    char *result = (char*)malloc(prefix_len + strlen(sprintf_call) + strlen(str + suffix_start) + 1);
-    if(result == NULL) {
-      free(sprintf_call);
-      free(content);
-      free_fstring(f);
-      return str;
-    }
-    strncpy(result, str, prefix_len);
-    result[prefix_len] = '\0';
-    strcat(result, sprintf_call);
-    strcat(result, str + suffix_start);
-
-    free(sprintf_call);
+  // Build sprintf call (unified for both cases)
+  int sprintf_len = strlen("sprintf('") + strlen(format_string) + strlen("')") + strlen(args_list) + 1;
+  char *sprintf_call = (char*)malloc(sprintf_len);
+  if(sprintf_call == NULL) {
+    if(f != NULL) free(format_string);
     free(content);
     free_fstring(f);
-
-    char *final_result = fstring_replace(result, n + 1);
-    if(final_result != result) {
-      free(result);
-    }
-    return final_result;
-  } else {
-    char *fstring_start = strstr(str, "f'");
-    if(fstring_start == NULL) {
-      free(content);
-      return str;
-    }
-
-    char *content_start = fstring_start + 2;
-    char *quote_end = find_closing_quote(content_start);
-
-    if(quote_end == NULL) {
-      free(content);
-      return str;
-    }
-
-    int sprintf_len = strlen("sprintf('") + strlen(content) + strlen("')") + 1;
-    char *sprintf_call = (char*)malloc(sprintf_len);
-    if(sprintf_call == NULL) {
-      free(content);
-      return str;
-    }
-    sprintf(sprintf_call, "sprintf('%s')", content);
-
-    int prefix_len = fstring_start - str;
-    int suffix_start = (quote_end - str) + 1;
-    char *result = (char*)malloc(prefix_len + strlen(sprintf_call) + strlen(str + suffix_start) + 1);
-    if(result == NULL) {
-      free(sprintf_call);
-      free(content);
-      return str;
-    }
-    strncpy(result, str, prefix_len);
-    result[prefix_len] = '\0';
-    strcat(result, sprintf_call);
-    strcat(result, str + suffix_start);
-
-    free(sprintf_call);
-    free(content);
-
-    // Recursively process any remaining f-strings
-    char *final_result = fstring_replace(result, n + 1);
-    if(final_result != result) {
-      free(result);
-    }
-    return final_result;
+    return str;
   }
+  sprintf(sprintf_call, "sprintf('%s'%s)", format_string, args_list);
+
+  // Replace f-string with sprintf in original string (unified)
+  int prefix_len = fstring_start - str;
+  int suffix_start = (ptr_quote_end - str) + 1;
+  char *result = (char*)malloc(prefix_len + strlen(sprintf_call) + strlen(str + suffix_start) + 1);
+  if(result == NULL) {
+    free(sprintf_call);
+    if(f != NULL) free(format_string);
+    free(content);
+    free_fstring(f);
+    return str;
+  }
+  strncpy(result, str, prefix_len);
+  result[prefix_len] = '\0';
+  strcat(result, sprintf_call);
+  strcat(result, str + suffix_start);
+
+  // Cleanup (unified)
+  free(sprintf_call);
+  if(f != NULL) free(format_string);
+  free(content);
+  free_fstring(f);
+
+  // Recursively process any remaining f-strings (unified)
+  char *final_result = fstring_replace(result, n + 1);
+  if(final_result != result) {
+    free(result);
+  }
+  return final_result;
 }
