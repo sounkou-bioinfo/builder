@@ -284,8 +284,12 @@ int copy(char *src, char *dst, Define **defs)
     if(test) {
       char *t = remove_leading_spaces(processed);
       char *description = strdup(t + 6);
+      // Remove trailing newline from description
+      size_t desc_len = strlen(description);
+      if(desc_len > 0 && description[desc_len - 1] == '\n') {
+        description[desc_len - 1] = '\0';
+      }
       char *expressions = NULL;
-      printf("%s\n", description);
       while(fgets(line, line_len, src_file) != NULL) {
         t = remove_leading_spaces(line);
         if(strncmp(t, "#endtest", 8) == 0) {
@@ -341,13 +345,7 @@ int copy(char *src, char *dst, Define **defs)
     }
   }
 
-  Tests *current = tests;
-  printf("v = %s\n", src);
-  while(current != NULL) {
-    printf("%s\n", current->description);
-    printf("%s\n", current->expressions);
-    current = current->next;
-  }
+  write_tests(tests, src);
 
   free(dest);
   fclose(dst_file);

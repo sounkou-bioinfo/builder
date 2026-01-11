@@ -13,5 +13,6 @@ int enter_test(char *line);
 Tests *create_test(char *description, char *expressions);
 void push_test(Tests **tests, Tests *test);
 void free_test(Tests *test);
+void write_tests(Tests *tests, const char *src);
 
 #endif
