@@ -65,7 +65,31 @@ char *ensure_dir(char *path)
 
 int clean(char *src, char *dst, Define **defs)
 {
-  return remove(src);
+  // Remove the output file
+  int result = remove(src);
+
+  // Also remove the corresponding test file
+  // Extract filename from src (e.g., "R/sub-main.R" -> "sub-main.R")
+  const char *filename = strrchr(src, '/');
+  if(filename == NULL) {
+    filename = src;
+  } else {
+    filename++;  // Skip the '/'
+  }
+
+  // Construct test filename: tests/testthat/test-builder-<filename>
+  size_t test_path_len = strlen("tests/testthat/test-builder-") + strlen(filename) + 1;
+  char *test_path = malloc(test_path_len);
+  if(test_path != NULL) {
+    snprintf(test_path, test_path_len, "tests/testthat/test-builder-%s", filename);
+
+    // Remove test file if it exists (don't report error if it doesn't)
+    remove(test_path);
+
+    free(test_path);
+  }
+
+  return result;
 }
 
 char *remove_leading_spaces(char *line)

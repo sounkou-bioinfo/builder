@@ -75,7 +75,7 @@ int main(int argc, char *argv[])
   int must_clean = !has_arg(argc, argv, "-noclean");
 
   if(must_clean) {
-    printf("%s Cleaning: %s\n", LOG_INFO, output);
+    printf("%s Cleaning: %s and testthat/\n", LOG_INFO, output);
     walk(output, output, clean, NULL);
   } else {
     printf("%s Not cleaning: %s\n", LOG_INFO, output);
