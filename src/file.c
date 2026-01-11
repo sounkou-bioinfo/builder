@@ -10,6 +10,7 @@
 #include "include.h"
 #include "fstring.h"
 #include "file.h"
+#include "test.h"
 #include "log.h"
 #include "r.h"
 
@@ -211,6 +212,9 @@ int copy(char *src, char *dst, Define **defs)
   int i = 0;
   char *istr = NULL;
 
+
+  Tests *tests = NULL;
+
   int is_macro = 0;
   int max_macro_lines = 1024;
   while(fgets(line, line_len, src_file) != NULL) {
@@ -275,6 +279,32 @@ int copy(char *src, char *dst, Define **defs)
     }
     char *deconstructed = deconstruct_replace(processed);
     char *processed_copy = strdup(deconstructed);
+
+    int test = enter_test(processed);
+    if(test) {
+      char *t = remove_leading_spaces(processed);
+      char *description = strdup(t + 6);
+      char *expressions = NULL;
+      printf("%s\n", description);
+      while(fgets(line, line_len, src_file) != NULL) {
+        t = remove_leading_spaces(line);
+        if(strncmp(t, "#endtest", 8) == 0) {
+          Tests *new_test = create_test(description, expressions);
+          push_test(&tests, new_test);
+          break;
+        }
+
+        if(expressions == NULL) {
+          expressions = (char *)malloc(strlen(t) - 1 + 1);
+          strcpy(expressions, t + 1);
+          continue;
+        }
+
+        expressions = realloc(expressions, strlen(expressions) + strlen(t) - 1 + 1);
+        strcat(expressions, t + 1);
+      }
+    }
+
     should_write = should_write_line(should_write, processed_copy, defs);
     free(processed_copy);
 
@@ -309,6 +339,14 @@ int copy(char *src, char *dst, Define **defs)
     if(fstring_result != line) {
       free(fstring_result);
     }
+  }
+
+  Tests *current = tests;
+  printf("v = %s\n", src);
+  while(current != NULL) {
+    printf("%s\n", current->description);
+    printf("%s\n", current->expressions);
+    current = current->next;
   }
 
   free(dest);
