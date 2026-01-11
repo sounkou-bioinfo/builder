@@ -20,7 +20,6 @@ Tests *create_test(char *description, char *expressions)
   test->description = (char *)malloc(strlen(description) + 1);
   strcpy(test->description, description);
 
-  // Handle NULL expressions (empty test block)
   if(expressions == NULL) {
     test->expressions = (char *)malloc(1);
     test->expressions[0] = '\0';
@@ -80,27 +79,23 @@ static int create_test_directory(const char *path)
 
 static char *make_test_filename(const char *src)
 {
-  // Find the last '/' to get the filename part
   const char *filename = strrchr(src, '/');
   if(filename == NULL) {
-    filename = src;  // No directory, use whole string
+    filename = src;
   } else {
-    filename++;  // Skip the '/'
+    filename++; 
   }
 
-  // Calculate subdirectory part (between first '/' and last '/')
   const char *first_slash = strchr(src, '/');
   char *subdir_part = NULL;
 
   if(first_slash != NULL && filename != first_slash + 1) {
-    // There's a subdirectory component
-    size_t subdir_len = filename - first_slash - 1;  // -1 to exclude final '/'
-    subdir_part = malloc(subdir_len + 2);  // +2 for '-' and null terminator
+    size_t subdir_len = filename - first_slash - 1;
+    subdir_part = malloc(subdir_len + 2);
     strncpy(subdir_part, first_slash + 1, subdir_len);
     subdir_part[subdir_len] = '-';
     subdir_part[subdir_len + 1] = '\0';
 
-    // Replace '/' with '-' in subdirectory part
     for(int i = 0; i < subdir_len; i++) {
       if(subdir_part[i] == '/') {
         subdir_part[i] = '-';
@@ -108,7 +103,6 @@ static char *make_test_filename(const char *src)
     }
   }
 
-  // Build final path: tests/testthat/test-builder-[subdir-]filename
   size_t len = strlen("tests/testthat/test-builder-") +
                (subdir_part ? strlen(subdir_part) : 0) +
                strlen(filename) + 1;
@@ -149,10 +143,8 @@ void write_tests(Tests *tests, const char *src)
 
   int tests_written = 0;
 
-  // Iterate through all tests and write them
   Tests *current = tests;
   while(current != NULL) {
-    // Skip empty tests and warn
     if(current->expressions == NULL || strlen(current->expressions) == 0) {
       printf("%s Skipping empty test: \"%s\"\n", LOG_WARNING, current->description);
       Tests *next = current->next;
