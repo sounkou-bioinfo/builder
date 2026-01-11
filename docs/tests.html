@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Builder</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/styles/atom-one-light.min.css"
+      media="(prefers-color-scheme: light)"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/styles/atom-one-dark.min.css"
+      media="(prefers-color-scheme: dark)"
+    />
+    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/highlight.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/languages/r.min.js"></script>
+  </head>
+  <body>
+    <main class="container">
+      <nav>
+        <ul>
+          <li>
+            <strong><a href="/">Builder</a></strong>
+          </li>
+        </ul>
+        <ul>
+          <li>
+            <details class="dropdown">
+              <summary>Docs</summary>
+              <ul dir="rtl">
+                <li><a href="/packages">Packages</a></li>
+                <li><a href="/directives">Directives</a></li>
+                <li><a href="/deconstruct">Deconstruct</a></li>
+                <li><a href="/macros">Macros</a></li>
+                <li><a href="/include">Include</a></li>
+                <li><a href="/fstrings">f-strings</a></li>
+                <li><a href="/tests">Tests</a></li>
+              </ul>
+            </details>
+          </li>
+        </ul>
+      </nav>
+      <h1>Tests</h1>
+
+      <p>
+        Builder automatically generates testthat test files from inline <code>#test</code> blocks
+        in your R source code. This allows you to keep tests close to the code they're testing
+        while maintaining a clean separation in the output.
+      </p>
+
+      <h2>How It Works</h2>
+
+      <p>
+        When Builder processes your source files, it:
+      </p>
+      <ul>
+        <li>Detects <code>#test</code> blocks in your source code</li>
+        <li>Extracts the test description and test expressions</li>
+        <li>Generates testthat test files in <code>tests/testthat/</code></li>
+        <li>Automatically creates the directory structure if needed</li>
+      </ul>
+
+      <h2>Syntax</h2>
+
+      <p>
+        Test blocks are defined using <code>#test</code> and <code>#endtest</code> directives:
+      </p>
+
+      <pre><code class="language-r">#test Description of what you're testing
+# expect_equal(my_function(), expected_value)
+# expect_true(some_condition)
+#endtest</code></pre>
+
+      <p><strong>Important notes:</strong></p>
+      <ul>
+        <li>The description comes on the same line as <code>#test</code></li>
+        <li>Test expressions must be prefixed with <code>#</code> (they're comments in source)</li>
+        <li>The leading <code>#</code> is automatically stripped in the generated test file</li>
+        <li>Empty test blocks (no expressions) are skipped with a warning</li>
+      </ul>
+
+      <h2>File Naming Convention</h2>
+
+      <p>
+        Generated test files follow this pattern:
+      </p>
+
+      <pre><code class="language-bash">tests/testthat/test-builder-&lt;filename&gt;</code></pre>
+
+      <p><strong>Examples:</strong></p>
+      <ul>
+        <li><code>srcr/main.R</code> → <code>tests/testthat/test-builder-main.R</code></li>
+        <li><code>srcr/sub/utils.R</code> → <code>tests/testthat/test-builder-sub-utils.R</code></li>
+      </ul>
+
+      <p>
+        Subdirectory paths are flattened using hyphens to keep all test files in a single directory.
+      </p>
+
+      <h2>Example</h2>
+
+      <p><strong>Input file (srcr/main.R):</strong></p>
+
+      <pre><code class="language-r">foo &lt;- function() {
+  return(1)
+}
+
+#test That it returns one!
+# expect_equal(foo(), 1)
+# expect_type(foo(), "double")
+#endtest</code></pre>
+
+      <p><strong>Command:</strong></p>
+
+      <pre><code class="language-bash">./builder -input srcr -output R</code></pre>
+
+      <p><strong>Generated test file (tests/testthat/test-builder-main.R):</strong></p>
+
+      <pre><code class="language-r">test_that("That it returns one!", {
+  expect_equal(foo(), 1)
+  expect_type(foo(), "double")
+})</code></pre>
+
+      <h2>Multiple Tests</h2>
+
+      <p>You can have multiple test blocks in a single source file:</p>
+
+      <pre><code class="language-r">add &lt;- function(a, b) {
+  return(a + b)
+}
+
+#test Addition works correctly
+# expect_equal(add(2, 3), 5)
+# expect_equal(add(-1, 1), 0)
+#endtest
+
+multiply &lt;- function(a, b) {
+  return(a * b)
+}
+
+#test Multiplication works correctly
+# expect_equal(multiply(2, 3), 6)
+# expect_equal(multiply(0, 5), 0)
+#endtest</code></pre>
+
+      <p>All tests from the same source file are collected into a single test file with multiple <code>test_that()</code> blocks.</p>
+
+      <h2>Cleaning Test Files</h2>
+
+      <p>
+        When Builder cleans the output directory (default behavior), it also automatically removes
+        the corresponding test files. This ensures a fresh build each time.
+      </p>
+
+      <pre><code class="language-bash"># Default: cleans R/ output and tests/testthat/ test files
+./builder -input srcr -output R
+
+# Skip cleaning with -noclean flag
+./builder -input srcr -output R -noclean</code></pre>
+
+      <h2>Integration with testthat</h2>
+
+      <p>
+        The generated test files are standard testthat format and can be run using:
+      </p>
+
+      <pre><code class="language-r"># In R console
+library(testthat)
+test_dir("tests/testthat")</code></pre>
+
+      <p>Or with the standard R CMD check workflow for package development.</p>
+
+      <h2>Best Practices</h2>
+
+      <ul>
+        <li><strong>Keep tests close to code</strong> - Write tests right after the functions they test</li>
+        <li><strong>Use descriptive names</strong> - Make test descriptions clear and specific</li>
+        <li><strong>One concern per test</strong> - Test one specific behavior per test block</li>
+        <li><strong>Include edge cases</strong> - Test boundary conditions and error cases</li>
+      </ul>
+
+      <h2>Limitations</h2>
+
+      <ul>
+        <li>Test expressions cannot span multiple lines without proper R continuation</li>
+        <li>The <code>#</code> prefix is required for all test expressions</li>
+        <li>Tests are removed from the processed R output (they remain as comments in source only)</li>
+      </ul>
+    </main>
+    <script>
+      hljs.highlightAll();
+    </script>
+  </body>
+</html>

@@ -26,6 +26,7 @@ DOCS_ORDER=(
     "macros"
     "include"
     "fstrings"
+    "tests"
 )
 
 # Show help message
