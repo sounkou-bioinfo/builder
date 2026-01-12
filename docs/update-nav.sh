@@ -27,6 +27,7 @@ DOCS_ORDER=(
     "include"
     "fstrings"
     "tests"
+    "const"
 )
 
 # Show help message

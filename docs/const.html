@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Builder - Constants</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/styles/atom-one-light.min.css"
+      media="(prefers-color-scheme: light)"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/styles/atom-one-dark.min.css"
+      media="(prefers-color-scheme: dark)"
+    />
+    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/highlight.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/languages/r.min.js"></script>
+  </head>
+  <body>
+    <main class="container">
+      <nav>
+        <ul>
+          <li>
+            <strong><a href="/">Builder</a></strong>
+          </li>
+        </ul>
+        <ul>
+          <li>
+            <details class="dropdown">
+              <summary>Docs</summary>
+              <ul dir="rtl">
+                <li><a href="/packages">Packages</a></li>
+                <li><a href="/directives">Directives</a></li>
+                <li><a href="/deconstruct">Deconstruct</a></li>
+                <li><a href="/macros">Macros</a></li>
+                <li><a href="/include">Include</a></li>
+                <li><a href="/fstrings">f-strings</a></li>
+                <li><a href="/tests">Tests</a></li>
+                <li><a href="/const">Constants</a></li>
+              </ul>
+            </details>
+          </li>
+        </ul>
+      </nav>
+      <h1>Constants</h1>
+      <p>
+        Builder provides a special syntax for creating constant (immutable)
+        bindings using the <code>-&lt;</code> operator. Once assigned, constant
+        values cannot be changed, providing safety against accidental
+        modification.
+      </p>
+      <h2>Basic Syntax</h2>
+      <p>
+        Use <code>-&lt;</code> instead of <code>&lt;-</code> to create a
+        constant binding.
+      </p>
+      <pre><code class="language-r">PI -&lt; 3.14159
+MAX_SIZE -&lt; 100</code></pre>
+      <p><strong>Expands to:</strong></p>
+      <pre><code class="language-r">PI &lt;- 3.14159;lockBinding(PI) &lt;- 3.14159;
+MAX_SIZE &lt;- 100;lockBinding(MAX_SIZE) &lt;- 100;</code></pre>
+      <h2>How It Works</h2>
+      <p>
+        The <code>-&lt;</code> operator is transformed during preprocessing into
+        a regular assignment followed by a <code>lockBinding()</code> call. This
+        prevents the variable from being reassigned later in the code.
+      </p>
+      <h2>Usage Examples</h2>
+      <h3>Defining Configuration Constants</h3>
+      <pre><code class="language-r">API_URL -&lt; "https://api.example.com"
+TIMEOUT -&lt; 30
+DEBUG -&lt; TRUE
+
+# Later attempts to modify will fail
+# API_URL &lt;- "different-url"  # Error: cannot change value of locked binding</code></pre>
+      <h3>Mathematical Constants</h3>
+      <pre><code class="language-r">EULER -&lt; 2.71828
+GOLDEN_RATIO -&lt; 1.61803
+
+calculate_growth &lt;- function(t) {
+  EULER ^ t  # Safe to use, cannot be accidentally changed
+}</code></pre>
+      <h3>Application Settings</h3>
+      <pre><code class="language-r">APP_NAME -&lt; "MyApp"
+VERSION -&lt; "1.0.0"
+MAX_RETRIES -&lt; 3
+
+print(f'{APP_NAME} v{VERSION}')</code></pre>
+      <h2>Benefits</h2>
+      <ul>
+        <li>
+          <strong>Safety:</strong> Prevents accidental modification of critical
+          values
+        </li>
+        <li>
+          <strong>Clarity:</strong> Makes it clear which values are meant to be
+          immutable
+        </li>
+        <li>
+          <strong>Protection:</strong> Using <code>lockBinding()</code> provides
+          R-level protection against reassignment
+        </li>
+        <li>
+          <strong>Convention:</strong> Provides a clean syntax for constant
+          declarations
+        </li>
+      </ul>
+      <h2>Important Notes</h2>
+      <ul>
+        <li>
+          Once a binding is locked, attempting to reassign it will result in an
+          error
+        </li>
+        <li>
+          The <code>-&lt;</code> syntax can be used with any R value: numbers,
+          strings, vectors, lists, functions, etc.
+        </li>
+        <li>
+          Whitespace around the <code>-&lt;</code> operator is automatically
+          handled during preprocessing
+        </li>
+        <li>
+          This is a compile-time transformation, so the locking happens when
+          your code runs
+        </li>
+      </ul>
+    </main>
+    <script>
+      hljs.highlightAll();
+    </script>
+  </body>
+</html>
