@@ -9,6 +9,7 @@
 #include "define.h"
 #include "include.h"
 #include "fstring.h"
+#include "const.h"
 #include "file.h"
 #include "test.h"
 #include "log.h"
@@ -302,11 +303,12 @@ int copy(char *src, char *dst, Define **defs)
       free(replaced);
     }
     char *deconstructed = deconstruct_replace(processed);
-    char *processed_copy = strdup(deconstructed);
+    char *cnst = replace_const(deconstructed);
+    char *processed_copy = strdup(cnst);
 
-    int test = enter_test(processed);
+    int test = enter_test(processed_copy);
     if(test) {
-      char *t = remove_leading_spaces(processed);
+      char *t = remove_leading_spaces(processed_copy);
       char *description = strdup(t + 6);
       // Remove trailing newline from description
       size_t desc_len = strlen(description);
@@ -337,7 +339,10 @@ int copy(char *src, char *dst, Define **defs)
     free(processed_copy);
 
     if(!should_write) {
-      free(deconstructed);
+      free(cnst);
+      if(deconstructed != cnst) {
+        free(deconstructed);
+      }
       if(processed != deconstructed) {
         free(processed);
       }
@@ -347,8 +352,11 @@ int copy(char *src, char *dst, Define **defs)
       continue;
     }
 
-    if(fputs(deconstructed, dst_file) == EOF) {
-      free(deconstructed);
+    if(fputs(cnst, dst_file) == EOF) {
+      free(cnst);
+      if(deconstructed != cnst) {
+        free(deconstructed);
+      }
       if(processed != deconstructed) {
         free(processed);
       }
@@ -360,7 +368,10 @@ int copy(char *src, char *dst, Define **defs)
       return 1;
     }
 
-    free(deconstructed);
+    free(cnst);
+    if(deconstructed != cnst) {
+      free(deconstructed);
+    }
     if(processed != deconstructed) {
       free(processed);
     }

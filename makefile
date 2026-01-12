@@ -13,7 +13,8 @@ FILES = src/main.c \
 	src/include.c \
 	src/fstring.c \
 	src/deconstruct.c \
-	src/test.c
+	src/test.c \
+	src/const.c
 
 build: $(FILES)
 	$(CC) $(CFLAGS) $(FLS) $^ -o bin/builder $(LDFLAGS)
