@@ -36,13 +36,11 @@ char *replace_const(char *line)
     }
   }
 
-  char *nl = (char *)malloc(strlen(";lockBinding(") + 1 + strlen(lhs) + 2 + strlen(" <- ") + strlen(pos) + 2);
+  char *nl = (char *)malloc(strlen(";lockBinding(\"") + strlen(lhs) + strlen("\", environment());") + 1);
   strcpy(nl, line);
-  strcat(nl, ";lockBinding(");
+  strcat(nl, ";lockBinding(\"");
   strcat(nl, lhs);
-  strcat(nl, ") <- ");
-  strcat(nl, pos);
-  strcat(nl, ";");
+  strcat(nl, "\", environment());");
   free(lhs);
 
   return nl;

@@ -63,8 +63,8 @@
       <pre><code class="language-r">PI -&lt; 3.14159
 MAX_SIZE -&lt; 100</code></pre>
       <p><strong>Expands to:</strong></p>
-      <pre><code class="language-r">PI &lt;- 3.14159;lockBinding(PI) &lt;- 3.14159;
-MAX_SIZE &lt;- 100;lockBinding(MAX_SIZE) &lt;- 100;</code></pre>
+      <pre><code class="language-r">PI &lt;- 3.14159;lockBinding("PI", environment());
+MAX_SIZE &lt;- 100;lockBinding("MAX_SIZE", environment());</code></pre>
       <h2>How It Works</h2>
       <p>
         The <code>-&lt;</code> operator is transformed during preprocessing into
