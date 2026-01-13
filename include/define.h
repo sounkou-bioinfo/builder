@@ -25,8 +25,7 @@ int define(Define **defines, char *line);
 char *define_replace(Define **defines, char *line);
 char *get_define_value(Define **defines, char *name);
 void print_defines(Define *defines);
-char *define_macro(char *line);
-void *define_macro_init(char **macro, char *line);
+void *define_macro_init(char **macro);
 char* str_replace(const char *orig, const char *find, const char *replace);
 
 #endif

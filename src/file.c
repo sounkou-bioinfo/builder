@@ -252,45 +252,51 @@ int copy(char *src, char *dst, Define **defs)
     is_macro = define(defs, line);
     if(is_macro) {
       char *macro;
-      define_macro_init(&macro, line);
+      define_macro_init(&macro);
 
-      // initial number of braces on first line
-      // #define macro_name(args) {...}
-      int braces = count_braces(line);
-      char *macro_name = define_macro(line);
-
+      // Syntax: 
+      // #define on its own line
+      // MACRO(arg1, arg2){
+      //  arg1 + arg2
+      // }
+      // #enddef
+      char *macro_name = NULL;
       int macro_lines = 0;
-      while(braces > 0 && macro_lines < max_macro_lines) {
-        while(fgets(line, line_len, src_file) != NULL) {
-          macro_lines++;
-          braces += count_braces(line);
+      int found_signature = 0;
 
-          if(strncmp(line, "# ", 2) == 0) {
-            memmove(line, line + 2, strlen(line + 2) + 1);
-          }
+      while(fgets(line, line_len, src_file) != NULL && macro_lines < max_macro_lines) {
+        macro_lines++;
 
-          if(strncmp(line, "#", 1) == 0) {
-            memmove(line, line + 1, strlen(line + 1) + 1);
-          }
+        if(strncmp(line, "#enddef", 7) == 0) {
+          break;
+        }
 
-          size_t l = strlen(macro) + strlen(line) + 1;
-          macro = realloc(macro, l);
-          strcat(macro, line);
-
-          // we're closing the macro
-          if(braces <= 0) {
-            break;
+        if(!found_signature) {
+          char *trimmed = line;
+          while(*trimmed == ' ' || *trimmed == '\t') trimmed++;
+          if(*trimmed != '\0' && *trimmed != '\n') {
+            char *paren = strchr(trimmed, '(');
+            if(paren) {
+              macro_name = strndup(trimmed, paren - trimmed);
+            }
+            found_signature = 1;
           }
         }
+
+        size_t l = strlen(macro) + strlen(line) + 1;
+        macro = realloc(macro, l);
+        strcat(macro, line);
+      }
+
+      if(macro_lines == max_macro_lines) {
+        printf("%s macro %s is too long (or failed to parse), reached %d lines\n", LOG_WARNING, macro_name ? macro_name : "<unknown>", macro_lines);
+        free(macro);
+        if(macro_name) free(macro_name);
+        is_macro = 0;
+        continue;
       }
 
       is_macro = 0;
-      if(macro_lines == max_macro_lines) {
-        printf("%s macro %s is too long (or failed to parse), reached %d lines\n", LOG_WARNING, macro, macro_lines);
-        free(macro);
-        free(macro_name);
-      }
-
       push((*defs), macro_name, macro, DEF_FUNCTION);
 
       continue;
@@ -308,16 +314,22 @@ int copy(char *src, char *dst, Define **defs)
 
     int test = enter_test(processed_copy);
     if(test) {
+      // Syntax: 
+      // #test Description
+      // expression1
+      // expression2
+      // #endtest
       char *t = remove_leading_spaces(processed_copy);
       char *description = strdup(t + 6);
-      // Remove trailing newline from description
       size_t desc_len = strlen(description);
       if(desc_len > 0 && description[desc_len - 1] == '\n') {
         description[desc_len - 1] = '\0';
       }
       char *expressions = NULL;
+
       while(fgets(line, line_len, src_file) != NULL) {
         t = remove_leading_spaces(line);
+
         if(strncmp(t, "#endtest", 8) == 0) {
           Tests *new_test = create_test(description, expressions);
           push_test(&tests, new_test);
@@ -325,13 +337,11 @@ int copy(char *src, char *dst, Define **defs)
         }
 
         if(expressions == NULL) {
-          expressions = (char *)malloc(strlen(t) - 1 + 1);
-          strcpy(expressions, t + 1);
-          continue;
+          expressions = strdup(t);
+        } else {
+          expressions = realloc(expressions, strlen(expressions) + strlen(t) + 1);
+          strcat(expressions, t);
         }
-
-        expressions = realloc(expressions, strlen(expressions) + strlen(t) - 1 + 1);
-        strcat(expressions, t + 1);
       }
     }
 

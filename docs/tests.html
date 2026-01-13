@@ -75,15 +75,14 @@
       </p>
 
       <pre><code class="language-r">#test Description of what you're testing
-# expect_equal(my_function(), expected_value)
-# expect_true(some_condition)
+expect_equal(my_function(), expected_value)
+expect_true(some_condition)
 #endtest</code></pre>
 
       <p><strong>Important notes:</strong></p>
       <ul>
         <li>The description comes on the same line as <code>#test</code></li>
-        <li>Test expressions must be prefixed with <code>#</code> (they're comments in source)</li>
-        <li>The leading <code>#</code> is automatically stripped in the generated test file</li>
+        <li>Test expressions are written as normal R code (no <code>#</code> prefix needed)</li>
         <li>Empty test blocks (no expressions) are skipped with a warning</li>
       </ul>
 
@@ -114,8 +113,8 @@
 }
 
 #test That it returns one!
-# expect_equal(foo(), 1)
-# expect_type(foo(), "double")
+expect_equal(foo(), 1)
+expect_type(foo(), "double")
 #endtest</code></pre>
 
       <p><strong>Command:</strong></p>
@@ -138,8 +137,8 @@
 }
 
 #test Addition works correctly
-# expect_equal(add(2, 3), 5)
-# expect_equal(add(-1, 1), 0)
+expect_equal(add(2, 3), 5)
+expect_equal(add(-1, 1), 0)
 #endtest
 
 multiply &lt;- function(a, b) {
@@ -147,8 +146,8 @@ multiply &lt;- function(a, b) {
 }
 
 #test Multiplication works correctly
-# expect_equal(multiply(2, 3), 6)
-# expect_equal(multiply(0, 5), 0)
+expect_equal(multiply(2, 3), 6)
+expect_equal(multiply(0, 5), 0)
 #endtest</code></pre>
 
       <p>All tests from the same source file are collected into a single test file with multiple <code>test_that()</code> blocks.</p>
@@ -191,8 +190,7 @@ test_dir("tests/testthat")</code></pre>
 
       <ul>
         <li>Test expressions cannot span multiple lines without proper R continuation</li>
-        <li>The <code>#</code> prefix is required for all test expressions</li>
-        <li>Tests are removed from the processed R output (they remain as comments in source only)</li>
+        <li>Tests are removed from the processed R output</li>
       </ul>
     </main>
     <script>

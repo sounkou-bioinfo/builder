@@ -126,43 +126,10 @@ void free_array(Define *arr)
   free(arr);
 }
 
-int is_macro(char *name)
+void *define_macro_init(char **macro)
 {
-  for(int i = 0; i < strlen(name); i++) {
-    if(name[i] == '(') {
-      return 1;
-    }
-  }
-
-  return 0;
-}
-
-void *define_macro_init(char **macro, char *line)
-{
-  *macro = malloc(strlen(line + 8) + 1);
-  if(*macro == NULL) {
-      return NULL;
-  }
-  strcpy(*macro, line + 8);
+  *macro = strdup("");
   return *macro;
-}
-
-char *define_macro(char *line)
-{
-  char *p = strstr(line, "#define");
-  if(!p) {
-    return p;
-  }
-
-  p+=8;
-  const char *start = p;
-
-  while (*p && *p != '(') {
-    p++;
-  }
-
-  int len = p - start;
-  return strndup(start, len);
 }
 
 int define(Define **defines, char *line)
@@ -171,6 +138,15 @@ int define(Define **defines, char *line)
     return 0;
   }
 
+  // Check if this is "#define" alone on a line (multiline macro syntax)
+  // Skip "#define" and check if only whitespace/newline remains
+  char *check = line + 7;
+  while(*check == ' ' || *check == '\t') check++;
+  if(*check == '\n' || *check == '\r' || *check == '\0') {
+    return 1;
+  }
+
+  // Simple variable define: #define NAME value
   char *token;
   char *copy = strdup(line);
   if(copy == NULL) {
@@ -189,15 +165,6 @@ int define(Define **defines, char *line)
   if(name_copy == NULL) {
     free(copy);
     return 0;
-  }
-
-  if(is_macro(name_copy)) {
-    // it's ugly but will do for now
-    // we just flag upstream that it's a function
-    // we do so because it may be multiline
-    free(name_copy);
-    free(copy);
-    return 1;
   }
 
   // check if already defined

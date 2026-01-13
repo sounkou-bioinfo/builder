@@ -72,18 +72,24 @@
       </ul>
       <h2>Basic Syntax</h2>
       <p>
-        Macros are defined using <code>#define</code> with a function-like
-        syntax. The macro body is enclosed in curly braces and can span multiple
-        lines.
+        Macros are defined using <code>#define</code> on its own line,
+        followed by the macro signature and body. The macro ends with
+        <code>#enddef</code>.
       </p>
       <p>
         <strong>Syntax:</strong>
-        <code>#define MACRO_NAME(arg1, arg2, ...) { body }</code>
       </p>
-      <pre><code class="language-r">#define LOG_EVAL(expr) {
-# cat("Evaluating stuff\n")
-# expr
-#}
+      <pre><code class="language-r">#define
+MACRO_NAME(arg1, arg2, ...){
+  body
+}
+#enddef</code></pre>
+      <pre><code class="language-r">#define
+LOG_EVAL(expr){
+  cat("Evaluating stuff\n")
+  expr
+}
+#enddef
 
 LOG_EVAL(sum(1, 1, 1))</code></pre>
       <p><strong>Expands to:</strong></p>
@@ -91,15 +97,16 @@ LOG_EVAL(sum(1, 1, 1))</code></pre>
 sum(1, 1, 1)</code></pre>
       <h2>Multiline Macro Bodies</h2>
       <p>
-        Macro bodies can contain multiple lines of R code. Lines within the
-        macro body should be prefixed with <code>#</code>. These prefixes are
-        stripped during expansion.
+        Macro bodies can contain multiple lines of R code with full syntax
+        highlighting support in your editor.
       </p>
-      <pre><code class="language-r">#define DEBUG_BLOCK(var, message) {
-# cat("Debug:", message, "\n")
-# cat("Value is", var, "\n")
-# cat("Type:", typeof(var), "\n")
-#}
+      <pre><code class="language-r">#define
+DEBUG_BLOCK(var, message){
+  cat("Debug:", message, "\n")
+  cat("Value is", var, "\n")
+  cat("Type:", typeof(var), "\n")
+}
+#enddef
 
 x &lt;- 42
 DEBUG_BLOCK(x, "Checking variable")</code></pre>
@@ -114,11 +121,13 @@ cat("Type:", typeof(x), "\n")</code></pre>
         is invoked. All occurrences of the parameter name will be substituted
         with the corresponding argument.
       </p>
-      <pre><code class="language-r">#define REPEAT(n, action) {
-# for (i in 1:n) {
-#   action
-# }
-#}
+      <pre><code class="language-r">#define
+REPEAT(n, action){
+  for (i in 1:n) {
+    action
+  }
+}
+#enddef
 
 REPEAT(3, print("Hello"))</code></pre>
       <p><strong>Expands to:</strong></p>
@@ -130,11 +139,13 @@ REPEAT(3, print("Hello"))</code></pre>
         Macros can accept multiple arguments, which are separated by commas in
         both the definition and invocation.
       </p>
-      <pre><code class="language-r">#define VALIDATE(value, min, max) {
-# if (value &lt; min || value &gt; max) {
-#   stop("Value out of range: ", value)
-# }
-#}
+      <pre><code class="language-r">#define
+VALIDATE(value, min, max){
+  if (value &lt; min || value &gt; max) {
+    stop("Value out of range: ", value)
+  }
+}
+#enddef
 
 x &lt;- 15
 VALIDATE(x, 0, 100)</code></pre>
@@ -145,23 +156,27 @@ if (x &lt; 0 || x &gt; 100) {
 }</code></pre>
       <h2>Practical Examples</h2>
       <h3>Logging Macro</h3>
-      <pre><code class="language-r">#define LOG(level, msg) {
-# cat("[", level, "] ", msg, "\n", sep = "")
-#}
+      <pre><code class="language-r">#define
+LOG(level, msg){
+  cat("[", level, "] ", msg, "\n", sep = "")
+}
+#enddef
 
 LOG("INFO", "Application started")
-LOG("ERROR", "Something went wrong")</code></pre>
+LOG("ERROR", "Something went wrong")</code></pre></invoke>
       <p><strong>Expands to:</strong></p>
       <pre><code class="language-r">cat("[", "INFO", "] ", "Application started", "\n", sep = "")
 cat("[", "ERROR", "] ", "Something went wrong", "\n", sep = "")</code></pre>
       <h3>Try-Catch Wrapper</h3>
-      <pre><code class="language-r">#define TRY_CATCH(code, error_msg) {
-# tryCatch({
-#   code
-# }, error = function(e) {
-#   cat(error_msg, ":", e$message, "\n")
-# })
-#}
+      <pre><code class="language-r">#define
+TRY_CATCH(code, error_msg){
+  tryCatch({
+    code
+  }, error = function(e) {
+    cat(error_msg, ":", e$message, "\n")
+  })
+}
+#enddef
 
 TRY_CATCH(risky_operation(), "Operation failed")</code></pre>
       <p><strong>Expands to:</strong></p>
@@ -171,13 +186,15 @@ TRY_CATCH(risky_operation(), "Operation failed")</code></pre>
   cat("Operation failed", ":", e$message, "\n")
 })</code></pre>
       <h3>Timing Macro</h3>
-      <pre><code class="language-r">#define TIME_IT(expr) {
-# start &lt;- Sys.time()
-# result &lt;- expr
-# end &lt;- Sys.time()
-# cat("Execution time:", end - start, "\n")
-# result
-#}
+      <pre><code class="language-r">#define
+TIME_IT(expr){
+  start &lt;- Sys.time()
+  result &lt;- expr
+  end &lt;- Sys.time()
+  cat("Execution time:", end - start, "\n")
+  result
+}
+#enddef
 
 TIME_IT(slow_computation())</code></pre>
       <p><strong>Expands to:</strong></p>
@@ -188,9 +205,10 @@ cat("Execution time:", end - start, "\n")
 result</code></pre>
       <h2>Important Notes</h2>
       <ul>
+        <li>Macros start with <code>#define</code> alone on a line</li>
+        <li>The macro signature and body follow on subsequent lines</li>
         <li>Macro bodies must be enclosed in curly braces <code>{}</code></li>
-        <li>Lines within macro bodies should start with <code>#</code></li>
-        <li>These line prefixes are automatically removed during expansion</li>
+        <li>Macros end with <code>#enddef</code></li>
         <li>
           Macros support multiline definitions and can span many lines (up to
           1024 lines)
@@ -200,8 +218,7 @@ result</code></pre>
           expressions that might be evaluated multiple times
         </li>
         <li>
-          Unlike simple <code>#define</code> constants, macros with parentheses
-          are treated as functions and expanded differently
+          Simple <code>#define NAME value</code> constants still work as before
         </li>
       </ul>
     </main>
