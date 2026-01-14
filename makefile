@@ -1,7 +1,7 @@
 CC = $(shell R CMD config CC)
 CFLAGS = $(shell R CMD config --cppflags)
 LDFLAGS = $(shell R CMD config --ldflags)
-FLS = -Wall -Iinclude
+FLS = -Wall -Iinclude -s
 CMD = ./bin/builder -input srcr -DDEBUG -DTEST '"a string"' -DXXX 42
 
 FILES = src/main.c \
