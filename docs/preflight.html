@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Builder</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/styles/atom-one-light.min.css"
+      media="(prefers-color-scheme: light)"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/styles/atom-one-dark.min.css"
+      media="(prefers-color-scheme: dark)"
+    />
+    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/highlight.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/languages/r.min.js"></script>
+  </head>
+  <body>
+    <main class="container">
+      <nav>
+        <ul>
+          <li>
+            <strong><a href="/">Builder</a></strong>
+          </li>
+        </ul>
+        <ul>
+          <li>
+            <details class="dropdown">
+              <summary>Docs</summary>
+              <ul dir="rtl">
+                <li><a href="/packages">Packages</a></li>
+                <li><a href="/directives">Directives</a></li>
+                <li><a href="/deconstruct">Deconstruct</a></li>
+                <li><a href="/macros">Macros</a></li>
+                <li><a href="/include">Include</a></li>
+                <li><a href="/fstrings">f-strings</a></li>
+                <li><a href="/tests">Tests</a></li>
+                <li><a href="/const">Constants</a></li>
+                <li><a href="/preflight">Preflight</a></li>
+              </ul>
+            </details>
+          </li>
+        </ul>
+      </nav>
+      <h1>Preflight</h1>
+
+      <p>
+        Preflight blocks allow you to run R code <strong>before</strong> the main preprocessing phase.
+        This is useful for validation checks, environment verification, or early-exit conditions
+        that should halt the build if requirements aren't met.
+      </p>
+
+      <h2>How It Works</h2>
+
+      <p>
+        When Builder encounters a <code>#preflight</code> block during processing, it:
+      </p>
+      <ul>
+        <li>Extracts all R code between <code>#preflight</code> and the end marker</li>
+        <li>Immediately evaluates the R code</li>
+        <li>If the code fails (throws an error), the build stops</li>
+        <li>If successful, preprocessing continues normally</li>
+      </ul>
+
+      <p>
+        The preflight code is executed as-is and is <strong>not</strong> subject to
+        preprocessor directives or macro expansion.
+      </p>
+
+      <h2>Syntax</h2>
+
+      <p>
+        Preflight blocks are defined using <code>#preflight</code> and closed with
+        either <code>#endpreflight</code> or the shorthand <code>#endflight</code>:
+      </p>
+
+      <pre><code class="language-r">#preflight
+# Your R validation code here
+if(!condition) stop("Requirement not met")
+#endflight</code></pre>
+
+      <h2>Example: Version Check</h2>
+
+      <p>
+        A common use case is verifying the R version meets minimum requirements:
+      </p>
+
+      <pre><code class="language-r">#preflight
+rver <- version$major |>
+  as.integer()
+
+if(rver < 4)
+  stop("We need R version 4.x.x at least")
+#endflight
+
+# Rest of your code continues here...
+foo <- function() {
+  return(1)
+}</code></pre>
+
+      <p>
+        If the R version is less than 4, the build will halt immediately with the
+        error message. Otherwise, preprocessing continues normally.
+      </p>
+
+      <h2>Example: Package Check</h2>
+
+      <p>
+        You can verify required packages are available before building:
+      </p>
+
+      <pre><code class="language-r">#preflight
+required <- c("dplyr", "ggplot2", "tidyr")
+missing <- required[!sapply(required, requireNamespace, quietly = TRUE)]
+
+if(length(missing) > 0)
+  stop("Missing required packages: ", paste(missing, collapse = ", "))
+#endpreflight</code></pre>
+
+      <h2>Example: Environment Check</h2>
+
+      <p>
+        Validate environment variables or system requirements:
+      </p>
+
+      <pre><code class="language-r">#preflight
+api_key <- Sys.getenv("API_KEY")
+if(nchar(api_key) == 0)
+  stop("API_KEY environment variable must be set")
+
+if(.Platform$OS.type != "unix")
+  warning("This package is optimized for Unix systems")
+#endflight</code></pre>
+
+      <h2>End Markers</h2>
+
+      <p>
+        Two end markers are supported:
+      </p>
+      <ul>
+        <li><code>#endpreflight</code> - The formal closing tag</li>
+        <li><code>#endflight</code> - A convenient shorthand</li>
+      </ul>
+
+      <p>Both are functionally equivalent.</p>
+
+      <h2>Behavior on Failure</h2>
+
+      <p>
+        When preflight code fails:
+      </p>
+      <ul>
+        <li>The error message is displayed</li>
+        <li>Builder exits with a non-zero status code</li>
+        <li>No output files are generated</li>
+      </ul>
+
+      <p>
+        This makes preflight checks ideal for CI/CD pipelines where you want builds
+        to fail fast if requirements aren't met.
+      </p>
+
+      <h2>Placement</h2>
+
+      <p>
+        Preflight blocks can appear anywhere in your source file, but are typically
+        placed at the top before any other code. The block is processed when encountered
+        during the sequential file reading.
+      </p>
+
+      <h2>Best Practices</h2>
+
+      <ul>
+        <li><strong>Fail early</strong> - Place preflight blocks at the top of your main source file</li>
+        <li><strong>Clear error messages</strong> - Use descriptive <code>stop()</code> messages</li>
+        <li><strong>Check essentials only</strong> - Keep preflight checks focused on build requirements</li>
+        <li><strong>Use warnings wisely</strong> - Use <code>warning()</code> for non-fatal issues</li>
+      </ul>
+
+      <h2>Limitations</h2>
+
+      <ul>
+        <li>Preflight code is not preprocessed (no macros, no <code>#define</code> substitution)</li>
+        <li>The code block must be valid R syntax on its own</li>
+        <li>Output from preflight code is not captured in any output files</li>
+      </ul>
+    </main>
+    <script>
+      hljs.highlightAll();
+    </script>
+  </body>
+</html>
