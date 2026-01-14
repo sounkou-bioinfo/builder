@@ -14,6 +14,7 @@ FILES = src/main.c \
 	src/fstring.c \
 	src/deconstruct.c \
 	src/test.c \
+	src/preflight.c \
 	src/const.c
 
 build: $(FILES)

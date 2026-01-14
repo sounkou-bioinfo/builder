@@ -6,6 +6,7 @@
 #include <regex.h>
 
 #include "deconstruct.h"
+#include "preflight.h"
 #include "define.h"
 #include "include.h"
 #include "fstring.h"
@@ -247,6 +248,20 @@ int copy(char *src, char *dst, Define **defs)
     asprintf(&istr, "%d", i);
     overwrite(defs, "__LINE__", istr);
     free(istr);
+
+    if(starts_preflight(line)) {
+      char *pf = strdup(line);
+      while(fgets(line, line_len, src_file) != NULL && !ends_preflight(line)){
+        pf = realloc(pf, strlen(pf) + strlen(line) + 1);
+        strcat(pf, line);
+      }
+
+      printf("%s Running preflight checks\n", LOG_INFO);
+      SEXP result = evaluate(pf);
+      if(result == NULL) {
+        return 1;
+      }
+    }
 
     // this is such a fukcing mess man
     is_macro = define(defs, line);

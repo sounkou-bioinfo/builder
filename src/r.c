@@ -49,7 +49,7 @@ SEXP evaluate(char *expr)
   if (status != PARSE_OK) {
     UNPROTECT(2);
     printf("%s Parsing expression `%s`\n", LOG_ERROR, remove_trailing_newline(expr));
-    return 0;
+    return NULL;
   }
 
   result = PROTECT(R_tryEval(VECTOR_ELT(parsed, 0), R_GlobalEnv, &has_error));
@@ -57,7 +57,7 @@ SEXP evaluate(char *expr)
   if (has_error) {
     UNPROTECT(3);
     printf("%s Evaluating expression `%s`\n", LOG_ERROR, remove_trailing_newline(expr));
-    return 0;
+    return NULL;
   }
 
   UNPROTECT(3);
