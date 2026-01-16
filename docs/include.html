@@ -104,9 +104,11 @@
         The most common use case is reading text files like SQL queries. First,
         define a macro that specifies how to read the file:
       </p>
-      <pre><code class="language-r">#define READ(path){
-# readLines(path)
-#}
+      <pre><code class="language-r">#define
+READ(path){
+  readLines(path)
+}
+#enddef
 
 #include:READ sql/query.sql my_query</code></pre>
       <p><strong>Expands to:</strong></p>
@@ -148,9 +150,11 @@
         You might want to read a multi-line SQL file and collapse it into a
         single string:
       </p>
-      <pre><code class="language-r">#define READ_SQL(path){
-# readLines(path) |&gt; paste(collapse = " ")
-#}
+      <pre><code class="language-r">#define
+READ_SQL(path){
+  readLines(path) |&gt; paste(collapse = " ")
+}
+#enddef
 
 #include:READ_SQL queries/get_users.sql user_query</code></pre>
       <p>If <code>queries/get_users.sql</code> contains:</p>
@@ -165,9 +169,11 @@ ORDER BY name</code></pre>
         You can use <code>#include</code> to embed JSON configuration at build
         time:
       </p>
-      <pre><code class="language-r">#define READ_JSON(path){
-# jsonlite::fromJSON(path, simplifyVector = FALSE)
-#}
+      <pre><code class="language-r">#define
+READ_JSON(path){
+  jsonlite::fromJSON(path, simplifyVector = FALSE)
+}
+#enddef
 
 #include:READ_JSON config/settings.json app_config</code></pre>
       <p>If <code>config/settings.json</code> contains:</p>
@@ -180,16 +186,20 @@ ORDER BY name</code></pre>
       <pre><code class="language-r">app_config &lt;- list(api_url = "https://api.example.com", timeout = 30, debug = FALSE)</code></pre>
       <h3>Reading CSV Data</h3>
       <p>Embed small lookup tables or static data directly in your code:</p>
-      <pre><code class="language-r">#define READ_CSV(path){
-# read.csv(path)
-#}
+      <pre><code class="language-r">#define
+READ_CSV(path){
+  read.csv(path)
+}
+#enddef
 
 #include:READ_CSV data/lookup_table.csv lookup_data</code></pre>
       <h3>Reading Template Files</h3>
       <p>Read template strings for reports or emails:</p>
-      <pre><code class="language-r">#define READ_TEMPLATE(path){
-# readLines(path) |&gt; paste(collapse = "\n")
-#}
+      <pre><code class="language-r">#define
+READ_TEMPLATE(path){
+  readLines(path) |&gt; paste(collapse = "\n")
+}
+#enddef
 
 #include:READ_TEMPLATE templates/email_body.txt email_template</code></pre>
       <h2>Important Notes</h2>
