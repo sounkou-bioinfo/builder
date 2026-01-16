@@ -6,7 +6,7 @@
 #include "log.h"
 #include "r.h"
 
-Plugins *create_plugins(char *name, int setup, SEXP ns, SEXP fn)
+Plugins *create_plugins(char *name, int setup, SEXP obj)
 {
   Plugins *plugins = malloc(sizeof(Plugins));
   if(plugins == NULL) {
@@ -16,20 +16,19 @@ Plugins *create_plugins(char *name, int setup, SEXP ns, SEXP fn)
 
   plugins->name = strdup(name);
   plugins->setup = setup;
-  plugins->ns = ns;
-  plugins->fn = fn;
+  plugins->obj = obj;
   plugins->next = NULL;
 
   return plugins;
 }
 
-Plugins *push_plugins(Plugins *head, char *name, int setup, SEXP ns, SEXP fn)
+Plugins *push_plugins(Plugins *head, char *name, int setup, SEXP obj)
 {
   if(head == NULL) {
-    return create_plugins(name, setup, ns, fn);
+    return create_plugins(name, setup, obj);
   }
 
-  Plugins *new = create_plugins(name, setup, ns, fn);
+  Plugins *new = create_plugins(name, setup, obj);
   if(new == NULL) {
     return NULL;
   }
@@ -67,23 +66,31 @@ Plugins *plugins_init(Value *plugins, char *input, char *output)
 
     if(result == NULL) {
       printf("%s Failed to initialize plugin: %s\n", LOG_ERROR, current->name);
-      head = push_plugins(head, current->name, 0, R_NilValue, R_NilValue);
+      head = push_plugins(head, current->name, 0, R_NilValue);
       current = current->next;
       continue;
     }
 
     SEXP obj = PROTECT(findVar(install(current->name), R_GlobalEnv));
 
-    SEXP setup_call = PROTECT(lang3(obj, mkString(input), mkString(output)));
+    SEXP setup_func = PROTECT(
+      eval(
+        lang3(install("$"), obj, install("setup")), R_GlobalEnv
+      )
+    );
 
-    if(setup_call == NULL) {
+    SEXP setup_call = PROTECT(lang3(setup_func, mkString(input), mkString(output)));
+    result = PROTECT(eval(setup_call, R_GlobalEnv));
+    UNPROTECT(3);
+
+    if(result == NULL) {
       printf("%s Failed to initialize plugin: %s\n", LOG_ERROR, current->name);
-      head = push_plugins(head, current->name, 0, R_NilValue, R_NilValue);
+      head = push_plugins(head, current->name, 0, R_NilValue);
       current = current->next;
       continue;
     }
 
-    head = push_plugins(head, current->name, 1, ns, func);
+    head = push_plugins(head, current->name, 1, obj);
 
     printf("%s Initialized plugin: %s\n", LOG_INFO, current->name);
 
@@ -103,4 +110,12 @@ int plugins_failed(Plugins *head)
     current = current->next;
   }
   return 0;
+}
+
+void plugins_call(Plugins *head, char *fn, char *str)
+{
+  Plugins *current = head;
+  while(current != NULL) {
+    current = current->next;
+  }
 }

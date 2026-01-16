@@ -7,8 +7,7 @@
 struct Plugins_t {
   char *name;
   int setup;
-  SEXP ns;
-  SEXP fn;
+  SEXP obj;
   struct Plugins_t *next;
 };
 
