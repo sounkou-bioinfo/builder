@@ -334,7 +334,7 @@ int copy(char *src, char *dst, Define **defs, Plugins *plugins)
 
     char *fstring_result = fstring_replace(line, 0);
     char *replaced = define_replace(defs, fstring_result);
-    char *processed = include_replace(defs, replaced);
+    char *processed = include_replace(defs, replaced, plugins);
     if(processed != replaced) {
       free(replaced);
     }
