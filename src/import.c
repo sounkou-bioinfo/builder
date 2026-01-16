@@ -69,3 +69,31 @@ void import_defines(Define **defines, Value *paths)
     current = current->next;
   }
 }
+
+int import_defines_from_line(Define **defines, char *line)
+{
+  char *import = strstr(line, "#import ");
+  if(import == NULL) {
+    return 0;
+  }
+
+  import += 8;
+
+  size_t len = strlen(import);
+  if(len > 0 && import[len - 1] == '\n') {
+    import[len - 1] = '\0';
+  }
+
+  char *path = get_path(import);
+  FILE *file = fopen(path, "r");
+  free(path);
+
+  char ln[1024];
+
+  while(fgets(ln, sizeof(ln), file) != NULL) {
+    define(defines, ln);
+  }
+  fclose(file);
+
+  return 1;
+}

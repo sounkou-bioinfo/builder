@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
     printf("  -noclean              Skip cleaning output directory before processing\n");
     printf("  -D<NAME>              Define directives, e.g.: -DDEBUG -DVALUE 42\n");
     printf("  -plugins              Use plugins, e.g.: -plugins pkg::plugin pkg::plugin2\n");
-    printf("  -imports              Import .rh files, e.g.: -imports inst/main.rh pkg::main.rh\n");
+    printf("  -import               Import .rh files, e.g.: -imports inst/main.rh pkg::main.rh\n");
     printf("  -help                 Show this help message\n");
     printf("\n");
     printf("Example:\n");
@@ -77,7 +77,7 @@ int main(int argc, char *argv[])
   Define *defines = create_define();
   get_definitions(defines, argc, argv);
 
-  Value *imports = get_arg_values(argc, argv, "-imports");
+  Value *imports = get_arg_values(argc, argv, "-import");
   if(imports != NULL) {
     printf("%s Importing header files:", LOG_INFO);
     Value *current = imports;

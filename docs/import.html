@@ -52,9 +52,11 @@
       </nav>
       <h1>Import</h1>
       <p>
-        The <code>#import</code> directive allows you to import macro definitions
+        The import feature allows you to import macro definitions
         from external files. This enables sharing macro definitions across
         multiple projects or organizing macros into separate, reusable files.
+        You can import macros using either the <code>#import</code> directive
+        in your source files or the <code>-import</code> flag from the CLI.
       </p>
       <h2>Advantages</h2>
       <ul>
@@ -84,6 +86,34 @@
         <strong>Syntax:</strong>
         <code>#import file_path</code>
       </p>
+      <h2>CLI Usage</h2>
+      <p>
+        You can also import macro definitions using the <code>-import</code>
+        CLI flag. This achieves the same result as the <code>#import</code>
+        directive but allows you to specify imports at build time without
+        modifying source files.
+      </p>
+      <p>
+        <strong>Syntax:</strong>
+        <code>builder -import &lt;path1&gt; [&lt;path2&gt; ...]</code>
+      </p>
+      <p>
+        The <code>-import</code> flag accepts multiple file paths and supports
+        both direct paths and package references using the <code>pkg::path</code>
+        syntax.
+      </p>
+      <h3>Example</h3>
+      <pre><code class="language-bash"># Import a single file
+builder -import macros.rh input.R -o output.R
+
+# Import multiple files
+builder -import common/logging.rh common/validation.rh input.R -o output.R
+
+# Import from a package
+builder -import mymacros::macros/utils.rh input.R -o output.R
+
+# Combine with other flags
+builder -import macros.rh -w input.R -o output.R</code></pre>
       <h2>Basic Example</h2>
       <p>
         Create a file with macro definitions (e.g., <code>macros.rh</code>):
@@ -107,6 +137,11 @@ my_function &lt;- function() {
   # ... code ...
   DEBUG("Intermediate value")
 }</code></pre>
+      <p>
+        Alternatively, you can omit the <code>#import</code> directive from
+        your source file and use the CLI flag instead:
+      </p>
+      <pre><code class="language-bash">builder -import macros.rh main.R -o output.R</code></pre>
       <h2>Package Path Syntax</h2>
       <p>
         You can import macros from installed R packages using the
@@ -129,8 +164,9 @@ my_function &lt;- function() {
       <p>
         This resolves to the file at
         <code>system.file("macros/utils.rh", package = "mymacros")</code>
-        within the installed package.
+        within the installed package. The same can be achieved via CLI:
       </p>
+      <pre><code class="language-bash">builder -import mymacros::macros/utils.rh main.R -o output.R</code></pre>
       <h2>Multiple Imports</h2>
       <p>You can use multiple import statements to combine macros from different sources:</p>
       <pre><code class="language-r">#import common/logging.rh
@@ -143,6 +179,8 @@ my_function &lt;- function(x) {
   result &lt;- HELPER_TRANSFORM(x)
   return(result)
 }</code></pre>
+      <p>Or via CLI with all imports in a single command:</p>
+      <pre><code class="language-bash">builder -import common/logging.rh common/validation.rh mypackage::macros/helpers.rh main.R -o output.R</code></pre>
       <h2>Import File Format</h2>
       <p>
         Imported files should contain <code>#define</code> blocks. Each line

@@ -8,6 +8,7 @@
 #include "deconstruct.h"
 #include "preflight.h"
 #include "plugins.h"
+#include "import.h"
 #include "define.h"
 #include "include.h"
 #include "fstring.h"
@@ -278,6 +279,11 @@ int copy(char *src, char *dst, Define **defs, Plugins *plugins)
       }
     }
 
+    int imported = import_defines_from_line(defs, line);
+    if(imported) {
+      continue;
+    }
+
     // this is such a fukcing mess man
     is_macro = define(defs, line);
     if(is_macro) {
@@ -444,6 +450,7 @@ int walk(char *src_dir, char *dst_dir, Callback func, Define **defs, Plugins *pl
     if (entry->d_type == DT_DIR) {
       walk(path, dst_dir, func, defs, plugins);
     } else {
+      if(strcmp(path, ".R") != 0) continue;
       func(path, dst_dir, defs, plugins);
     }
   }
