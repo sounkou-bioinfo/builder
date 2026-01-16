@@ -152,7 +152,7 @@ char *plugins_call(Plugins *head, char *fn, char *str)
     }
 
     if(result == R_NilValue) {
-      if(str != NULL) {
+      if(str != NULL && strcmp(fn, "include") != 0) {
         printf("%s Plugin %s call to %s() returns NULL\n", LOG_WARNING, current->name, fn);
       }
       current = current->next;
