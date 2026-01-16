@@ -402,7 +402,7 @@ int walk(char *src_dir, char *dst_dir, Callback func, Define **defs, Plugins *pl
       walk(path, dst_dir, func, defs, plugins);
     } else {
       char *ext = strrchr(path, '.');
-      if(strcmp(ext, ".R") != 0) continue;
+      if(strcmp(ext, ".R") != 0 && strcmp(ext, ".r") != 0) continue;
       func(path, dst_dir, defs, plugins);
     }
   }
