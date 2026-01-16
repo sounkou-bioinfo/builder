@@ -76,6 +76,10 @@
           <strong>Build-time resolution:</strong> Imports are resolved at build
           time, with no runtime overhead.
         </li>
+        <li>
+          <strong>Automatic namespacing:</strong> Package imports are
+          automatically namespaced to prevent macro name collisions.
+        </li>
       </ul>
       <h2>Basic Syntax</h2>
       <p>
@@ -149,23 +153,32 @@ my_function &lt;- function() {
         <strong>Syntax:</strong>
         <code>#import packagename::path/to/file</code>
       </p>
+      <p>
+        When importing from a package, macros are automatically namespaced with
+        the package name&mdash;similar to R's <code>pkg::function()</code>
+        convention. This prevents collisions when importing macros from multiple
+        packages.
+      </p>
       <h3>Example</h3>
       <p>Import macros from a package called <code>mymacros</code>:</p>
       <pre><code class="language-r">#import mymacros::macros/utils.rh
 
 my_function &lt;- function() {
-  UTIL_MACRO("value")
+  mymacros::UTIL_MACRO("value")
 }</code></pre>
       <p>
         This resolves to the file at
         <code>system.file("macros/utils.rh", package = "mymacros")</code>
-        within the installed package. The same can be achieved via CLI:
+        within the installed package. The macro <code>UTIL_MACRO</code> becomes
+        <code>mymacros::UTIL_MACRO</code> due to automatic namespacing. The same
+        can be achieved via CLI:
       </p>
       <pre><code class="language-bash">builder -import mymacros::macros/utils.rh main.R -o output.R</code></pre>
       <h2>Multiple Imports</h2>
       <p>
         You can use multiple import statements to combine macros from different
-        sources:
+        sources. Local imports retain their original names, while package imports
+        are namespaced:
       </p>
       <pre><code class="language-r">#import common/logging.rh
 #import common/validation.rh
@@ -174,7 +187,7 @@ my_function &lt;- function() {
 my_function &lt;- function(x) {
   LOG("Processing input")
   VALIDATE_INPUT(x)
-  result &lt;- HELPER_TRANSFORM(x)
+  result &lt;- mypackage::HELPER_TRANSFORM(x)
   return(result)
 }</code></pre>
       <p>Or via CLI with all imports in a single command:</p>
@@ -208,6 +221,11 @@ MACRO_TWO(a, b){
         <li>
           Package paths require the package to be installed in your R
           environment.
+        </li>
+        <li>
+          Package imports (<code>pkg::path</code>) automatically namespace
+          macros with the package name (e.g., <code>MACRO</code> becomes
+          <code>pkg::MACRO</code>). Local file imports are not namespaced.
         </li>
         <li>
           Imported macros are merged with any macros defined directly in your

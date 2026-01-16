@@ -132,7 +132,7 @@ void *define_macro_init(char **macro)
   return *macro;
 }
 
-int ingest_macro(Define **defs, FILE *src_file, size_t line_len)
+int ingest_macro(Define **defs, FILE *src_file, size_t line_len, char *namespace)
 {
   char *macro;
   define_macro_init(&macro);
@@ -174,11 +174,20 @@ int ingest_macro(Define **defs, FILE *src_file, size_t line_len)
     return 1;
   }
 
+  if(namespace != NULL) {
+    char *ccopy = strdup(macro_name);
+    macro_name = realloc(macro_name, strlen(macro_name) + strlen(namespace) + 3);
+    strcpy(macro_name, namespace);
+    strcat(macro_name, "::");
+    strcat(macro_name, ccopy);
+    free(ccopy);
+  }
+
   push((*defs), macro_name, macro, DEF_FUNCTION);
   return 0;
 }
 
-int define(Define **defines, char *line)
+int define(Define **defines, char *line, char *namespace)
 {
   if(strncmp(line, "#define", 7) != 0) {
     return 0;
@@ -245,6 +254,15 @@ int define(Define **defines, char *line)
         }
       }
     }
+  }
+
+  if(namespace != NULL) {
+    char *ccopy = strdup(name_copy);
+    name_copy = realloc(name_copy, strlen(name_copy) + strlen(namespace) + 3);
+    strcpy(name_copy, namespace);
+    strcat(name_copy, "::");
+    strcat(name_copy, ccopy);
+    free(ccopy);
   }
 
   push(*defines, name_copy, value_copy, DEF_VARIABLE);

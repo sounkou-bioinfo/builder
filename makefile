@@ -5,7 +5,7 @@ FLS = -Wall -Iinclude -s
 CMD = ./bin/builder \
 			-input srcr \
 			-DDEBUG -DTEST '"a string"' -DXXX 42 \
-			-import piper::main.rh \
+			-import builder.r::generate.rh \
 			-plugin piper::plugin minifier::plugin
 
 FILES = src/main.c \

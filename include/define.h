@@ -25,12 +25,12 @@ void push(Define *arr, char *name, char *value, DefineType type);
 void overwrite(Define **arr, char *name, char *value);
 void push_builtins(Define *arr);
 void free_array(Define *arr);
-int define(Define **defines, char *line);
+int define(Define **defines, char *line, char *namespace);
 char *define_replace(Define **defines, char *line);
 char *get_define_value(Define **defines, char *name);
 void print_defines(Define *defines);
 void *define_macro_init(char **macro);
-int ingest_macro(Define **defs, FILE *src_file, size_t line_len);
+int ingest_macro(Define **defs, FILE *src_file, size_t line_len, char *namespace);
 char* str_replace(const char *orig, const char *find, const char *replace);
 void import_defines(Define **defines, Value *paths);
 

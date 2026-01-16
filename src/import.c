@@ -49,6 +49,16 @@ char *get_path(char *path)
   return strdup(path);
 }
 
+char *get_namespace(char *path)
+{
+  if(strstr(path, "::") != NULL) {
+    char *token = strtok(path, ":");
+    return token;
+  }
+
+  return NULL;
+}
+
 void import_defines(Define **defines, Value *paths)
 {
   if(paths == NULL) {
@@ -60,11 +70,12 @@ void import_defines(Define **defines, Value *paths)
   Value *current = paths;
   while(current != NULL) {
     char *path = get_path(current->name);
+    char *namespace = get_namespace(current->name);
     FILE *file = fopen(path, "r");
     free(path);
     while(fgets(line, sizeof(line), file) != NULL) {
-      if(define(defines, line)) {
-        ingest_macro(defines, file, sizeof(line));
+      if(define(defines, line, namespace)) {
+        ingest_macro(defines, file, sizeof(line), namespace);
       }
     }
     fclose(file);
@@ -87,14 +98,15 @@ int import_defines_from_line(Define **defines, char *line)
   }
 
   char *path = get_path(import);
+  char *namespace = get_namespace(import);
   FILE *file = fopen(path, "r");
   free(path);
 
   char ln[1024];
 
   while(fgets(ln, sizeof(ln), file) != NULL) {
-    if(define(defines, ln)) {
-      ingest_macro(defines, file, sizeof(ln));
+    if(define(defines, ln, namespace)) {
+      ingest_macro(defines, file, sizeof(ln), namespace);
     }
   }
   fclose(file);

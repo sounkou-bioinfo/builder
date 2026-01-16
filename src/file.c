@@ -283,9 +283,9 @@ int copy(char *src, char *dst, Define **defs, Plugins *plugins)
       continue;
     }
 
-    is_macro = define(defs, line);
+    is_macro = define(defs, line, NULL);
     if(is_macro) {
-      ingest_macro(defs, src_file, line_len);
+      ingest_macro(defs, src_file, line_len, NULL);
       continue;
     }
 
