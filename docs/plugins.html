@@ -57,8 +57,8 @@
       </p>
 
       <h2>Usage</h2>
-      <p>Specify plugins with the <code>-plugins</code> flag:</p>
-      <pre><code>./builder -input srcr -plugins package::function</code></pre>
+      <p>Specify plugins with the <code>-plugin</code> flag:</p>
+      <pre><code>./builder -input srcr -plugin package::function</code></pre>
       <p>
         The format is <code>package::function</code> where
         <code>package</code> is the R package name and <code>function</code> is
@@ -106,7 +106,7 @@ plugin &lt;- function() {
   )
 }</code></pre>
       <p>
-        Use it with <code>-plugins minifier::plugin</code>. Methods that don't
+        Use it with <code>-plugin minifier::plugin</code>. Methods that don't
         need to modify content can return <code>NULL</code> or be empty. Use
         <code>...</code> in function signatures for forward compatibility.
       </p>
