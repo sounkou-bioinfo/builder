@@ -85,7 +85,7 @@ int main(int argc, char *argv[])
     printf("\n");
   }
 
-  Plugins *plugins = plugins_init(plugins_str);
+  Plugins *plugins = plugins_init(plugins_str, input, output);
   int p_failed = plugins_failed(plugins);
   if(p_failed) {
     printf("%s Failed to initialize plugin(s) - stopping execution\n", LOG_ERROR);
@@ -95,12 +95,12 @@ int main(int argc, char *argv[])
 
   if(must_clean) {
     printf("%s Cleaning: %s and testthat/\n", LOG_INFO, output);
-    walk(output, output, clean, NULL, plugins_str);
+    walk(output, output, clean, NULL, plugins);
   } else {
     printf("%s Not cleaning: %s\n", LOG_INFO, output);
   }
 
-  walk(input, output, copy, &defines, plugins_str);
+  walk(input, output, copy, &defines, plugins);
 
   free(input);
   free(output);
