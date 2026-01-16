@@ -6,7 +6,7 @@ CMD = ./bin/builder \
 			-input srcr \
 			-DDEBUG -DTEST '"a string"' -DXXX 42 \
 			-import piper::main.rh \
-			-plugin piper::plugin
+			-plugin piper::plugin minifier::plugin
 
 FILES = src/main.c \
   src/r.c \

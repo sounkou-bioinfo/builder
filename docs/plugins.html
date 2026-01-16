@@ -99,7 +99,9 @@ plugin &lt;- function() {
   list(
     setup = function(...) {},
     preprocess = function(str, ...) {
-      gsub("\n", ";", str)
+      lines <- strsplit(str, "\n")[[1]]
+      lines <- lines[nzchar(trimws(lines))]
+      paste(lines, collapse = ";")
     },
     include = function(...) {},
     end = function(...) {}
