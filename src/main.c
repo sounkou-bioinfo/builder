@@ -3,8 +3,9 @@
 #include <string.h>
 #include "parser.h"
 #include "define.h"
-#include "log.h"
+#include "plugins.h"
 #include "file.h"
+#include "log.h"
 #include "r.h"
 
 int main(int argc, char *argv[])
@@ -72,16 +73,34 @@ int main(int argc, char *argv[])
   Define *defines = create_define();
   get_definitions(defines, argc, argv);
 
+  Value *plugins_str = get_arg_values(argc, argv, "-plugins");
+
+  if(plugins_str != NULL) {
+    printf("%s Using plugins:", LOG_INFO);
+    Value *current = plugins_str;
+    while(current != NULL) {
+      printf(" %s", current->name);
+      current = current->next;
+    }
+    printf("\n");
+  }
+
+  Plugins *plugins = plugins_init(plugins_str);
+  int p_failed = plugins_failed(plugins);
+  if(p_failed) {
+    printf("%s Failed to initialize plugin(s) - stopping execution\n", LOG_ERROR);
+    return 1;
+  }
   int must_clean = !has_arg(argc, argv, "-noclean");
 
   if(must_clean) {
     printf("%s Cleaning: %s and testthat/\n", LOG_INFO, output);
-    walk(output, output, clean, NULL);
+    walk(output, output, clean, NULL, plugins_str);
   } else {
     printf("%s Not cleaning: %s\n", LOG_INFO, output);
   }
 
-  walk(input, output, copy, &defines);
+  walk(input, output, copy, &defines, plugins_str);
 
   free(input);
   free(output);

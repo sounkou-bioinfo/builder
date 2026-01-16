@@ -65,7 +65,7 @@ char *ensure_dir(char *path)
   return path;
 }
 
-int clean(char *src, char *dst, Define **defs)
+int clean(char *src, char *dst, Define **defs, Value *plugins)
 {
   // Remove the output file
   int result = remove(src);
@@ -228,7 +228,7 @@ char *append_buffer(char *buffer, char *line)
   return new_buffer;
 }
 
-int copy(char *src, char *dst, Define **defs)
+int copy(char *src, char *dst, Define **defs, Value *plugins)
 {
   char *dest = make_dest_path(src, dst);
   FILE *src_file = fopen(src, "r");
@@ -417,7 +417,7 @@ int copy(char *src, char *dst, Define **defs)
   return 0;
 }
 
-int walk(char *src_dir, char *dst_dir, Callback func, Define **defs)
+int walk(char *src_dir, char *dst_dir, Callback func, Define **defs, Value *plugins)
 {
   DIR *source;
   struct dirent *entry;
@@ -438,9 +438,9 @@ int walk(char *src_dir, char *dst_dir, Callback func, Define **defs)
 
     // it's a directory, recurse
     if (entry->d_type == DT_DIR) {
-      walk(path, dst_dir, func, defs);
+      walk(path, dst_dir, func, defs, plugins);
     } else {
-      func(path, dst_dir, defs);
+      func(path, dst_dir, defs, plugins);
     }
   }
   
