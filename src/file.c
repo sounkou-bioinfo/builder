@@ -450,7 +450,8 @@ int walk(char *src_dir, char *dst_dir, Callback func, Define **defs, Plugins *pl
     if (entry->d_type == DT_DIR) {
       walk(path, dst_dir, func, defs, plugins);
     } else {
-      if(strcmp(path, ".R") != 0) continue;
+      char *ext = strrchr(path, '.');
+      if(strcmp(ext, ".R") != 0) continue;
       func(path, dst_dir, defs, plugins);
     }
   }

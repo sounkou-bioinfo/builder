@@ -27,8 +27,8 @@ int main(int argc, char *argv[])
     printf("  -output <path>        Output directory (default: R/)\n");
     printf("  -noclean              Skip cleaning output directory before processing\n");
     printf("  -D<NAME>              Define directives, e.g.: -DDEBUG -DVALUE 42\n");
-    printf("  -plugins              Use plugins, e.g.: -plugins pkg::plugin pkg::plugin2\n");
-    printf("  -import               Import .rh files, e.g.: -imports inst/main.rh pkg::main.rh\n");
+    printf("  -plugin               Use plugins, e.g.: -plugin pkg::plugin pkg::plugin2\n");
+    printf("  -import               Import .rh files, e.g.: -import inst/main.rh pkg::main.rh\n");
     printf("  -help                 Show this help message\n");
     printf("\n");
     printf("Example:\n");
