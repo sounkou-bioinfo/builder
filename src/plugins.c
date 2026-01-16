@@ -112,10 +112,58 @@ int plugins_failed(Plugins *head)
   return 0;
 }
 
-void plugins_call(Plugins *head, char *fn, char *str)
+char *plugins_call(Plugins *head, char *fn, char *str)
 {
+  char *copy = NULL;
+
+  if(str != NULL) {
+    copy = strdup(str);
+  }
+
   Plugins *current = head;
   while(current != NULL) {
+    // that setup failed
+    if(current->setup == 0) {
+      continue;
+    }
+
+    SEXP func = PROTECT(
+      eval(
+        lang3(install("$"), current->obj, install(fn)), R_GlobalEnv
+      )
+    );
+
+    SEXP call = NULL;
+    SEXP result = NULL;
+    if(str != NULL) {
+      call = PROTECT(lang2(func, mkString(str)));
+      result = PROTECT(eval(call, R_GlobalEnv));
+    } else {
+      call = PROTECT(lang1(func));
+      result = PROTECT(eval(call, R_GlobalEnv));
+    }
+    UNPROTECT(3);
+
+    if(result == NULL) {
+      printf("%s Failed to initialize plugin: %s\n", LOG_ERROR, current->name);
+      head = push_plugins(head, current->name, 0, R_NilValue);
+      current = current->next;
+      continue;
+    }
+
+    if(result == R_NilValue) {
+      if(str != NULL) {
+        printf("%s Plugin %s call to %s() returns NULL\n", LOG_WARNING, current->name, fn);
+      }
+      current = current->next;
+      continue;
+    }
+
+    copy = realloc(copy, strlen(CHAR(STRING_ELT(result, 0))) + 1);
+    strcpy(copy, CHAR(STRING_ELT(result, 0)));
+
     current = current->next;
   }
+
+  return copy;
 }

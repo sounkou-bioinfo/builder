@@ -101,6 +101,7 @@ int main(int argc, char *argv[])
   }
 
   walk(input, output, copy, &defines, plugins);
+  plugins_call(plugins, "end", NULL);
 
   free(input);
   free(output);

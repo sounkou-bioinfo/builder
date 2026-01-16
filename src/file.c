@@ -7,6 +7,7 @@
 
 #include "deconstruct.h"
 #include "preflight.h"
+#include "plugins.h"
 #include "define.h"
 #include "include.h"
 #include "fstring.h"
@@ -407,7 +408,10 @@ int copy(char *src, char *dst, Define **defs, Plugins *plugins)
     }
   }
 
-  fputs(buffer, dst_file);
+  char *output = plugins_call(plugins, "preprocess", buffer);
+  fputs(output, dst_file);
+  free(output);
+  free(buffer);
   write_tests(tests, src);
 
   free(dest);
