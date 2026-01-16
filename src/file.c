@@ -258,7 +258,6 @@ int copy(char *src, char *dst, Define **defs, Plugins *plugins)
   Tests *tests = NULL;
 
   int is_macro = 0;
-  int max_macro_lines = 1024;
   while(fgets(line, line_len, src_file) != NULL) {
     i++;
     asprintf(&istr, "%d", i);
@@ -284,57 +283,9 @@ int copy(char *src, char *dst, Define **defs, Plugins *plugins)
       continue;
     }
 
-    // this is such a fukcing mess man
     is_macro = define(defs, line);
     if(is_macro) {
-      char *macro;
-      define_macro_init(&macro);
-
-      // Syntax: 
-      // #define on its own line
-      // MACRO(arg1, arg2){
-      //  arg1 + arg2
-      // }
-      // #enddef
-      char *macro_name = NULL;
-      int macro_lines = 0;
-      int found_signature = 0;
-
-      while(fgets(line, line_len, src_file) != NULL && macro_lines < max_macro_lines) {
-        macro_lines++;
-
-        if(strncmp(line, "#enddef", 7) == 0) {
-          break;
-        }
-
-        if(!found_signature) {
-          char *trimmed = line;
-          while(*trimmed == ' ' || *trimmed == '\t') trimmed++;
-          if(*trimmed != '\0' && *trimmed != '\n') {
-            char *paren = strchr(trimmed, '(');
-            if(paren) {
-              macro_name = strndup(trimmed, paren - trimmed);
-            }
-            found_signature = 1;
-          }
-        }
-
-        size_t l = strlen(macro) + strlen(line) + 1;
-        macro = realloc(macro, l);
-        strcat(macro, line);
-      }
-
-      if(macro_lines == max_macro_lines) {
-        printf("%s macro %s is too long (or failed to parse), reached %d lines\n", LOG_WARNING, macro_name ? macro_name : "<unknown>", macro_lines);
-        free(macro);
-        if(macro_name) free(macro_name);
-        is_macro = 0;
-        continue;
-      }
-
-      is_macro = 0;
-      push((*defs), macro_name, macro, DEF_FUNCTION);
-
+      ingest_macro(defs, src_file, line_len);
       continue;
     }
 

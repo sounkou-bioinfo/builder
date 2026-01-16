@@ -1,6 +1,8 @@
 #ifndef DEFINE_H
 #define DEFINE_H
 
+#include <stdio.h>
+
 typedef struct Value_t Value;
 
 extern const char *DYNAMIC_DEFINITION;
@@ -28,6 +30,7 @@ char *define_replace(Define **defines, char *line);
 char *get_define_value(Define **defines, char *name);
 void print_defines(Define *defines);
 void *define_macro_init(char **macro);
+int ingest_macro(Define **defs, FILE *src_file, size_t line_len);
 char* str_replace(const char *orig, const char *find, const char *replace);
 void import_defines(Define **defines, Value *paths);
 

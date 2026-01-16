@@ -63,7 +63,9 @@ void import_defines(Define **defines, Value *paths)
     FILE *file = fopen(path, "r");
     free(path);
     while(fgets(line, sizeof(line), file) != NULL) {
-      define(defines, line);
+      if(define(defines, line)) {
+        ingest_macro(defines, file, sizeof(line));
+      }
     }
     fclose(file);
     current = current->next;
@@ -91,7 +93,9 @@ int import_defines_from_line(Define **defines, char *line)
   char ln[1024];
 
   while(fgets(ln, sizeof(ln), file) != NULL) {
-    define(defines, ln);
+    if(define(defines, ln)) {
+      ingest_macro(defines, file, sizeof(ln));
+    }
   }
   fclose(file);
 

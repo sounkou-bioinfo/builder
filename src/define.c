@@ -132,6 +132,52 @@ void *define_macro_init(char **macro)
   return *macro;
 }
 
+int ingest_macro(Define **defs, FILE *src_file, size_t line_len)
+{
+  char *macro;
+  define_macro_init(&macro);
+
+  char line[line_len];
+  char *macro_name = NULL;
+  int macro_lines = 0;
+  int found_signature = 0;
+  int max_macro_lines = 1024;
+
+  while(fgets(line, line_len, src_file) != NULL && macro_lines < max_macro_lines) {
+    macro_lines++;
+
+    if(strncmp(line, "#enddef", 7) == 0) {
+      break;
+    }
+
+    if(!found_signature) {
+      char *trimmed = line;
+      while(*trimmed == ' ' || *trimmed == '\t') trimmed++;
+      if(*trimmed != '\0' && *trimmed != '\n') {
+        char *paren = strchr(trimmed, '(');
+        if(paren) {
+          macro_name = strndup(trimmed, paren - trimmed);
+        }
+        found_signature = 1;
+      }
+    }
+
+    size_t l = strlen(macro) + strlen(line) + 1;
+    macro = realloc(macro, l);
+    strcat(macro, line);
+  }
+
+  if(macro_lines == max_macro_lines) {
+    printf("%s macro %s is too long (or failed to parse), reached %d lines\n", LOG_WARNING, macro_name ? macro_name : "<unknown>", macro_lines);
+    free(macro);
+    if(macro_name) free(macro_name);
+    return 1;
+  }
+
+  push((*defs), macro_name, macro, DEF_FUNCTION);
+  return 0;
+}
+
 int define(Define **defines, char *line)
 {
   if(strncmp(line, "#define", 7) != 0) {
