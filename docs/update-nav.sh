@@ -25,6 +25,7 @@ DOCS_ORDER=(
     "deconstruct"
     "macros"
     "include"
+    "import"
     "fstrings"
     "tests"
     "const"

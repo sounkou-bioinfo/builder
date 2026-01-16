@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Builder - Import</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/styles/atom-one-light.min.css"
+      media="(prefers-color-scheme: light)"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/styles/atom-one-dark.min.css"
+      media="(prefers-color-scheme: dark)"
+    />
+    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/highlight.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/languages/r.min.js"></script>
+  </head>
+  <body>
+    <main class="container">
+      <nav>
+        <ul>
+          <li>
+            <strong><a href="/">Builder</a></strong>
+          </li>
+        </ul>
+        <ul>
+          <li>
+            <details class="dropdown">
+              <summary>Docs</summary>
+              <ul dir="rtl">
+                <li><a href="/packages">Packages</a></li>
+                <li><a href="/directives">Directives</a></li>
+                <li><a href="/deconstruct">Deconstruct</a></li>
+                <li><a href="/macros">Macros</a></li>
+                <li><a href="/include">Include</a></li>
+                <li><a href="/import">Import</a></li>
+                <li><a href="/fstrings">f-strings</a></li>
+                <li><a href="/tests">Tests</a></li>
+                <li><a href="/const">Constants</a></li>
+                <li><a href="/plugins">Plugins</a></li>
+              </ul>
+            </details>
+          </li>
+        </ul>
+      </nav>
+      <h1>Import</h1>
+      <p>
+        The <code>#import</code> directive allows you to import macro definitions
+        from external files. This enables sharing macro definitions across
+        multiple projects or organizing macros into separate, reusable files.
+      </p>
+      <h2>Advantages</h2>
+      <ul>
+        <li>
+          <strong>Reusability:</strong> Define macros once and import them
+          across multiple projects without copy-pasting.
+        </li>
+        <li>
+          <strong>Organization:</strong> Keep macro definitions separate from
+          your main source files for better maintainability.
+        </li>
+        <li>
+          <strong>Package distribution:</strong> Share macro libraries through
+          R packages using the package path syntax.
+        </li>
+        <li>
+          <strong>Build-time resolution:</strong> Imports are resolved at
+          build time, with no runtime overhead.
+        </li>
+      </ul>
+      <h2>Basic Syntax</h2>
+      <p>
+        The <code>#import</code> directive specifies a path to a file
+        containing macro definitions.
+      </p>
+      <p>
+        <strong>Syntax:</strong>
+        <code>#import file_path</code>
+      </p>
+      <h2>Basic Example</h2>
+      <p>
+        Create a file with macro definitions (e.g., <code>macros.rh</code>):
+      </p>
+      <pre><code class="language-r">#define
+LOG(msg){
+  message(paste0("[LOG] ", msg))
+}
+#enddef
+
+#define
+DEBUG(msg){
+  if(getOption("debug", FALSE)) message(paste0("[DEBUG] ", msg))
+}
+#enddef</code></pre>
+      <p>Import and use these macros in your main file:</p>
+      <pre><code class="language-r">#import macros.rh
+
+my_function &lt;- function() {
+  LOG("Starting function")
+  # ... code ...
+  DEBUG("Intermediate value")
+}</code></pre>
+      <h2>Package Path Syntax</h2>
+      <p>
+        You can import macros from installed R packages using the
+        <code>package::path</code> syntax. This uses R's
+        <code>system.file()</code> function to locate files within packages.
+      </p>
+      <p>
+        <strong>Syntax:</strong>
+        <code>#import packagename::path/to/file</code>
+      </p>
+      <h3>Example</h3>
+      <p>
+        Import macros from a package called <code>mymacros</code>:
+      </p>
+      <pre><code class="language-r">#import mymacros::macros/utils.rh
+
+my_function &lt;- function() {
+  UTIL_MACRO("value")
+}</code></pre>
+      <p>
+        This resolves to the file at
+        <code>system.file("macros/utils.rh", package = "mymacros")</code>
+        within the installed package.
+      </p>
+      <h2>Multiple Imports</h2>
+      <p>You can use multiple import statements to combine macros from different sources:</p>
+      <pre><code class="language-r">#import common/logging.rh
+#import common/validation.rh
+#import mypackage::macros/helpers.rh
+
+my_function &lt;- function(x) {
+  LOG("Processing input")
+  VALIDATE_INPUT(x)
+  result &lt;- HELPER_TRANSFORM(x)
+  return(result)
+}</code></pre>
+      <h2>Import File Format</h2>
+      <p>
+        Imported files should contain <code>#define</code> blocks. Each line
+        in the file is processed as a potential macro definition:
+      </p>
+      <pre><code class="language-r">#define
+MACRO_ONE(x){
+  # macro body
+}
+#enddef
+
+#define
+MACRO_TWO(a, b){
+  # macro body
+}
+#enddef</code></pre>
+      <h2>Important Notes</h2>
+      <ul>
+        <li>
+          Import statements are processed before other directives, making
+          imported macros available for use throughout your file.
+        </li>
+        <li>
+          Local file paths are relative to the current working directory
+          or can be absolute paths.
+        </li>
+        <li>
+          Package paths require the package to be installed in your R
+          environment.
+        </li>
+        <li>
+          Imported macros are merged with any macros defined directly in
+          your source files.
+        </li>
+        <li>
+          If the same macro is defined in multiple imported files, the
+          later definition takes precedence.
+        </li>
+        <li>
+          Import files must exist at build time; missing files will cause
+          build errors.
+        </li>
+      </ul>
+      <h2>Creating Shareable Macro Packages</h2>
+      <p>
+        To distribute macros via an R package:
+      </p>
+      <ol>
+        <li>Create a directory in your package's <code>inst/</code> folder (e.g., <code>inst/macros/</code>)</li>
+        <li>Place your macro definition files there</li>
+        <li>Users can import with <code>#import yourpackage::macros/filename.rh</code></li>
+      </ol>
+      <p>
+        This allows you to version and distribute macro libraries through
+        standard R package mechanisms like CRAN or GitHub.
+      </p>
+    </main>
+    <script>
+      hljs.highlightAll();
+    </script>
+  </body>
+</html>
