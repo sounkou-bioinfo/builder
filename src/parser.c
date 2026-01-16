@@ -145,7 +145,7 @@ void get_definitions(Define *arr, int argc, char *argv[])
       continue;
     }
 
-    if(strcmp(argv[i], "-plugins") == 0)
+    if(strcmp(argv[i], "-plugin") == 0)
     {
       i++;
       continue;

@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
 
   if(input == NULL) {
     input = strdup("srcr/");
-    printf("%s No -input, defaulting to srcr\n", LOG_INFO);
+    printf("%s No -input, defaulting to srcr\n", LOG_WARNING);
   }
 
   if(input == NULL) {
@@ -89,7 +89,7 @@ int main(int argc, char *argv[])
   }
   import_defines(&defines, imports);
 
-  Value *plugins_str = get_arg_values(argc, argv, "-plugins");
+  Value *plugins_str = get_arg_values(argc, argv, "-plugin");
 
   if(plugins_str != NULL) {
     printf("%s Using plugins:", LOG_INFO);
