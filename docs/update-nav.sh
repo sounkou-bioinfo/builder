@@ -28,6 +28,7 @@ DOCS_ORDER=(
     "fstrings"
     "tests"
     "const"
+    "plugins"
 )
 
 # Show help message

@@ -6,6 +6,36 @@
 
 const char *NO_DEFINITION = "<UNDEFINED>";
 
+Value *create_value(char *value)
+{
+  Value *new_value = malloc(sizeof(Value));
+  if(new_value == NULL) {
+    return NULL;
+  }
+  new_value->name = value;
+  new_value->next = NULL;
+  return new_value;
+}
+
+Value *push_value(Value *head, char *name)
+{
+  Value *new_value = create_value(name);
+  if(new_value == NULL) {
+    return NULL;
+  }
+
+  if(head == NULL) {
+    return new_value;
+  }
+
+  Value *current = head;
+  while(current->next != NULL) {
+    current = current->next;
+  }
+  current->next = new_value;
+  return head;
+}
+
 int include(char *arg, char value)
 {
   const int l = strlen(arg);
@@ -46,6 +76,42 @@ char *get_arg_value(int argc, char *argv[], char *arg)
   return NULL;
 }
 
+Value *get_arg_values(int argc, char *argv[], char *arg)
+{
+  Value *values = NULL;
+  int got_arg = 0;
+
+  for (int i = 1; i < argc; i++)
+  {
+    if (strcmp(argv[i], arg) != 0 && !got_arg) continue;
+
+    // we got -arg
+    if (strcmp(argv[i], arg) == 0){
+      got_arg = 1;
+      continue;
+    }
+
+    if(!got_arg) {
+      continue;
+    }
+
+    // we probably encountered another -arg
+    if(strncmp(argv[i], "-", 1) == 0) {
+      break;
+    }
+
+    if(values == NULL) {
+      values = create_value(argv[i]);
+      continue;
+    }
+
+
+    values = push_value(values, argv[i]);
+  }
+
+  return values;
+}
+
 int has_arg(int argc, char *argv[], char *arg)
 {
   for (int i = 1; i < argc; i++)
@@ -74,6 +140,12 @@ void get_definitions(Define *arr, int argc, char *argv[])
     }
 
     if(strcmp(argv[i], "-output") == 0)
+    {
+      i++;
+      continue;
+    }
+
+    if(strcmp(argv[i], "-plugins") == 0)
     {
       i++;
       continue;

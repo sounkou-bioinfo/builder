@@ -7,6 +7,7 @@
 
 #include "deconstruct.h"
 #include "preflight.h"
+#include "plugins.h"
 #include "define.h"
 #include "include.h"
 #include "fstring.h"
@@ -65,7 +66,7 @@ char *ensure_dir(char *path)
   return path;
 }
 
-int clean(char *src, char *dst, Define **defs)
+int clean(char *src, char *dst, Define **defs, Plugins *plugins)
 {
   // Remove the output file
   int result = remove(src);
@@ -214,7 +215,21 @@ int count_braces(char *line)
   return count;
 }
 
-int copy(char *src, char *dst, Define **defs)
+char *append_buffer(char *buffer, char *line)
+{
+  if(buffer == NULL) {
+    return strdup(line);
+  }
+
+  char *new_buffer = malloc(strlen(buffer) + strlen(line) + 1);
+
+  strcpy(new_buffer, buffer);
+  strcat(new_buffer, line);
+
+  return new_buffer;
+}
+
+int copy(char *src, char *dst, Define **defs, Plugins *plugins)
 {
   char *dest = make_dest_path(src, dst);
   FILE *src_file = fopen(src, "r");
@@ -237,7 +252,7 @@ int copy(char *src, char *dst, Define **defs)
   int should_write = 1;
   int i = 0;
   char *istr = NULL;
-
+  char *buffer = NULL;
 
   Tests *tests = NULL;
 
@@ -319,7 +334,7 @@ int copy(char *src, char *dst, Define **defs)
 
     char *fstring_result = fstring_replace(line, 0);
     char *replaced = define_replace(defs, fstring_result);
-    char *processed = include_replace(defs, replaced);
+    char *processed = include_replace(defs, replaced, plugins);
     if(processed != replaced) {
       free(replaced);
     }
@@ -377,26 +392,14 @@ int copy(char *src, char *dst, Define **defs)
       continue;
     }
 
-    if(fputs(cnst, dst_file) == EOF) {
-      free(cnst);
-      if(deconstructed != cnst) {
-        free(deconstructed);
-      }
-      if(processed != deconstructed) {
-        free(processed);
-      }
-      if(fstring_result != line) {
-        free(fstring_result);
-      }
-      free(dest);
-      printf("%s Failed to write to destination file\n", LOG_ERROR);
-      return 1;
-    }
+    char *old_buffer = buffer;
+    buffer = append_buffer(buffer, cnst);
+    free(old_buffer);
 
-    free(cnst);
     if(deconstructed != cnst) {
       free(deconstructed);
     }
+    free(cnst);
     if(processed != deconstructed) {
       free(processed);
     }
@@ -405,6 +408,10 @@ int copy(char *src, char *dst, Define **defs)
     }
   }
 
+  char *output = plugins_call(plugins, "preprocess", buffer);
+  fputs(output, dst_file);
+  free(output);
+  free(buffer);
   write_tests(tests, src);
 
   free(dest);
@@ -414,7 +421,7 @@ int copy(char *src, char *dst, Define **defs)
   return 0;
 }
 
-int walk(char *src_dir, char *dst_dir, Callback func, Define **defs)
+int walk(char *src_dir, char *dst_dir, Callback func, Define **defs, Plugins *plugins)
 {
   DIR *source;
   struct dirent *entry;
@@ -435,9 +442,9 @@ int walk(char *src_dir, char *dst_dir, Callback func, Define **defs)
 
     // it's a directory, recurse
     if (entry->d_type == DT_DIR) {
-      walk(path, dst_dir, func, defs);
+      walk(path, dst_dir, func, defs, plugins);
     } else {
-      func(path, dst_dir, defs);
+      func(path, dst_dir, defs, plugins);
     }
   }
   

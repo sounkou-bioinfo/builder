@@ -13,6 +13,11 @@ void free_include(Include *include)
   if(include->object != NULL) free(include->object);
 }
 
+int has_include(char *line)
+{
+  return strstr(line, "#include:") != NULL;
+}
+
 Include parse_include(char *line)
 {
   Include result = {NULL, NULL, NULL};
@@ -53,8 +58,18 @@ Include parse_include(char *line)
   return result;
 }
 
-char *include_replace(Define **defs, char *line)
+char *include_replace(Define **defs, char *line, Plugins *plugins)
 {
+  if(!has_include(line)) {
+    return line;
+  }
+
+  char *plugged = plugins_call(plugins, "include", line);
+  if(strcmp(plugged, line) != 0) {
+    free(line);
+    return plugged;
+  }
+
   Include inc = parse_include(line);
 
   // nothing to do
