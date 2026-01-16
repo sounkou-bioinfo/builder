@@ -151,6 +151,12 @@ void get_definitions(Define *arr, int argc, char *argv[])
       continue;
     }
 
+    if(strcmp(argv[i], "-imports") == 0)
+    {
+      i++;
+      continue;
+    }
+
     // these are directives
     if(is_directive(argv[i])) {
       if(i < argc - 1 && !is_directive(argv[i + 1])) {

@@ -2,7 +2,11 @@ CC = $(shell R CMD config CC)
 CFLAGS = $(shell R CMD config --cppflags)
 LDFLAGS = $(shell R CMD config --ldflags)
 FLS = -Wall -Iinclude -s
-CMD = ./bin/builder -input srcr -DDEBUG -DTEST '"a string"' -DXXX 42 -plugins piper::plugin
+CMD = ./bin/builder \
+			-input srcr \
+			-DDEBUG -DTEST '"a string"' -DXXX 42 \
+			-imports main.rh piper::main.rh \
+			-plugins piper::plugin
 
 FILES = src/main.c \
   src/r.c \
@@ -16,6 +20,7 @@ FILES = src/main.c \
 	src/test.c \
 	src/preflight.c \
 	src/plugins.c \
+	src/import.c \
 	src/const.c
 
 build: $(FILES)

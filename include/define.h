@@ -1,6 +1,8 @@
 #ifndef DEFINE_H
 #define DEFINE_H
 
+typedef struct Value_t Value;
+
 extern const char *DYNAMIC_DEFINITION;
 
 typedef enum {
@@ -27,5 +29,6 @@ char *get_define_value(Define **defines, char *name);
 void print_defines(Define *defines);
 void *define_macro_init(char **macro);
 char* str_replace(const char *orig, const char *find, const char *replace);
+void import_defines(Define **defines, Value *paths);
 
 #endif
