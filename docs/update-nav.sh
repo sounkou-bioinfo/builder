@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# update-nav.sh - Update navigation in all HTML documentation files
+# update-nav.sh - Update sidebar navigation in all HTML documentation files
 #
 # Usage: ./update-nav.sh [-n|--dry-run] [-b|--backup] [-h|--help]
 #
@@ -18,7 +18,7 @@ DOCS_DIR="$SCRIPT_DIR"
 DRY_RUN=false
 CREATE_BACKUP=false
 
-# Explicit page order (excluding index.html)
+# Explicit page order (excluding index.html which is "Home")
 DOCS_ORDER=(
     "packages"
     "directives"
@@ -29,13 +29,14 @@ DOCS_ORDER=(
     "fstrings"
     "tests"
     "const"
+    "preflight"
     "plugins"
 )
 
 # Show help message
 show_help() {
     cat << EOF
-Update navigation in all HTML documentation files
+Update sidebar navigation in all HTML documentation files
 
 Usage: ./update-nav.sh [OPTIONS]
 
@@ -45,9 +46,10 @@ Options:
   -h, --help       Show this help message
 
 Description:
-  This script automatically generates navigation for all HTML files in the
-  docs/ directory. It extracts page titles from H1 tags and creates a
-  consistent navigation dropdown across all documentation pages.
+  This script automatically generates sidebar navigation for all HTML files in
+  the docs/ directory. It extracts page titles from H1 tags and creates a
+  consistent sidebar menu across all documentation pages, marking the current
+  page as selected.
 
 Examples:
   ./update-nav.sh --dry-run    # Preview changes
@@ -101,19 +103,22 @@ extract_h1_title() {
     echo "$title"
 }
 
-# Build navigation dropdown HTML
-build_nav_dropdown() {
-    local nav_html="      <nav>
-        <ul>
-          <li>
-            <strong><a href=\"/\">Builder</a></strong>
-          </li>
-        </ul>
-        <ul>
-          <li>
-            <details class=\"dropdown\">
-              <summary>Docs</summary>
-              <ul dir=\"rtl\">"
+# Build sidebar navigation HTML for a specific page
+build_sidebar_nav() {
+    local current_page="$1"  # e.g., "index", "packages", etc.
+
+    local nav_html='      <nav id="menu" class="pure-menu">
+        <a class="pure-menu-heading" href="/">Builder</a>
+        <ul class="pure-menu-list">'
+
+    # Add Home link
+    if [ "$current_page" = "index" ]; then
+        nav_html="$nav_html
+          <li class=\"pure-menu-item pure-menu-selected\"><a href=\"/\" class=\"pure-menu-link\">Home</a></li>"
+    else
+        nav_html="$nav_html
+          <li class=\"pure-menu-item\"><a href=\"/\" class=\"pure-menu-link\">Home</a></li>"
+    fi
 
     # Add each page in specified order
     for page in "${DOCS_ORDER[@]}"; do
@@ -127,14 +132,16 @@ build_nav_dropdown() {
         local title=$(extract_h1_title "$file")
         local url="/$page"
 
-        nav_html="$nav_html
-                <li><a href=\"$url\">$title</a></li>"
+        if [ "$current_page" = "$page" ]; then
+            nav_html="$nav_html
+          <li class=\"pure-menu-item pure-menu-selected\"><a href=\"$url\" class=\"pure-menu-link\">$title</a></li>"
+        else
+            nav_html="$nav_html
+          <li class=\"pure-menu-item\"><a href=\"$url\" class=\"pure-menu-link\">$title</a></li>"
+        fi
     done
 
     nav_html="$nav_html
-              </ul>
-            </details>
-          </li>
         </ul>
       </nav>"
 
@@ -148,8 +155,8 @@ replace_nav_in_file() {
     local tmpfile="${file}.tmp"
 
     # Check if nav block exists
-    if ! grep -q '<nav>' "$file"; then
-        echo "WARNING: No <nav> tag found in $file, skipping" >&2
+    if ! grep -q '<nav id="menu"' "$file"; then
+        echo "WARNING: No sidebar nav block found in $file, skipping" >&2
         return 1
     fi
 
@@ -161,7 +168,7 @@ replace_nav_in_file() {
     # Use awk to replace nav block
     awk -v nav="$new_nav" '
         BEGIN { in_nav=0; printed_nav=0 }
-        /<nav>/ {
+        /<nav id="menu"/ {
             if (!printed_nav) {
                 print nav
                 printed_nav=1
@@ -169,7 +176,7 @@ replace_nav_in_file() {
             in_nav=1
             next
         }
-        /<\/nav>/ {
+        in_nav && /<\/nav>/ {
             in_nav=0
             next
         }
@@ -183,7 +190,7 @@ replace_nav_in_file() {
         return 1
     fi
 
-    if ! grep -q '<nav>' "$tmpfile"; then
+    if ! grep -q '<nav id="menu"' "$tmpfile"; then
         echo "ERROR: Failed to update $file - nav block missing in output" >&2
         rm -f "$tmpfile"
         return 1
@@ -205,22 +212,13 @@ replace_nav_in_file() {
 main() {
     parse_args "$@"
 
-    echo "Generating navigation for HTML documentation..."
+    echo "Generating sidebar navigation for HTML documentation..."
     echo ""
 
     # Validate docs directory
     if [ ! -d "$DOCS_DIR" ]; then
         echo "ERROR: Directory not found: $DOCS_DIR"
         exit 1
-    fi
-
-    # Build navigation HTML
-    local nav_html=$(build_nav_dropdown)
-
-    if $DRY_RUN; then
-        echo "Generated navigation:"
-        echo "$nav_html"
-        echo ""
     fi
 
     # Update all HTML files
@@ -230,6 +228,18 @@ main() {
     for html_file in "$DOCS_DIR"/*.html; do
         if [ ! -f "$html_file" ]; then
             continue
+        fi
+
+        # Get page name from filename
+        local page_name=$(basename "$html_file" .html)
+
+        # Build nav for this specific page (with correct selected state)
+        local nav_html=$(build_sidebar_nav "$page_name")
+
+        if $DRY_RUN && [ $files_updated -eq 0 ]; then
+            echo "Sample navigation for $page_name:"
+            echo "$nav_html"
+            echo ""
         fi
 
         if replace_nav_in_file "$html_file" "$nav_html"; then

@@ -3,90 +3,159 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="color-scheme" content="light dark" />
     <title>Builder - Macros</title>
     <link
       rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/styles/atom-one-light.min.css"
-      media="(prefers-color-scheme: light)"
+      href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css"
     />
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/styles/atom-one-dark.min.css"
-      media="(prefers-color-scheme: dark)"
     />
     <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/highlight.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/languages/r.min.js"></script>
+    <style>
+      body {
+        background-color: #121212;
+        color: #e0e0e0;
+      }
+      a { color: #90caf9; }
+      a:hover { color: #bbdefb; }
+
+      #layout {
+        padding-left: 180px;
+      }
+      #menu {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 180px;
+        background: #1a1a1a;
+        overflow-y: auto;
+      }
+      #menu .pure-menu-heading {
+        font-size: 1.2em;
+        color: #fff;
+        padding: 0.5em 0.8em;
+        margin: 0;
+      }
+      #menu .pure-menu-link {
+        color: #999;
+        padding: 0.5em 1em;
+      }
+      #menu .pure-menu-link:hover {
+        background: #333;
+        color: #fff;
+      }
+      #menu .pure-menu-selected .pure-menu-link {
+        background: #1f8dd6;
+        color: #fff;
+      }
+      .content {
+        max-width: 900px;
+        padding: 2em;
+      }
+      pre {
+        background: #1e1e1e;
+        padding: 1em;
+        overflow-x: auto;
+        border-radius: 4px;
+      }
+      code {
+        background: #1e1e1e;
+        padding: 0.2em 0.4em;
+        border-radius: 3px;
+      }
+      pre code {
+        background: none;
+        padding: 0;
+      }
+
+      #menuLink {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        background: #1a1a1a;
+        width: 2em;
+        height: 2em;
+        padding: 0.5em;
+        z-index: 10;
+      }
+      #menuLink span {
+        display: block;
+        width: 1.25em;
+        height: 2px;
+        background: #fff;
+        margin: 0.25em auto;
+      }
+      @media (max-width: 48em) {
+        #layout { padding-left: 0; }
+        #menu { transform: translateX(-180px); transition: transform 0.2s; }
+        #menu.active { transform: translateX(0); }
+        #menuLink { display: block; }
+      }
+    </style>
   </head>
   <body>
-    <main class="container">
-      <nav>
-        <ul>
-          <li>
-            <strong><a href="/">Builder</a></strong>
-          </li>
-        </ul>
-        <ul>
-          <li>
-            <details class="dropdown">
-              <summary>Docs</summary>
-              <ul dir="rtl">
-                <li><a href="/packages">Packages</a></li>
-                <li><a href="/directives">Directives</a></li>
-                <li><a href="/deconstruct">Deconstruct</a></li>
-                <li><a href="/macros">Macros</a></li>
-                <li><a href="/include">Include</a></li>
-                <li><a href="/import">Import</a></li>
-                <li><a href="/fstrings">f-strings</a></li>
-                <li><a href="/tests">Tests</a></li>
-                <li><a href="/const">Constants</a></li>
-                <li><a href="/plugins">Plugins</a></li>
-              </ul>
-            </details>
-          </li>
+    <div id="layout">
+      <a href="#menu" id="menuLink"><span></span><span></span><span></span></a>
+      <nav id="menu" class="pure-menu">
+        <a class="pure-menu-heading" href="/">Builder</a>
+        <ul class="pure-menu-list">
+          <li class="pure-menu-item"><a href="/" class="pure-menu-link">Home</a></li>
+          <li class="pure-menu-item"><a href="/packages" class="pure-menu-link">Packages</a></li>
+          <li class="pure-menu-item"><a href="/directives" class="pure-menu-link">Directives</a></li>
+          <li class="pure-menu-item"><a href="/deconstruct" class="pure-menu-link">Deconstruct</a></li>
+          <li class="pure-menu-item pure-menu-selected"><a href="/macros" class="pure-menu-link">Macros</a></li>
+          <li class="pure-menu-item"><a href="/include" class="pure-menu-link">Include</a></li>
+          <li class="pure-menu-item"><a href="/import" class="pure-menu-link">Import</a></li>
+          <li class="pure-menu-item"><a href="/fstrings" class="pure-menu-link">f-strings</a></li>
+          <li class="pure-menu-item"><a href="/tests" class="pure-menu-link">Tests</a></li>
+          <li class="pure-menu-item"><a href="/const" class="pure-menu-link">Constants</a></li>
+          <li class="pure-menu-item"><a href="/preflight" class="pure-menu-link">Preflight</a></li>
+          <li class="pure-menu-item"><a href="/plugins" class="pure-menu-link">Plugins</a></li>
         </ul>
       </nav>
-      <h1>Macros</h1>
-      <p>
-        Macros are function-like preprocessor directives that allow you to
-        define reusable code templates with parameters. Unlike simple
-        <code>#define</code> replacements, macros can accept arguments and
-        expand into multiple lines of code.
-      </p>
-      <h2>Advantages</h2>
-      <ul>
-        <li>
-          <strong>Easy metaprogramming:</strong> Write code that generates code,
-          enabling powerful abstractions and code generation patterns.
-        </li>
-        <li>
-          <strong>Zero overhead:</strong> Macros have no runtime performance
-          cost since they're expanded at compile time.
-        </li>
-        <li>
-          <strong>Compile time expansion:</strong> All macro processing happens
-          during preprocessing, before your code executes.
-        </li>
-      </ul>
-      <h2>Basic Syntax</h2>
-      <p>
-        Macros are defined using <code>#define</code> on its own line,
-        followed by the macro signature and body. The macro ends with
-        <code>#enddef</code>.
-      </p>
-      <p>
-        <strong>Syntax:</strong>
-      </p>
-      <pre><code class="language-r">#define
+      <main class="content">
+        <h1>Macros</h1>
+        <p>
+          Macros are function-like preprocessor directives that allow you to
+          define reusable code templates with parameters. Unlike simple
+          <code>#define</code> replacements, macros can accept arguments and
+          expand into multiple lines of code.
+        </p>
+        <h2>Advantages</h2>
+        <ul>
+          <li>
+            <strong>Easy metaprogramming:</strong> Write code that generates code,
+            enabling powerful abstractions and code generation patterns.
+          </li>
+          <li>
+            <strong>Zero overhead:</strong> Macros have no runtime performance
+            cost since they're expanded at compile time.
+          </li>
+          <li>
+            <strong>Compile time expansion:</strong> All macro processing happens
+            during preprocessing, before your code executes.
+          </li>
+        </ul>
+        <h2>Basic Syntax</h2>
+        <p>
+          Macros are defined using <code>#define</code> on its own line,
+          followed by the macro signature and body. The macro ends with
+          <code>#enddef</code>.
+        </p>
+        <p>
+          <strong>Syntax:</strong>
+        </p>
+        <pre><code class="language-r">#define
 MACRO_NAME(arg1, arg2, ...){
   body
 }
 #enddef</code></pre>
-      <pre><code class="language-r">#define
+        <pre><code class="language-r">#define
 LOG_EVAL(expr){
   cat("Evaluating stuff\n")
   expr
@@ -94,15 +163,15 @@ LOG_EVAL(expr){
 #enddef
 
 LOG_EVAL(sum(1, 1, 1))</code></pre>
-      <p><strong>Expands to:</strong></p>
-      <pre><code class="language-r">cat("Evaluating stuff\n")
+        <p><strong>Expands to:</strong></p>
+        <pre><code class="language-r">cat("Evaluating stuff\n")
 sum(1, 1, 1)</code></pre>
-      <h2>Multiline Macro Bodies</h2>
-      <p>
-        Macro bodies can contain multiple lines of R code with full syntax
-        highlighting support in your editor.
-      </p>
-      <pre><code class="language-r">#define
+        <h2>Multiline Macro Bodies</h2>
+        <p>
+          Macro bodies can contain multiple lines of R code with full syntax
+          highlighting support in your editor.
+        </p>
+        <pre><code class="language-r">#define
 DEBUG_BLOCK(var, message){
   cat("Debug:", message, "\n")
   cat("Value is", var, "\n")
@@ -112,18 +181,18 @@ DEBUG_BLOCK(var, message){
 
 x &lt;- 42
 DEBUG_BLOCK(x, "Checking variable")</code></pre>
-      <p><strong>Expands to:</strong></p>
-      <pre><code class="language-r">x &lt;- 42
+        <p><strong>Expands to:</strong></p>
+        <pre><code class="language-r">x &lt;- 42
 cat("Debug:", "Checking variable", "\n")
 cat("Value is", x, "\n")
 cat("Type:", typeof(x), "\n")</code></pre>
-      <h2>Parameter Substitution</h2>
-      <p>
-        Macro parameters are replaced throughout the macro body when the macro
-        is invoked. All occurrences of the parameter name will be substituted
-        with the corresponding argument.
-      </p>
-      <pre><code class="language-r">#define
+        <h2>Parameter Substitution</h2>
+        <p>
+          Macro parameters are replaced throughout the macro body when the macro
+          is invoked. All occurrences of the parameter name will be substituted
+          with the corresponding argument.
+        </p>
+        <pre><code class="language-r">#define
 REPEAT(n, action){
   for (i in 1:n) {
     action
@@ -132,16 +201,16 @@ REPEAT(n, action){
 #enddef
 
 REPEAT(3, print("Hello"))</code></pre>
-      <p><strong>Expands to:</strong></p>
-      <pre><code class="language-r">for (i in 1:3) {
+        <p><strong>Expands to:</strong></p>
+        <pre><code class="language-r">for (i in 1:3) {
   print("Hello")
 }</code></pre>
-      <h2>Macros with Multiple Arguments</h2>
-      <p>
-        Macros can accept multiple arguments, which are separated by commas in
-        both the definition and invocation.
-      </p>
-      <pre><code class="language-r">#define
+        <h2>Macros with Multiple Arguments</h2>
+        <p>
+          Macros can accept multiple arguments, which are separated by commas in
+          both the definition and invocation.
+        </p>
+        <pre><code class="language-r">#define
 VALIDATE(value, min, max){
   if (value &lt; min || value &gt; max) {
     stop("Value out of range: ", value)
@@ -151,26 +220,26 @@ VALIDATE(value, min, max){
 
 x &lt;- 15
 VALIDATE(x, 0, 100)</code></pre>
-      <p><strong>Expands to:</strong></p>
-      <pre><code class="language-r">x &lt;- 15
+        <p><strong>Expands to:</strong></p>
+        <pre><code class="language-r">x &lt;- 15
 if (x &lt; 0 || x &gt; 100) {
   stop("Value out of range: ", x)
 }</code></pre>
-      <h2>Practical Examples</h2>
-      <h3>Logging Macro</h3>
-      <pre><code class="language-r">#define
+        <h2>Practical Examples</h2>
+        <h3>Logging Macro</h3>
+        <pre><code class="language-r">#define
 LOG(level, msg){
   cat("[", level, "] ", msg, "\n", sep = "")
 }
 #enddef
 
 LOG("INFO", "Application started")
-LOG("ERROR", "Something went wrong")</code></pre></invoke>
-      <p><strong>Expands to:</strong></p>
-      <pre><code class="language-r">cat("[", "INFO", "] ", "Application started", "\n", sep = "")
+LOG("ERROR", "Something went wrong")</code></pre>
+        <p><strong>Expands to:</strong></p>
+        <pre><code class="language-r">cat("[", "INFO", "] ", "Application started", "\n", sep = "")
 cat("[", "ERROR", "] ", "Something went wrong", "\n", sep = "")</code></pre>
-      <h3>Try-Catch Wrapper</h3>
-      <pre><code class="language-r">#define
+        <h3>Try-Catch Wrapper</h3>
+        <pre><code class="language-r">#define
 TRY_CATCH(code, error_msg){
   tryCatch({
     code
@@ -181,14 +250,14 @@ TRY_CATCH(code, error_msg){
 #enddef
 
 TRY_CATCH(risky_operation(), "Operation failed")</code></pre>
-      <p><strong>Expands to:</strong></p>
-      <pre><code class="language-r">tryCatch({
+        <p><strong>Expands to:</strong></p>
+        <pre><code class="language-r">tryCatch({
   risky_operation()
 }, error = function(e) {
   cat("Operation failed", ":", e$message, "\n")
 })</code></pre>
-      <h3>Timing Macro</h3>
-      <pre><code class="language-r">#define
+        <h3>Timing Macro</h3>
+        <pre><code class="language-r">#define
 TIME_IT(expr){
   start &lt;- Sys.time()
   result &lt;- expr
@@ -199,33 +268,38 @@ TIME_IT(expr){
 #enddef
 
 TIME_IT(slow_computation())</code></pre>
-      <p><strong>Expands to:</strong></p>
-      <pre><code class="language-r">start &lt;- Sys.time()
+        <p><strong>Expands to:</strong></p>
+        <pre><code class="language-r">start &lt;- Sys.time()
 result &lt;- slow_computation()
 end &lt;- Sys.time()
 cat("Execution time:", end - start, "\n")
 result</code></pre>
-      <h2>Important Notes</h2>
-      <ul>
-        <li>Macros start with <code>#define</code> alone on a line</li>
-        <li>The macro signature and body follow on subsequent lines</li>
-        <li>Macro bodies must be enclosed in curly braces <code>{}</code></li>
-        <li>Macros end with <code>#enddef</code></li>
-        <li>
-          Macros support multiline definitions and can span many lines (up to
-          1024 lines)
-        </li>
-        <li>
-          Macro parameters are simple text substitution - be careful with
-          expressions that might be evaluated multiple times
-        </li>
-        <li>
-          Simple <code>#define NAME value</code> constants still work as before
-        </li>
-      </ul>
-    </main>
+        <h2>Important Notes</h2>
+        <ul>
+          <li>Macros start with <code>#define</code> alone on a line</li>
+          <li>The macro signature and body follow on subsequent lines</li>
+          <li>Macro bodies must be enclosed in curly braces <code>{}</code></li>
+          <li>Macros end with <code>#enddef</code></li>
+          <li>
+            Macros support multiline definitions and can span many lines (up to
+            1024 lines)
+          </li>
+          <li>
+            Macro parameters are simple text substitution - be careful with
+            expressions that might be evaluated multiple times
+          </li>
+          <li>
+            Simple <code>#define NAME value</code> constants still work as before
+          </li>
+        </ul>
+      </main>
+    </div>
     <script>
       hljs.highlightAll();
+      document.getElementById('menuLink').addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('menu').classList.toggle('active');
+      });
     </script>
   </body>
 </html>

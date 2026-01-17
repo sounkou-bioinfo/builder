@@ -3,138 +3,212 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="color-scheme" content="light dark" />
     <title>Builder - Constants</title>
     <link
       rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/styles/atom-one-light.min.css"
-      media="(prefers-color-scheme: light)"
+      href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css"
     />
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/styles/atom-one-dark.min.css"
-      media="(prefers-color-scheme: dark)"
     />
     <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/highlight.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/languages/r.min.js"></script>
+    <style>
+      body {
+        background-color: #121212;
+        color: #e0e0e0;
+      }
+      a { color: #90caf9; }
+      a:hover { color: #bbdefb; }
+
+      #layout {
+        padding-left: 180px;
+      }
+      #menu {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 180px;
+        background: #1a1a1a;
+        overflow-y: auto;
+      }
+      #menu .pure-menu-heading {
+        font-size: 1.2em;
+        color: #fff;
+        padding: 0.5em 0.8em;
+        margin: 0;
+      }
+      #menu .pure-menu-link {
+        color: #999;
+        padding: 0.5em 1em;
+      }
+      #menu .pure-menu-link:hover {
+        background: #333;
+        color: #fff;
+      }
+      #menu .pure-menu-selected .pure-menu-link {
+        background: #1f8dd6;
+        color: #fff;
+      }
+      .content {
+        max-width: 900px;
+        padding: 2em;
+      }
+      pre {
+        background: #1e1e1e;
+        padding: 1em;
+        overflow-x: auto;
+        border-radius: 4px;
+      }
+      code {
+        background: #1e1e1e;
+        padding: 0.2em 0.4em;
+        border-radius: 3px;
+      }
+      pre code {
+        background: none;
+        padding: 0;
+      }
+
+      #menuLink {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        background: #1a1a1a;
+        width: 2em;
+        height: 2em;
+        padding: 0.5em;
+        z-index: 10;
+      }
+      #menuLink span {
+        display: block;
+        width: 1.25em;
+        height: 2px;
+        background: #fff;
+        margin: 0.25em auto;
+      }
+      @media (max-width: 48em) {
+        #layout { padding-left: 0; }
+        #menu { transform: translateX(-180px); transition: transform 0.2s; }
+        #menu.active { transform: translateX(0); }
+        #menuLink { display: block; }
+      }
+    </style>
   </head>
   <body>
-    <main class="container">
-      <nav>
-        <ul>
-          <li>
-            <strong><a href="/">Builder</a></strong>
-          </li>
-        </ul>
-        <ul>
-          <li>
-            <details class="dropdown">
-              <summary>Docs</summary>
-              <ul dir="rtl">
-                <li><a href="/packages">Packages</a></li>
-                <li><a href="/directives">Directives</a></li>
-                <li><a href="/deconstruct">Deconstruct</a></li>
-                <li><a href="/macros">Macros</a></li>
-                <li><a href="/include">Include</a></li>
-                <li><a href="/import">Import</a></li>
-                <li><a href="/fstrings">f-strings</a></li>
-                <li><a href="/tests">Tests</a></li>
-                <li><a href="/const">Constants</a></li>
-                <li><a href="/plugins">Plugins</a></li>
-              </ul>
-            </details>
-          </li>
+    <div id="layout">
+      <a href="#menu" id="menuLink"><span></span><span></span><span></span></a>
+      <nav id="menu" class="pure-menu">
+        <a class="pure-menu-heading" href="/">Builder</a>
+        <ul class="pure-menu-list">
+          <li class="pure-menu-item"><a href="/" class="pure-menu-link">Home</a></li>
+          <li class="pure-menu-item"><a href="/packages" class="pure-menu-link">Packages</a></li>
+          <li class="pure-menu-item"><a href="/directives" class="pure-menu-link">Directives</a></li>
+          <li class="pure-menu-item"><a href="/deconstruct" class="pure-menu-link">Deconstruct</a></li>
+          <li class="pure-menu-item"><a href="/macros" class="pure-menu-link">Macros</a></li>
+          <li class="pure-menu-item"><a href="/include" class="pure-menu-link">Include</a></li>
+          <li class="pure-menu-item"><a href="/import" class="pure-menu-link">Import</a></li>
+          <li class="pure-menu-item"><a href="/fstrings" class="pure-menu-link">f-strings</a></li>
+          <li class="pure-menu-item"><a href="/tests" class="pure-menu-link">Tests</a></li>
+          <li class="pure-menu-item pure-menu-selected"><a href="/const" class="pure-menu-link">Constants</a></li>
+          <li class="pure-menu-item"><a href="/preflight" class="pure-menu-link">Preflight</a></li>
+          <li class="pure-menu-item"><a href="/plugins" class="pure-menu-link">Plugins</a></li>
         </ul>
       </nav>
-      <h1>Constants</h1>
-      <p>
-        Builder provides a special syntax for creating constant (immutable)
-        bindings using the <code>-&lt;</code> operator. Once assigned, constant
-        values cannot be changed, providing safety against accidental
-        modification.
-      </p>
-      <h2>Basic Syntax</h2>
-      <p>
-        Use <code>-&lt;</code> instead of <code>&lt;-</code> to create a
-        constant binding.
-      </p>
-      <pre><code class="language-r">PI -&lt; 3.14159
+      <main class="content">
+        <h1>Constants</h1>
+        <p>
+          Builder provides a special syntax for creating constant (immutable)
+          bindings using the <code>-&lt;</code> operator. Once assigned, constant
+          values cannot be changed, providing safety against accidental
+          modification.
+        </p>
+        <h2>Basic Syntax</h2>
+        <p>
+          Use <code>-&lt;</code> instead of <code>&lt;-</code> to create a
+          constant binding.
+        </p>
+        <pre><code class="language-r">PI -&lt; 3.14159
 MAX_SIZE -&lt; 100</code></pre>
-      <p><strong>Expands to:</strong></p>
-      <pre><code class="language-r">PI &lt;- 3.14159;lockBinding("PI", environment());
+        <p><strong>Expands to:</strong></p>
+        <pre><code class="language-r">PI &lt;- 3.14159;lockBinding("PI", environment());
 MAX_SIZE &lt;- 100;lockBinding("MAX_SIZE", environment());</code></pre>
-      <h2>How It Works</h2>
-      <p>
-        The <code>-&lt;</code> operator is transformed during preprocessing into
-        a regular assignment followed by a <code>lockBinding()</code> call. This
-        prevents the variable from being reassigned later in the code.
-      </p>
-      <h2>Usage Examples</h2>
-      <h3>Defining Configuration Constants</h3>
-      <pre><code class="language-r">API_URL -&lt; "https://api.example.com"
+        <h2>How It Works</h2>
+        <p>
+          The <code>-&lt;</code> operator is transformed during preprocessing into
+          a regular assignment followed by a <code>lockBinding()</code> call. This
+          prevents the variable from being reassigned later in the code.
+        </p>
+        <h2>Usage Examples</h2>
+        <h3>Defining Configuration Constants</h3>
+        <pre><code class="language-r">API_URL -&lt; "https://api.example.com"
 TIMEOUT -&lt; 30
 DEBUG -&lt; TRUE
 
 # Later attempts to modify will fail
 # API_URL &lt;- "different-url"  # Error: cannot change value of locked binding</code></pre>
-      <h3>Mathematical Constants</h3>
-      <pre><code class="language-r">EULER -&lt; 2.71828
+        <h3>Mathematical Constants</h3>
+        <pre><code class="language-r">EULER -&lt; 2.71828
 GOLDEN_RATIO -&lt; 1.61803
 
 calculate_growth &lt;- function(t) {
   EULER ^ t  # Safe to use, cannot be accidentally changed
 }</code></pre>
-      <h3>Application Settings</h3>
-      <pre><code class="language-r">APP_NAME -&lt; "MyApp"
+        <h3>Application Settings</h3>
+        <pre><code class="language-r">APP_NAME -&lt; "MyApp"
 VERSION -&lt; "1.0.0"
 MAX_RETRIES -&lt; 3
 
 print(f'{APP_NAME} v{VERSION}')</code></pre>
-      <h2>Benefits</h2>
-      <ul>
-        <li>
-          <strong>Safety:</strong> Prevents accidental modification of critical
-          values
-        </li>
-        <li>
-          <strong>Clarity:</strong> Makes it clear which values are meant to be
-          immutable
-        </li>
-        <li>
-          <strong>Protection:</strong> Using <code>lockBinding()</code> provides
-          R-level protection against reassignment
-        </li>
-        <li>
-          <strong>Convention:</strong> Provides a clean syntax for constant
-          declarations
-        </li>
-      </ul>
-      <h2>Important Notes</h2>
-      <ul>
-        <li>
-          Once a binding is locked, attempting to reassign it will result in an
-          error
-        </li>
-        <li>
-          The <code>-&lt;</code> syntax can be used with any R value: numbers,
-          strings, vectors, lists, functions, etc.
-        </li>
-        <li>
-          Whitespace around the <code>-&lt;</code> operator is automatically
-          handled during preprocessing
-        </li>
-        <li>
-          This is a compile-time transformation, so the locking happens when
-          your code runs
-        </li>
-      </ul>
-    </main>
+        <h2>Benefits</h2>
+        <ul>
+          <li>
+            <strong>Safety:</strong> Prevents accidental modification of critical
+            values
+          </li>
+          <li>
+            <strong>Clarity:</strong> Makes it clear which values are meant to be
+            immutable
+          </li>
+          <li>
+            <strong>Protection:</strong> Using <code>lockBinding()</code> provides
+            R-level protection against reassignment
+          </li>
+          <li>
+            <strong>Convention:</strong> Provides a clean syntax for constant
+            declarations
+          </li>
+        </ul>
+        <h2>Important Notes</h2>
+        <ul>
+          <li>
+            Once a binding is locked, attempting to reassign it will result in an
+            error
+          </li>
+          <li>
+            The <code>-&lt;</code> syntax can be used with any R value: numbers,
+            strings, vectors, lists, functions, etc.
+          </li>
+          <li>
+            Whitespace around the <code>-&lt;</code> operator is automatically
+            handled during preprocessing
+          </li>
+          <li>
+            This is a compile-time transformation, so the locking happens when
+            your code runs
+          </li>
+        </ul>
+      </main>
+    </div>
     <script>
       hljs.highlightAll();
+      document.getElementById('menuLink').addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('menu').classList.toggle('active');
+      });
     </script>
   </body>
 </html>
