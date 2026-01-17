@@ -1,266 +1,248 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Builder - Include</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/styles/atom-one-dark.min.css" />
-    <link rel="stylesheet" href="/style.css" />
-    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/highlight.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/languages/r.min.js"></script>
-  </head>
-  <body>
-    <div id="layout">
-      <a href="#menu" id="menuLink"><span></span><span></span><span></span></a>
-      <nav id="menu" class="pure-menu">
-        <a class="pure-menu-heading" href="/">Builder</a>
-        <ul class="pure-menu-list">
-          <li class="pure-menu-item"><a href="/" class="pure-menu-link">Home</a></li>
-          <li class="pure-menu-item"><a href="/packages" class="pure-menu-link">Packages</a></li>
-          <li class="pure-menu-item"><a href="/directives" class="pure-menu-link">Directives</a></li>
-          <li class="pure-menu-item"><a href="/deconstruct" class="pure-menu-link">Deconstruct</a></li>
-          <li class="pure-menu-item"><a href="/macros" class="pure-menu-link">Macros</a></li>
-          <li class="pure-menu-item pure-menu-selected"><a href="/include" class="pure-menu-link">Include</a></li>
-          <li class="pure-menu-item"><a href="/import" class="pure-menu-link">Import</a></li>
-          <li class="pure-menu-item"><a href="/fstrings" class="pure-menu-link">f-strings</a></li>
-          <li class="pure-menu-item"><a href="/tests" class="pure-menu-link">Tests</a></li>
-          <li class="pure-menu-item"><a href="/const" class="pure-menu-link">Constants</a></li>
-          <li class="pure-menu-item"><a href="/preflight" class="pure-menu-link">Preflight</a></li>
-          <li class="pure-menu-item"><a href="/plugins" class="pure-menu-link">Plugins</a></li>
-        </ul>
-      </nav>
-      <main class="content">
-        <h1>Include</h1>
-        <p>
-          The <code>#include</code> directive allows you to read external files at
-          build time and process them using macros. This enables you to embed file
-          contents (like SQL queries, templates, or configuration) directly into
-          your R code as variables.
-        </p>
-        <h2>Advantages</h2>
-        <ul>
-          <li>
-            <strong>Separation of concerns:</strong> Keep SQL queries, templates,
-            and other content in separate files while still embedding them in your
-            code at build time.
-          </li>
-          <li>
-            <strong>Build-time processing:</strong> File contents are read and
-            processed during preprocessing, not at runtime, eliminating file I/O
-            overhead.
-          </li>
-          <li>
-            <strong>Macro integration:</strong> Use any macro to process file
-            contents, enabling custom transformations and formatting.
-          </li>
-          <li>
-            <strong>Type safety:</strong> File contents are converted to R objects
-            at build time, catching errors early.
-          </li>
-        </ul>
-        <h2>Basic Syntax</h2>
-        <p>
-          The <code>#include</code> directive uses a special syntax that specifies
-          a macro to apply, a file path to read, and a variable name for the
-          result.
-        </p>
-        <p>
-          <strong>Syntax:</strong>
-          <code>#include:MACRO_NAME file_path variable_name</code>
-        </p>
-        <p>The directive consists of three space-separated parts:</p>
-        <ul>
-          <li>
-            <code>MACRO_NAME</code> - The name of a previously defined macro that
-            takes one argument (the file path)
-          </li>
-          <li><code>file_path</code> - The path to the file to include</li>
-          <li>
-            <code>variable_name</code> - The R variable name that will be assigned
-            the processed result
-          </li>
-        </ul>
-        <h2>Basic Example</h2>
-        <p>
-          The most common use case is reading text files like SQL queries. First,
-          define a macro that specifies how to read the file:
-        </p>
-        <pre><code class="language-r">#define
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Builder - Include</title>
+</head>
+<body>
+  <nav>
+    <a href="/">Builder</a> |
+    <a href="/packages.html">Packages</a> |
+    <a href="/directives.html">Directives</a> |
+    <a href="/deconstruct.html">Deconstruct</a> |
+    <a href="/macros.html">Macros</a> |
+    <a href="/include.html">Include</a> |
+    <a href="/import.html">Import</a> |
+    <a href="/fstrings.html">f-strings</a> |
+    <a href="/tests.html">Tests</a> |
+    <a href="/const.html">Constants</a> |
+    <a href="/preflight.html">Preflight</a> |
+    <a href="/plugins.html">Plugins</a>
+  </nav>
+  <main>
+    <h1>Include</h1>
+    <p>
+      The <code>#include</code> directive allows you to read external files at
+      build time and process them using macros. This enables you to embed file
+      contents (like SQL queries, templates, or configuration) directly into
+      your R code as variables.
+    </p>
+    <h2>Advantages</h2>
+    <ul>
+      <li>
+        <strong>Separation of concerns:</strong> Keep SQL queries, templates,
+        and other content in separate files while still embedding them in your
+        code at build time.
+      </li>
+      <li>
+        <strong>Build-time processing:</strong> File contents are read and
+        processed during preprocessing, not at runtime, eliminating file I/O
+        overhead.
+      </li>
+      <li>
+        <strong>Macro integration:</strong> Use any macro to process file
+        contents, enabling custom transformations and formatting.
+      </li>
+      <li>
+        <strong>Type safety:</strong> File contents are converted to R objects
+        at build time, catching errors early.
+      </li>
+    </ul>
+    <h2>Basic Syntax</h2>
+    <p>
+      The <code>#include</code> directive uses a special syntax that specifies
+      a macro to apply, a file path to read, and a variable name for the
+      result.
+    </p>
+    <p>
+      <strong>Syntax:</strong>
+      <code>#include:MACRO_NAME file_path variable_name</code>
+    </p>
+    <p>The directive consists of three space-separated parts:</p>
+    <ul>
+      <li>
+        <code>MACRO_NAME</code> - The name of a previously defined macro that
+        takes one argument (the file path)
+      </li>
+      <li><code>file_path</code> - The path to the file to include</li>
+      <li>
+        <code>variable_name</code> - The R variable name that will be assigned
+        the processed result
+      </li>
+    </ul>
+    <h2>Basic Example</h2>
+    <p>
+      The most common use case is reading text files like SQL queries. First,
+      define a macro that specifies how to read the file:
+    </p>
+    <pre><code>#define
 READ(path){
   readLines(path)
 }
 #enddef
 
 #include:READ sql/query.sql my_query</code></pre>
-        <p><strong>Expands to:</strong></p>
-        <pre><code class="language-r">my_query &lt;- c("SELECT * FROM users")</code></pre>
-        <p>
-          The <code>READ</code> macro uses R's <code>readLines()</code> function
-          to read the file. The result is captured using R's
-          <code>dput()</code> function and assigned to the specified variable.
-        </p>
-        <h2>How It Works</h2>
-        <p>
-          When the preprocessor encounters an <code>#include</code> directive:
-        </p>
-        <ol>
-          <li>It parses the macro name, file path, and variable name</li>
-          <li>
-            It looks up the macro definition (e.g., <code>READ</code>) from your
-            <code>#define</code> statements
-          </li>
-          <li>
-            It constructs an R expression:
-            <code>MACRO_NAME('file_path') |&gt; dput() |&gt; capture.output()</code>
-          </li>
-          <li>It executes this R expression to process the file</li>
-          <li>
-            It generates an assignment:
-            <code>variable_name &lt;- &lt;result&gt;</code>
-          </li>
-        </ol>
-        <p>
-          This happens at build time, so the final R code contains no file reading
-          operations—just the processed data.
-        </p>
-        <h2>Advanced Examples</h2>
-        <h3>Reading and Collapsing SQL</h3>
-        <p>
-          You might want to read a multi-line SQL file and collapse it into a
-          single string:
-        </p>
-        <pre><code class="language-r">#define
+    <p><strong>Expands to:</strong></p>
+    <pre><code>my_query &lt;- c("SELECT * FROM users")</code></pre>
+    <p>
+      The <code>READ</code> macro uses R's <code>readLines()</code> function
+      to read the file. The result is captured using R's
+      <code>dput()</code> function and assigned to the specified variable.
+    </p>
+    <h2>How It Works</h2>
+    <p>
+      When the preprocessor encounters an <code>#include</code> directive:
+    </p>
+    <ol>
+      <li>It parses the macro name, file path, and variable name</li>
+      <li>
+        It looks up the macro definition (e.g., <code>READ</code>) from your
+        <code>#define</code> statements
+      </li>
+      <li>
+        It constructs an R expression:
+        <code>MACRO_NAME('file_path') |&gt; dput() |&gt; capture.output()</code>
+      </li>
+      <li>It executes this R expression to process the file</li>
+      <li>
+        It generates an assignment:
+        <code>variable_name &lt;- &lt;result&gt;</code>
+      </li>
+    </ol>
+    <p>
+      This happens at build time, so the final R code contains no file reading
+      operations—just the processed data.
+    </p>
+    <h2>Advanced Examples</h2>
+    <h3>Reading and Collapsing SQL</h3>
+    <p>
+      You might want to read a multi-line SQL file and collapse it into a
+      single string:
+    </p>
+    <pre><code>#define
 READ_SQL(path){
   readLines(path) |&gt; paste(collapse = " ")
 }
 #enddef
 
 #include:READ_SQL queries/get_users.sql user_query</code></pre>
-        <p>If <code>queries/get_users.sql</code> contains:</p>
-        <pre><code class="language-sql">SELECT id, name, email
+    <p>If <code>queries/get_users.sql</code> contains:</p>
+    <pre><code>SELECT id, name, email
 FROM users
 WHERE active = TRUE
 ORDER BY name</code></pre>
-        <p><strong>Expands to:</strong></p>
-        <pre><code class="language-r">user_query &lt;- "SELECT id, name, email FROM users WHERE active = TRUE ORDER BY name"</code></pre>
-        <h3>Reading JSON Configuration</h3>
-        <p>
-          You can use <code>#include</code> to embed JSON configuration at build
-          time:
-        </p>
-        <pre><code class="language-r">#define
+    <p><strong>Expands to:</strong></p>
+    <pre><code>user_query &lt;- "SELECT id, name, email FROM users WHERE active = TRUE ORDER BY name"</code></pre>
+    <h3>Reading JSON Configuration</h3>
+    <p>
+      You can use <code>#include</code> to embed JSON configuration at build
+      time:
+    </p>
+    <pre><code>#define
 READ_JSON(path){
   jsonlite::fromJSON(path, simplifyVector = FALSE)
 }
 #enddef
 
 #include:READ_JSON config/settings.json app_config</code></pre>
-        <p>If <code>config/settings.json</code> contains:</p>
-        <pre><code class="language-json">{
+    <p>If <code>config/settings.json</code> contains:</p>
+    <pre><code>{
   "api_url": "https://api.example.com",
   "timeout": 30,
   "debug": false
 }</code></pre>
-        <p><strong>Expands to:</strong></p>
-        <pre><code class="language-r">app_config &lt;- list(api_url = "https://api.example.com", timeout = 30, debug = FALSE)</code></pre>
-        <h3>Reading CSV Data</h3>
-        <p>Embed small lookup tables or static data directly in your code:</p>
-        <pre><code class="language-r">#define
+    <p><strong>Expands to:</strong></p>
+    <pre><code>app_config &lt;- list(api_url = "https://api.example.com", timeout = 30, debug = FALSE)</code></pre>
+    <h3>Reading CSV Data</h3>
+    <p>Embed small lookup tables or static data directly in your code:</p>
+    <pre><code>#define
 READ_CSV(path){
   read.csv(path)
 }
 #enddef
 
 #include:READ_CSV data/lookup_table.csv lookup_data</code></pre>
-        <h3>Reading Template Files</h3>
-        <p>Read template strings for reports or emails:</p>
-        <pre><code class="language-r">#define
+    <h3>Reading Template Files</h3>
+    <p>Read template strings for reports or emails:</p>
+    <pre><code>#define
 READ_TEMPLATE(path){
   readLines(path) |&gt; paste(collapse = "\n")
 }
 #enddef
 
 #include:READ_TEMPLATE templates/email_body.txt email_template</code></pre>
-        <h2>Important Notes</h2>
-        <ul>
-          <li>
-            The macro specified in <code>#include:MACRO_NAME</code> must be
-            defined before the <code>#include</code> directive
-          </li>
-          <li>The macro must accept exactly one parameter (the file path)</li>
-          <li>
-            File paths are relative to the build directory or can be absolute
-            paths
-          </li>
-          <li>
-            The result is captured using R's <code>dput()</code> function, which
-            converts R objects to their code representation
-          </li>
-          <li>
-            File reading happens at build time, not runtime, so files must exist
-            when running the builder
-          </li>
-          <li>
-            Changes to included files require rebuilding to be reflected in the
-            output
-          </li>
-          <li>
-            The macro can use any R code for processing—you're not limited to
-            simple <code>readLines()</code>
-          </li>
-          <li>
-            Variable names should follow R naming conventions and will be created
-            in the global scope
-          </li>
-        </ul>
-        <h2>Processing Pipeline</h2>
-        <p>
-          The <code>#include</code> directive is processed after
-          <code>#define</code> macro expansion but as part of the same
-          preprocessing pass. This means:
-        </p>
-        <ol>
-          <li>First, all <code>#define</code> macros are defined and expanded</li>
-          <li>
-            Then, <code>#include</code> directives are processed using the defined
-            macros
-          </li>
-          <li>
-            The result is pure R code with all preprocessing directives removed
-          </li>
-        </ol>
-        <h2>Common Use Cases</h2>
-        <ul>
-          <li>
-            <strong>SQL Queries:</strong> Keep SQL in <code>.sql</code> files with
-            proper syntax highlighting and embed them in R packages
-          </li>
-          <li>
-            <strong>Configuration:</strong> Store configuration in JSON, YAML, or
-            other formats and embed at build time
-          </li>
-          <li>
-            <strong>Static Data:</strong> Include small reference datasets or
-            lookup tables directly in code
-          </li>
-          <li>
-            <strong>Templates:</strong> Store HTML, Markdown, or text templates
-            externally and include them for string generation
-          </li>
-          <li>
-            <strong>Constants:</strong> Define large constant structures in
-            separate files for better organization
-          </li>
-        </ul>
-      </main>
-    </div>
-    <script>
-      hljs.highlightAll();
-      document.getElementById('menuLink').addEventListener('click', function(e) {
-        e.preventDefault();
-        document.getElementById('menu').classList.toggle('active');
-      });
-    </script>
-  </body>
+    <h2>Important Notes</h2>
+    <ul>
+      <li>
+        The macro specified in <code>#include:MACRO_NAME</code> must be
+        defined before the <code>#include</code> directive
+      </li>
+      <li>The macro must accept exactly one parameter (the file path)</li>
+      <li>
+        File paths are relative to the build directory or can be absolute
+        paths
+      </li>
+      <li>
+        The result is captured using R's <code>dput()</code> function, which
+        converts R objects to their code representation
+      </li>
+      <li>
+        File reading happens at build time, not runtime, so files must exist
+        when running the builder
+      </li>
+      <li>
+        Changes to included files require rebuilding to be reflected in the
+        output
+      </li>
+      <li>
+        The macro can use any R code for processing—you're not limited to
+        simple <code>readLines()</code>
+      </li>
+      <li>
+        Variable names should follow R naming conventions and will be created
+        in the global scope
+      </li>
+    </ul>
+    <h2>Processing Pipeline</h2>
+    <p>
+      The <code>#include</code> directive is processed after
+      <code>#define</code> macro expansion but as part of the same
+      preprocessing pass. This means:
+    </p>
+    <ol>
+      <li>First, all <code>#define</code> macros are defined and expanded</li>
+      <li>
+        Then, <code>#include</code> directives are processed using the defined
+        macros
+      </li>
+      <li>
+        The result is pure R code with all preprocessing directives removed
+      </li>
+    </ol>
+    <h2>Common Use Cases</h2>
+    <ul>
+      <li>
+        <strong>SQL Queries:</strong> Keep SQL in <code>.sql</code> files with
+        proper syntax highlighting and embed them in R packages
+      </li>
+      <li>
+        <strong>Configuration:</strong> Store configuration in JSON, YAML, or
+        other formats and embed at build time
+      </li>
+      <li>
+        <strong>Static Data:</strong> Include small reference datasets or
+        lookup tables directly in code
+      </li>
+      <li>
+        <strong>Templates:</strong> Store HTML, Markdown, or text templates
+        externally and include them for string generation
+      </li>
+      <li>
+        <strong>Constants:</strong> Define large constant structures in
+        separate files for better organization
+      </li>
+    </ul>
+  </main>
+</body>
 </html>

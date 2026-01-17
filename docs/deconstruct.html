@@ -1,55 +1,37 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Builder - Deconstruct</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/styles/atom-one-dark.min.css" />
-    <link rel="stylesheet" href="/style.css" />
-    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/highlight.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/languages/r.min.js"></script>
-  </head>
-  <body>
-    <div id="layout">
-      <a href="#menu" id="menuLink"><span></span><span></span><span></span></a>
-      <nav id="menu" class="pure-menu">
-        <a class="pure-menu-heading" href="/">Builder</a>
-        <ul class="pure-menu-list">
-          <li class="pure-menu-item"><a href="/" class="pure-menu-link">Home</a></li>
-          <li class="pure-menu-item"><a href="/packages" class="pure-menu-link">Packages</a></li>
-          <li class="pure-menu-item"><a href="/directives" class="pure-menu-link">Directives</a></li>
-          <li class="pure-menu-item pure-menu-selected"><a href="/deconstruct" class="pure-menu-link">Deconstruct</a></li>
-          <li class="pure-menu-item"><a href="/macros" class="pure-menu-link">Macros</a></li>
-          <li class="pure-menu-item"><a href="/include" class="pure-menu-link">Include</a></li>
-          <li class="pure-menu-item"><a href="/import" class="pure-menu-link">Import</a></li>
-          <li class="pure-menu-item"><a href="/fstrings" class="pure-menu-link">f-strings</a></li>
-          <li class="pure-menu-item"><a href="/tests" class="pure-menu-link">Tests</a></li>
-          <li class="pure-menu-item"><a href="/const" class="pure-menu-link">Constants</a></li>
-          <li class="pure-menu-item"><a href="/preflight" class="pure-menu-link">Preflight</a></li>
-          <li class="pure-menu-item"><a href="/plugins" class="pure-menu-link">Plugins</a></li>
-        </ul>
-      </nav>
-      <main class="content">
-        <h1>Deconstruct</h1>
-        <p>Builder supports destructuring assignment syntax for R, similar to JavaScript and Python.</p>
-        <p>Use the <code>.[var1, var2, ...]</code> syntax to extract multiple values from a list:</p>
-        <pre><code class="language-r">.[x, my_var] <- call()</code></pre>
-        <p>That will produce:</p>
-        <pre><code class="language-r">x <- call()[[1]]
-my_var <- call()[[2]]</code></pre>
-        <p>
-          Variables are assigned in order using list accessor <code>[[1]]</code>, <code>[[2]]</code>, etc.
-          This makes it convenient to work with functions that return multiple values in a list.
-        </p>
-      </main>
-    </div>
-    <script>
-      hljs.highlightAll();
-      document.getElementById('menuLink').addEventListener('click', function(e) {
-        e.preventDefault();
-        document.getElementById('menu').classList.toggle('active');
-      });
-    </script>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Builder - Deconstruct</title>
+</head>
+<body>
+  <nav>
+    <a href="/">Builder</a> |
+    <a href="/packages.html">Packages</a> |
+    <a href="/directives.html">Directives</a> |
+    <a href="/deconstruct.html">Deconstruct</a> |
+    <a href="/macros.html">Macros</a> |
+    <a href="/include.html">Include</a> |
+    <a href="/import.html">Import</a> |
+    <a href="/fstrings.html">f-strings</a> |
+    <a href="/tests.html">Tests</a> |
+    <a href="/const.html">Constants</a> |
+    <a href="/preflight.html">Preflight</a> |
+    <a href="/plugins.html">Plugins</a>
+  </nav>
+  <main>
+    <h1>Deconstruct</h1>
+    <p>Builder supports destructuring assignment syntax for R, similar to JavaScript and Python.</p>
+    <p>Use the <code>.[var1, var2, ...]</code> syntax to extract multiple values from a list:</p>
+    <pre><code>.[x, my_var] &lt;- call()</code></pre>
+    <p>That will produce:</p>
+    <pre><code>x &lt;- call()[[1]]
+my_var &lt;- call()[[2]]</code></pre>
+    <p>
+      Variables are assigned in order using list accessor <code>[[1]]</code>, <code>[[2]]</code>, etc.
+      This makes it convenient to work with functions that return multiple values in a list.
+    </p>
+  </main>
+</body>
 </html>

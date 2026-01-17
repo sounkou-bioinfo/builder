@@ -1,97 +1,87 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Builder - Tests</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/styles/atom-one-dark.min.css" />
-    <link rel="stylesheet" href="/style.css" />
-    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/highlight.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/languages/r.min.js"></script>
-  </head>
-  <body>
-    <div id="layout">
-      <a href="#menu" id="menuLink"><span></span><span></span><span></span></a>
-      <nav id="menu" class="pure-menu">
-        <a class="pure-menu-heading" href="/">Builder</a>
-        <ul class="pure-menu-list">
-          <li class="pure-menu-item"><a href="/" class="pure-menu-link">Home</a></li>
-          <li class="pure-menu-item"><a href="/packages" class="pure-menu-link">Packages</a></li>
-          <li class="pure-menu-item"><a href="/directives" class="pure-menu-link">Directives</a></li>
-          <li class="pure-menu-item"><a href="/deconstruct" class="pure-menu-link">Deconstruct</a></li>
-          <li class="pure-menu-item"><a href="/macros" class="pure-menu-link">Macros</a></li>
-          <li class="pure-menu-item"><a href="/include" class="pure-menu-link">Include</a></li>
-          <li class="pure-menu-item"><a href="/import" class="pure-menu-link">Import</a></li>
-          <li class="pure-menu-item"><a href="/fstrings" class="pure-menu-link">f-strings</a></li>
-          <li class="pure-menu-item pure-menu-selected"><a href="/tests" class="pure-menu-link">Tests</a></li>
-          <li class="pure-menu-item"><a href="/const" class="pure-menu-link">Constants</a></li>
-          <li class="pure-menu-item"><a href="/preflight" class="pure-menu-link">Preflight</a></li>
-          <li class="pure-menu-item"><a href="/plugins" class="pure-menu-link">Plugins</a></li>
-        </ul>
-      </nav>
-      <main class="content">
-        <h1>Tests</h1>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Builder - Tests</title>
+</head>
+<body>
+  <nav>
+    <a href="/">Builder</a> |
+    <a href="/packages.html">Packages</a> |
+    <a href="/directives.html">Directives</a> |
+    <a href="/deconstruct.html">Deconstruct</a> |
+    <a href="/macros.html">Macros</a> |
+    <a href="/include.html">Include</a> |
+    <a href="/import.html">Import</a> |
+    <a href="/fstrings.html">f-strings</a> |
+    <a href="/tests.html">Tests</a> |
+    <a href="/const.html">Constants</a> |
+    <a href="/preflight.html">Preflight</a> |
+    <a href="/plugins.html">Plugins</a>
+  </nav>
+  <main>
+    <h1>Tests</h1>
 
-        <p>
-          Builder automatically generates testthat test files from inline <code>#test</code> blocks
-          in your R source code. This allows you to keep tests close to the code they're testing
-          while maintaining a clean separation in the output.
-        </p>
+    <p>
+      Builder automatically generates testthat test files from inline <code>#test</code> blocks
+      in your R source code. This allows you to keep tests close to the code they're testing
+      while maintaining a clean separation in the output.
+    </p>
 
-        <h2>How It Works</h2>
+    <h2>How It Works</h2>
 
-        <p>
-          When Builder processes your source files, it:
-        </p>
-        <ul>
-          <li>Detects <code>#test</code> blocks in your source code</li>
-          <li>Extracts the test description and test expressions</li>
-          <li>Generates testthat test files in <code>tests/testthat/</code></li>
-          <li>Automatically creates the directory structure if needed</li>
-        </ul>
+    <p>
+      When Builder processes your source files, it:
+    </p>
+    <ul>
+      <li>Detects <code>#test</code> blocks in your source code</li>
+      <li>Extracts the test description and test expressions</li>
+      <li>Generates testthat test files in <code>tests/testthat/</code></li>
+      <li>Automatically creates the directory structure if needed</li>
+    </ul>
 
-        <h2>Syntax</h2>
+    <h2>Syntax</h2>
 
-        <p>
-          Test blocks are defined using <code>#test</code> and <code>#endtest</code> directives:
-        </p>
+    <p>
+      Test blocks are defined using <code>#test</code> and <code>#endtest</code> directives:
+    </p>
 
-        <pre><code class="language-r">#test Description of what you're testing
+    <pre><code>#test Description of what you're testing
 expect_equal(my_function(), expected_value)
 expect_true(some_condition)
 #endtest</code></pre>
 
-        <p><strong>Important notes:</strong></p>
-        <ul>
-          <li>The description comes on the same line as <code>#test</code></li>
-          <li>Test expressions are written as normal R code (no <code>#</code> prefix needed)</li>
-          <li>Empty test blocks (no expressions) are skipped with a warning</li>
-        </ul>
+    <p><strong>Important notes:</strong></p>
+    <ul>
+      <li>The description comes on the same line as <code>#test</code></li>
+      <li>Test expressions are written as normal R code (no <code>#</code> prefix needed)</li>
+      <li>Empty test blocks (no expressions) are skipped with a warning</li>
+    </ul>
 
-        <h2>File Naming Convention</h2>
+    <h2>File Naming Convention</h2>
 
-        <p>
-          Generated test files follow this pattern:
-        </p>
+    <p>
+      Generated test files follow this pattern:
+    </p>
 
-        <pre><code class="language-bash">tests/testthat/test-builder-&lt;filename&gt;</code></pre>
+    <pre><code>tests/testthat/test-builder-&lt;filename&gt;</code></pre>
 
-        <p><strong>Examples:</strong></p>
-        <ul>
-          <li><code>srcr/main.R</code> → <code>tests/testthat/test-builder-main.R</code></li>
-          <li><code>srcr/sub/utils.R</code> → <code>tests/testthat/test-builder-sub-utils.R</code></li>
-        </ul>
+    <p><strong>Examples:</strong></p>
+    <ul>
+      <li><code>srcr/main.R</code> → <code>tests/testthat/test-builder-main.R</code></li>
+      <li><code>srcr/sub/utils.R</code> → <code>tests/testthat/test-builder-sub-utils.R</code></li>
+    </ul>
 
-        <p>
-          Subdirectory paths are flattened using hyphens to keep all test files in a single directory.
-        </p>
+    <p>
+      Subdirectory paths are flattened using hyphens to keep all test files in a single directory.
+    </p>
 
-        <h2>Example</h2>
+    <h2>Example</h2>
 
-        <p><strong>Input file (srcr/main.R):</strong></p>
+    <p><strong>Input file (srcr/main.R):</strong></p>
 
-        <pre><code class="language-r">foo &lt;- function() {
+    <pre><code>foo &lt;- function() {
   return(1)
 }
 
@@ -100,22 +90,22 @@ expect_equal(foo(), 1)
 expect_type(foo(), "double")
 #endtest</code></pre>
 
-        <p><strong>Command:</strong></p>
+    <p><strong>Command:</strong></p>
 
-        <pre><code class="language-bash">./builder -input srcr -output R</code></pre>
+    <pre><code>./builder -input srcr -output R</code></pre>
 
-        <p><strong>Generated test file (tests/testthat/test-builder-main.R):</strong></p>
+    <p><strong>Generated test file (tests/testthat/test-builder-main.R):</strong></p>
 
-        <pre><code class="language-r">test_that("That it returns one!", {
+    <pre><code>test_that("That it returns one!", {
   expect_equal(foo(), 1)
   expect_type(foo(), "double")
 })</code></pre>
 
-        <h2>Multiple Tests</h2>
+    <h2>Multiple Tests</h2>
 
-        <p>You can have multiple test blocks in a single source file:</p>
+    <p>You can have multiple test blocks in a single source file:</p>
 
-        <pre><code class="language-r">add &lt;- function(a, b) {
+    <pre><code>add &lt;- function(a, b) {
   return(a + b)
 }
 
@@ -133,56 +123,48 @@ expect_equal(multiply(2, 3), 6)
 expect_equal(multiply(0, 5), 0)
 #endtest</code></pre>
 
-        <p>All tests from the same source file are collected into a single test file with multiple <code>test_that()</code> blocks.</p>
+    <p>All tests from the same source file are collected into a single test file with multiple <code>test_that()</code> blocks.</p>
 
-        <h2>Cleaning Test Files</h2>
+    <h2>Cleaning Test Files</h2>
 
-        <p>
-          When Builder cleans the output directory (default behavior), it also automatically removes
-          the corresponding test files. This ensures a fresh build each time.
-        </p>
+    <p>
+      When Builder cleans the output directory (default behavior), it also automatically removes
+      the corresponding test files. This ensures a fresh build each time.
+    </p>
 
-        <pre><code class="language-bash"># Default: cleans R/ output and tests/testthat/ test files
+    <pre><code># Default: cleans R/ output and tests/testthat/ test files
 ./builder -input srcr -output R
 
 # Skip cleaning with -noclean flag
 ./builder -input srcr -output R -noclean</code></pre>
 
-        <h2>Integration with testthat</h2>
+    <h2>Integration with testthat</h2>
 
-        <p>
-          The generated test files are standard testthat format and can be run using:
-        </p>
+    <p>
+      The generated test files are standard testthat format and can be run using:
+    </p>
 
-        <pre><code class="language-r"># In R console
+    <pre><code># In R console
 library(testthat)
 test_dir("tests/testthat")</code></pre>
 
-        <p>Or with the standard R CMD check workflow for package development.</p>
+    <p>Or with the standard R CMD check workflow for package development.</p>
 
-        <h2>Best Practices</h2>
+    <h2>Best Practices</h2>
 
-        <ul>
-          <li><strong>Keep tests close to code</strong> - Write tests right after the functions they test</li>
-          <li><strong>Use descriptive names</strong> - Make test descriptions clear and specific</li>
-          <li><strong>One concern per test</strong> - Test one specific behavior per test block</li>
-          <li><strong>Include edge cases</strong> - Test boundary conditions and error cases</li>
-        </ul>
+    <ul>
+      <li><strong>Keep tests close to code</strong> - Write tests right after the functions they test</li>
+      <li><strong>Use descriptive names</strong> - Make test descriptions clear and specific</li>
+      <li><strong>One concern per test</strong> - Test one specific behavior per test block</li>
+      <li><strong>Include edge cases</strong> - Test boundary conditions and error cases</li>
+    </ul>
 
-        <h2>Limitations</h2>
+    <h2>Limitations</h2>
 
-        <ul>
-          <li>Test expressions cannot span multiple lines without proper R continuation</li>
-          <li>Tests are removed from the processed R output</li>
-        </ul>
-      </main>
-    </div>
-    <script>
-      hljs.highlightAll();
-      document.getElementById('menuLink').addEventListener('click', function(e) {
-        e.preventDefault();
-        document.getElementById('menu').classList.toggle('active');
-      });
-    </script>
-  </body>
+    <ul>
+      <li>Test expressions cannot span multiple lines without proper R continuation</li>
+      <li>Tests are removed from the processed R output</li>
+    </ul>
+  </main>
+</body>
 </html>

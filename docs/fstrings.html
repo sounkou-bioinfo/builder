@@ -1,57 +1,39 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Builder - f-strings</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/styles/atom-one-dark.min.css" />
-    <link rel="stylesheet" href="/style.css" />
-    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/highlight.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/languages/r.min.js"></script>
-  </head>
-  <body>
-    <div id="layout">
-      <a href="#menu" id="menuLink"><span></span><span></span><span></span></a>
-      <nav id="menu" class="pure-menu">
-        <a class="pure-menu-heading" href="/">Builder</a>
-        <ul class="pure-menu-list">
-          <li class="pure-menu-item"><a href="/" class="pure-menu-link">Home</a></li>
-          <li class="pure-menu-item"><a href="/packages" class="pure-menu-link">Packages</a></li>
-          <li class="pure-menu-item"><a href="/directives" class="pure-menu-link">Directives</a></li>
-          <li class="pure-menu-item"><a href="/deconstruct" class="pure-menu-link">Deconstruct</a></li>
-          <li class="pure-menu-item"><a href="/macros" class="pure-menu-link">Macros</a></li>
-          <li class="pure-menu-item"><a href="/include" class="pure-menu-link">Include</a></li>
-          <li class="pure-menu-item"><a href="/import" class="pure-menu-link">Import</a></li>
-          <li class="pure-menu-item pure-menu-selected"><a href="/fstrings" class="pure-menu-link">f-strings</a></li>
-          <li class="pure-menu-item"><a href="/tests" class="pure-menu-link">Tests</a></li>
-          <li class="pure-menu-item"><a href="/const" class="pure-menu-link">Constants</a></li>
-          <li class="pure-menu-item"><a href="/preflight" class="pure-menu-link">Preflight</a></li>
-          <li class="pure-menu-item"><a href="/plugins" class="pure-menu-link">Plugins</a></li>
-        </ul>
-      </nav>
-      <main class="content">
-        <h1>f-strings</h1>
-        <p>Builder accepts f-strings</p>
-        <pre><code class="language-r">x <- 1
-y <- 2
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Builder - f-strings</title>
+</head>
+<body>
+  <nav>
+    <a href="/">Builder</a> |
+    <a href="/packages.html">Packages</a> |
+    <a href="/directives.html">Directives</a> |
+    <a href="/deconstruct.html">Deconstruct</a> |
+    <a href="/macros.html">Macros</a> |
+    <a href="/include.html">Include</a> |
+    <a href="/import.html">Import</a> |
+    <a href="/fstrings.html">f-strings</a> |
+    <a href="/tests.html">Tests</a> |
+    <a href="/const.html">Constants</a> |
+    <a href="/preflight.html">Preflight</a> |
+    <a href="/plugins.html">Plugins</a>
+  </nav>
+  <main>
+    <h1>f-strings</h1>
+    <p>Builder accepts f-strings</p>
+    <pre><code>x &lt;- 1
+y &lt;- 2
 print(f'{x} + {y} = {x + y}')</code></pre>
-        <p>That will produce:</p>
-        <pre><code class="language-r">x <- 1
-y <- 2
+    <p>That will produce:</p>
+    <pre><code>x &lt;- 1
+y &lt;- 2
 print(sprintf('%s + %s = %s', x, y, x + y))</code></pre>
-        <p>
-          Note that it's currently simple in its implementation and just uses
-          <code>%s</code> formats.
-        </p>
-      </main>
-    </div>
-    <script>
-      hljs.highlightAll();
-      document.getElementById('menuLink').addEventListener('click', function(e) {
-        e.preventDefault();
-        document.getElementById('menu').classList.toggle('active');
-      });
-    </script>
-  </body>
+    <p>
+      Note that it's currently simple in its implementation and just uses
+      <code>%s</code> formats.
+    </p>
+  </main>
+</body>
 </html>

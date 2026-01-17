@@ -1,75 +1,65 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Builder - Directives</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/styles/atom-one-dark.min.css" />
-    <link rel="stylesheet" href="/style.css" />
-    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/highlight.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/languages/r.min.js"></script>
-  </head>
-  <body>
-    <div id="layout">
-      <a href="#menu" id="menuLink"><span></span><span></span><span></span></a>
-      <nav id="menu" class="pure-menu">
-        <a class="pure-menu-heading" href="/">Builder</a>
-        <ul class="pure-menu-list">
-          <li class="pure-menu-item"><a href="/" class="pure-menu-link">Home</a></li>
-          <li class="pure-menu-item"><a href="/packages" class="pure-menu-link">Packages</a></li>
-          <li class="pure-menu-item pure-menu-selected"><a href="/directives" class="pure-menu-link">Directives</a></li>
-          <li class="pure-menu-item"><a href="/deconstruct" class="pure-menu-link">Deconstruct</a></li>
-          <li class="pure-menu-item"><a href="/macros" class="pure-menu-link">Macros</a></li>
-          <li class="pure-menu-item"><a href="/include" class="pure-menu-link">Include</a></li>
-          <li class="pure-menu-item"><a href="/import" class="pure-menu-link">Import</a></li>
-          <li class="pure-menu-item"><a href="/fstrings" class="pure-menu-link">f-strings</a></li>
-          <li class="pure-menu-item"><a href="/tests" class="pure-menu-link">Tests</a></li>
-          <li class="pure-menu-item"><a href="/const" class="pure-menu-link">Constants</a></li>
-          <li class="pure-menu-item"><a href="/preflight" class="pure-menu-link">Preflight</a></li>
-          <li class="pure-menu-item"><a href="/plugins" class="pure-menu-link">Plugins</a></li>
-        </ul>
-      </nav>
-      <main class="content">
-        <h1>Directives</h1>
-        <p>
-          Builder lets you use directives in your R files and via the command
-          line.
-        </p>
-        <h2>Command line</h2>
-        <p>
-          You can pass definitions via the command line using <code>-D</code>
-          flags. This is useful for setting build-time constants without modifying
-          your source files.
-        </p>
-        <p>
-          <strong>Syntax:</strong> <code>-D&lt;NAME&gt;</code> for boolean flags,
-          or <code>-D&lt;NAME&gt; &lt;value&gt;</code> for valued definitions.
-        </p>
-        <pre><code class="language-bash">./builder -input srcr -output R -DDEBUG -DTEST '"a string"' -DXXX 42</code></pre>
-        <p>
-          Note: Command-line definitions override file-based
-          <code>#define</code> directives.
-        </p>
-        <h2>#define</h2>
-        <p>
-          Define macros or constants that will be replaced throughout your code.
-          All occurrences of the defined name will be replaced with the specified
-          value.
-        </p>
-        <p><strong>Syntax:</strong> <code>#define NAME value</code></p>
-        <pre><code class="language-r">#define PI 3.14159
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Builder - Directives</title>
+</head>
+<body>
+  <nav>
+    <a href="/">Builder</a> |
+    <a href="/packages.html">Packages</a> |
+    <a href="/directives.html">Directives</a> |
+    <a href="/deconstruct.html">Deconstruct</a> |
+    <a href="/macros.html">Macros</a> |
+    <a href="/include.html">Include</a> |
+    <a href="/import.html">Import</a> |
+    <a href="/fstrings.html">f-strings</a> |
+    <a href="/tests.html">Tests</a> |
+    <a href="/const.html">Constants</a> |
+    <a href="/preflight.html">Preflight</a> |
+    <a href="/plugins.html">Plugins</a>
+  </nav>
+  <main>
+    <h1>Directives</h1>
+    <p>
+      Builder lets you use directives in your R files and via the command
+      line.
+    </p>
+    <h2>Command line</h2>
+    <p>
+      You can pass definitions via the command line using <code>-D</code>
+      flags. This is useful for setting build-time constants without modifying
+      your source files.
+    </p>
+    <p>
+      <strong>Syntax:</strong> <code>-D&lt;NAME&gt;</code> for boolean flags,
+      or <code>-D&lt;NAME&gt; &lt;value&gt;</code> for valued definitions.
+    </p>
+    <pre><code>./builder -input srcr -output R -DDEBUG -DTEST '"a string"' -DXXX 42</code></pre>
+    <p>
+      Note: Command-line definitions override file-based
+      <code>#define</code> directives.
+    </p>
+    <h2>#define</h2>
+    <p>
+      Define macros or constants that will be replaced throughout your code.
+      All occurrences of the defined name will be replaced with the specified
+      value.
+    </p>
+    <p><strong>Syntax:</strong> <code>#define NAME value</code></p>
+    <pre><code>#define PI 3.14159
 #define STRING "hello world!"
 
 x &lt;- PI  # becomes: x &lt;- 3.14159
 print(STRING)  # becomes: print("hello world!")</code></pre>
-        <h2>#ifdef</h2>
-        <p>
-          Include a code block only if the specified name is defined (either via
-          <code>#define</code> or command-line <code>-D</code> flag).
-        </p>
-        <p><strong>Syntax:</strong> <code>#ifdef NAME ... #endif</code></p>
-        <pre><code class="language-r">#ifdef DEBUG
+    <h2>#ifdef</h2>
+    <p>
+      Include a code block only if the specified name is defined (either via
+      <code>#define</code> or command-line <code>-D</code> flag).
+    </p>
+    <p><strong>Syntax:</strong> <code>#ifdef NAME ... #endif</code></p>
+    <pre><code>#ifdef DEBUG
 cat("debugging!\n")
 #endif
 
@@ -79,23 +69,23 @@ cat("debug!")
 #else
 cat("world!")
 #endif</code></pre>
-        <h2>#ifndef</h2>
-        <p>
-          Include a code block only if the specified name is NOT defined. This is
-          the opposite of <code>#ifdef</code>.
-        </p>
-        <p><strong>Syntax:</strong> <code>#ifndef NAME ... #endif</code></p>
-        <pre><code class="language-r">#ifndef PROD
+    <h2>#ifndef</h2>
+    <p>
+      Include a code block only if the specified name is NOT defined. This is
+      the opposite of <code>#ifdef</code>.
+    </p>
+    <p><strong>Syntax:</strong> <code>#ifndef NAME ... #endif</code></p>
+    <pre><code>#ifndef PROD
 cat("Not in production mode")
 #endif</code></pre>
-        <h2>#if</h2>
-        <p>
-          Evaluate an R expression and include the code block if the result is
-          TRUE. The expression is evaluated using the embedded R interpreter and
-          supports any valid R expression that returns a logical value.
-        </p>
-        <p><strong>Syntax:</strong> <code>#if R_EXPRESSION ... #endif</code></p>
-        <pre><code class="language-r">#define VERSION 3
+    <h2>#if</h2>
+    <p>
+      Evaluate an R expression and include the code block if the result is
+      TRUE. The expression is evaluated using the embedded R interpreter and
+      supports any valid R expression that returns a logical value.
+    </p>
+    <p><strong>Syntax:</strong> <code>#if R_EXPRESSION ... #endif</code></p>
+    <pre><code>#define VERSION 3
 
 #if VERSION &gt; 2
 cat("Using new API\n")
@@ -104,51 +94,43 @@ cat("Using new API\n")
 #if XXX &gt; 1
 cat("it's 1!\n")
 #endif</code></pre>
-        <h2>#else</h2>
-        <p>
-          Provide an alternative code path for conditional blocks. Used with
-          <code>#ifdef</code>, <code>#ifndef</code>, or <code>#if</code> to
-          specify code that should be included when the condition is false.
-        </p>
-        <p>See the <code>#ifdef</code> example above for usage.</p>
-        <h2>#endif</h2>
-        <p>
-          Close a conditional compilation block. Required for all conditional
-          directives (<code>#ifdef</code>, <code>#ifndef</code>,
-          <code>#if</code>).
-        </p>
-        <h2>__FILE__</h2>
-        <p>
-          A built-in directive that is automatically replaced with the current
-          source file path. Useful for debugging and logging to track which file
-          generated specific code.
-        </p>
-        <pre><code class="language-r">cat("Processing file: __FILE__\n")
+    <h2>#else</h2>
+    <p>
+      Provide an alternative code path for conditional blocks. Used with
+      <code>#ifdef</code>, <code>#ifndef</code>, or <code>#if</code> to
+      specify code that should be included when the condition is false.
+    </p>
+    <p>See the <code>#ifdef</code> example above for usage.</p>
+    <h2>#endif</h2>
+    <p>
+      Close a conditional compilation block. Required for all conditional
+      directives (<code>#ifdef</code>, <code>#ifndef</code>,
+      <code>#if</code>).
+    </p>
+    <h2>__FILE__</h2>
+    <p>
+      A built-in directive that is automatically replaced with the current
+      source file path. Useful for debugging and logging to track which file
+      generated specific code.
+    </p>
+    <pre><code>cat("Processing file: __FILE__\n")
 # If in srcr/analysis.R, becomes: cat("Processing file: srcr/analysis.R \n")</code></pre>
-        <h2>__LINE__</h2>
-        <p>
-          A built-in directive that is automatically replaced with the current
-          line number in the source file. Useful for debugging and error tracking
-          to identify the exact location of code execution.
-        </p>
-        <pre><code class="language-r">cat("Executing line __LINE__\n")
+    <h2>__LINE__</h2>
+    <p>
+      A built-in directive that is automatically replaced with the current
+      line number in the source file. Useful for debugging and error tracking
+      to identify the exact location of code execution.
+    </p>
+    <pre><code>cat("Executing line __LINE__\n")
 # If on line 42, becomes: cat("Executing line 42\n")</code></pre>
-        <h2>__OS__</h2>
-        <p>
-          A built-in directive that is automatically populated with the current
-          operating system. Useful for conditionally compiling code based on the
-          current OS.
-        </p>
-        <pre><code class="language-r">cat("Running on: __OS__\n")
+    <h2>__OS__</h2>
+    <p>
+      A built-in directive that is automatically populated with the current
+      operating system. Useful for conditionally compiling code based on the
+      current OS.
+    </p>
+    <pre><code>cat("Running on: __OS__\n")
 # becomes: cat("Running on: Linux\n")</code></pre>
-      </main>
-    </div>
-    <script>
-      hljs.highlightAll();
-      document.getElementById('menuLink').addEventListener('click', function(e) {
-        e.preventDefault();
-        document.getElementById('menu').classList.toggle('active');
-      });
-    </script>
-  </body>
+  </main>
+</body>
 </html>
