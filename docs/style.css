@@ -4,11 +4,15 @@ body {
   color: #e0e0e0;
 }
 
+main {
+  line-height: 1.5;
+}
+
 a {
-  color: #90caf9;
+  color: #94a3b8;
 }
 a:hover {
-  color: #bbdefb;
+  color: #ffffff;
 }
 
 /* Layout */
@@ -45,7 +49,7 @@ a:hover {
 }
 
 #menu .pure-menu-selected .pure-menu-link {
-  background: #1f8dd6;
+  background: #64748b;
   color: #fff;
 }
 
