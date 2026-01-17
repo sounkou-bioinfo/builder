@@ -69,6 +69,7 @@ char *include_replace(Define **defs, char *line, Plugins *plugins)
     free(line);
     return plugged;
   }
+  free(plugged);
 
   Include inc = parse_include(line);
 

@@ -167,3 +167,13 @@ char *plugins_call(Plugins *head, char *fn, char *str)
 
   return copy;
 }
+
+void free_plugins(Plugins *head) {
+  Plugins *current = head;
+  while (current != NULL) {
+    Plugins *next = current->next;
+    free(current->name);
+    free(current);
+    current = next;
+  }
+}

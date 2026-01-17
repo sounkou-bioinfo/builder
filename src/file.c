@@ -320,6 +320,8 @@ int copy(char *src, char *dst, Define **defs, Plugins *plugins)
         if(strncmp(t, "#endtest", 8) == 0) {
           Tests *new_test = create_test(description, expressions);
           push_test(&tests, new_test);
+          free(description);
+          free(expressions);
           break;
         }
 

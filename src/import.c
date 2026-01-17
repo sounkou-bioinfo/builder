@@ -25,6 +25,9 @@ char *get_path_from_package(char *input)
   SEXP filename = PROTECT(mkString(path));
   SEXP pkg_name = PROTECT(mkString(name));
 
+  free(name);
+  free(path);
+
   SEXP call = PROTECT(lang3(system_file, filename, pkg_name));
 
   // name argument

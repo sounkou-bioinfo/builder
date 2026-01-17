@@ -105,7 +105,6 @@ Value *get_arg_values(int argc, char *argv[], char *arg)
       continue;
     }
 
-
     values = push_value(values, argv[i]);
   }
 
@@ -181,5 +180,14 @@ void get_definitions(Define *arr, int argc, char *argv[])
       }
       push(arr, name, undefined, DEF_VARIABLE);
     }
+  }
+}
+
+void free_value(Value *head) {
+  Value *current = head;
+  while (current != NULL) {
+    Value *next = current->next;
+    free(current);
+    current = next;
   }
 }
