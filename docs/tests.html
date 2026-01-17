@@ -4,99 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Builder - Tests</title>
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/styles/atom-one-dark.min.css"
-    />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/styles/atom-one-dark.min.css" />
+    <link rel="stylesheet" href="/style.css" />
     <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/highlight.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11/build/languages/r.min.js"></script>
-    <style>
-      body {
-        background-color: #121212;
-        color: #e0e0e0;
-      }
-      a { color: #90caf9; }
-      a:hover { color: #bbdefb; }
-
-      #layout {
-        padding-left: 180px;
-      }
-      #menu {
-        position: fixed;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        width: 180px;
-        background: #1a1a1a;
-        overflow-y: auto;
-      }
-      #menu .pure-menu-heading {
-        font-size: 1.2em;
-        color: #fff;
-        padding: 0.5em 0.8em;
-        margin: 0;
-      }
-      #menu .pure-menu-link {
-        color: #999;
-        padding: 0.5em 1em;
-      }
-      #menu .pure-menu-link:hover {
-        background: #333;
-        color: #fff;
-      }
-      #menu .pure-menu-selected .pure-menu-link {
-        background: #1f8dd6;
-        color: #fff;
-      }
-      .content {
-        max-width: 900px;
-        padding: 2em;
-      }
-      pre {
-        background: #1e1e1e;
-        padding: 1em;
-        overflow-x: auto;
-        border-radius: 4px;
-      }
-      code {
-        background: #1e1e1e;
-        padding: 0.2em 0.4em;
-        border-radius: 3px;
-      }
-      pre code {
-        background: none;
-        padding: 0;
-      }
-
-      #menuLink {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        background: #1a1a1a;
-        width: 2em;
-        height: 2em;
-        padding: 0.5em;
-        z-index: 10;
-      }
-      #menuLink span {
-        display: block;
-        width: 1.25em;
-        height: 2px;
-        background: #fff;
-        margin: 0.25em auto;
-      }
-      @media (max-width: 48em) {
-        #layout { padding-left: 0; }
-        #menu { transform: translateX(-180px); transition: transform 0.2s; }
-        #menu.active { transform: translateX(0); }
-        #menuLink { display: block; }
-      }
-    </style>
   </head>
   <body>
     <div id="layout">
