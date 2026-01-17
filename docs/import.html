@@ -52,211 +52,41 @@
       </nav>
       <h1>Import</h1>
       <p>
-        The import feature allows you to import macro definitions from external
-        files. This enables sharing macro definitions across multiple projects
-        or organizing macros into separate, reusable files. You can import
-        macros using either the <code>#import</code> directive in your source
-        files or the <code>-import</code> flag from the CLI.
+        Import <code>.rh</code> files containing macro definitions.
       </p>
-      <h2>Advantages</h2>
+
+      <h2>Two Ways to Import</h2>
+      <p>Use <code>#import</code> in your <code>.R</code> file:</p>
+      <pre><code class="language-r">#import macros.rh</code></pre>
+      <p>Or use the <code>-import</code> CLI flag:</p>
+      <pre><code class="language-bash">builder -import macros.rh main.R</code></pre>
+
+      <h2>Local Import</h2>
+      <p>Import a local <code>.rh</code> file:</p>
+      <pre><code class="language-r">#import utils.rh
+
+foo &lt;- function() {
+  LOG("hello")
+}</code></pre>
+
+      <h2>Package Import</h2>
+      <p>
+        Import from an installed R package using <code>pkg::path</code> syntax.
+        Package imports <strong>must be namespaced</strong> when used.
+      </p>
+      <pre><code class="language-r">#import mypkg::macros/utils.rh
+
+foo &lt;- function() {
+  mypkg::LOG("hello")
+  x &lt;- mypkg::DEFAULT_VALUE
+}</code></pre>
+
+      <h2>Summary</h2>
       <ul>
-        <li>
-          <strong>Reusability:</strong> Define macros once and import them
-          across multiple projects without copy-pasting.
-        </li>
-        <li>
-          <strong>Organization:</strong> Keep macro definitions separate from
-          your main source files for better maintainability.
-        </li>
-        <li>
-          <strong>Package distribution:</strong> Share macro libraries through R
-          packages using the package path syntax.
-        </li>
-        <li>
-          <strong>Build-time resolution:</strong> Imports are resolved at build
-          time, with no runtime overhead.
-        </li>
-        <li>
-          <strong>Automatic namespacing:</strong> Package imports are
-          automatically namespaced to prevent macro name collisions.
-        </li>
+        <li>Only <code>.rh</code> files can be imported</li>
+        <li>Local imports: use macros directly (<code>MACRO()</code>)</li>
+        <li>Package imports: must namespace (<code>pkg::MACRO()</code>)</li>
       </ul>
-      <h2>Basic Syntax</h2>
-      <p>
-        The <code>#import</code> directive specifies a path to a file containing
-        macro definitions.
-      </p>
-      <p>
-        <strong>Syntax:</strong>
-        <code>#import file_path</code>
-      </p>
-      <h2>CLI Usage</h2>
-      <p>
-        You can also import macro definitions using the <code>-import</code> CLI
-        flag. This achieves the same result as the <code>#import</code>
-        directive but allows you to specify imports at build time without
-        modifying source files.
-      </p>
-      <p>
-        <strong>Syntax:</strong>
-        <code>builder -import &lt;path1&gt; [&lt;path2&gt; ...]</code>
-      </p>
-      <p>
-        The <code>-import</code> flag accepts multiple file paths and supports
-        both direct paths and package references using the
-        <code>pkg::path</code>
-        syntax.
-      </p>
-      <h3>Example</h3>
-      <pre><code class="language-bash"># Import a single file
-# Import multiple files
-builder -import common/logging.rh common/validation.rh
-
-# Import from a package
-builder -import mymacros::macros/utils.rh
-</code></pre>
-      <h2>Basic Example</h2>
-      <p>
-        Create a file with macro definitions (e.g., <code>macros.rh</code>):
-      </p>
-      <pre><code class="language-r">#define
-LOG(msg){
-  message(paste0("[LOG] ", msg))
-}
-#enddef
-
-#define
-DEBUG(msg){
-  if(getOption("debug", FALSE)) message(paste0("[DEBUG] ", msg))
-}
-#enddef</code></pre>
-      <p>Import and use these macros in your main file:</p>
-      <pre><code class="language-r">#import macros.rh
-
-my_function &lt;- function() {
-  LOG("Starting function")
-  # ... code ...
-  DEBUG("Intermediate value")
-}</code></pre>
-      <p>
-        Alternatively, you can omit the <code>#import</code> directive from your
-        source file and use the CLI flag instead:
-      </p>
-      <pre><code class="language-bash">builder -import macros.rh main.R -o output.R</code></pre>
-      <h2>Package Path Syntax</h2>
-      <p>
-        You can import macros from installed R packages using the
-        <code>package::path</code> syntax. This uses R's
-        <code>system.file()</code> function to locate files within packages.
-      </p>
-      <p>
-        <strong>Syntax:</strong>
-        <code>#import packagename::path/to/file</code>
-      </p>
-      <p>
-        When importing from a package, macros are automatically namespaced with
-        the package name&mdash;similar to R's <code>pkg::function()</code>
-        convention. This prevents collisions when importing macros from multiple
-        packages.
-      </p>
-      <h3>Example</h3>
-      <p>Import macros from a package called <code>mymacros</code>:</p>
-      <pre><code class="language-r">#import mymacros::macros/utils.rh
-
-my_function &lt;- function() {
-  mymacros::UTIL_MACRO("value")
-}</code></pre>
-      <p>
-        This resolves to the file at
-        <code>system.file("macros/utils.rh", package = "mymacros")</code>
-        within the installed package. The macro <code>UTIL_MACRO</code> becomes
-        <code>mymacros::UTIL_MACRO</code> due to automatic namespacing. The same
-        can be achieved via CLI:
-      </p>
-      <pre><code class="language-bash">builder -import mymacros::macros/utils.rh main.R -o output.R</code></pre>
-      <h2>Multiple Imports</h2>
-      <p>
-        You can use multiple import statements to combine macros from different
-        sources. Local imports retain their original names, while package imports
-        are namespaced:
-      </p>
-      <pre><code class="language-r">#import common/logging.rh
-#import common/validation.rh
-#import mypackage::macros/helpers.rh
-
-my_function &lt;- function(x) {
-  LOG("Processing input")
-  VALIDATE_INPUT(x)
-  result &lt;- mypackage::HELPER_TRANSFORM(x)
-  return(result)
-}</code></pre>
-      <p>Or via CLI with all imports in a single command:</p>
-      <pre><code class="language-bash">builder -import common/logging.rh common/validation.rh mypackage::macros/helpers.rh main.R -o output.R</code></pre>
-      <h2>Import File Format</h2>
-      <p>
-        Imported files should contain <code>#define</code> blocks. Each line in
-        the file is processed as a potential macro definition:
-      </p>
-      <pre><code class="language-r">#define
-MACRO_ONE(x){
-  # macro body
-}
-#enddef
-
-#define
-MACRO_TWO(a, b){
-  # macro body
-}
-#enddef</code></pre>
-      <h2>Important Notes</h2>
-      <ul>
-        <li>
-          Import statements are processed before other directives, making
-          imported macros available for use throughout your file.
-        </li>
-        <li>
-          Local file paths are relative to the current working directory or can
-          be absolute paths.
-        </li>
-        <li>
-          Package paths require the package to be installed in your R
-          environment.
-        </li>
-        <li>
-          Package imports (<code>pkg::path</code>) automatically namespace
-          macros with the package name (e.g., <code>MACRO</code> becomes
-          <code>pkg::MACRO</code>). Local file imports are not namespaced.
-        </li>
-        <li>
-          Imported macros are merged with any macros defined directly in your
-          source files.
-        </li>
-        <li>
-          If the same macro is defined in multiple imported files, the later
-          definition takes precedence.
-        </li>
-        <li>
-          Import files must exist at build time; missing files will cause build
-          errors.
-        </li>
-      </ul>
-      <h2>Creating Shareable Macro Packages</h2>
-      <p>To distribute macros via an R package:</p>
-      <ol>
-        <li>
-          Create a directory in your package's <code>inst/</code> folder (e.g.,
-          <code>inst/macros/</code>)
-        </li>
-        <li>Place your macro definition files there</li>
-        <li>
-          Users can import with
-          <code>#import yourpackage::macros/filename.rh</code>
-        </li>
-      </ol>
-      <p>
-        This allows you to version and distribute macro libraries through
-        standard R package mechanisms like CRAN or GitHub.
-      </p>
     </main>
     <script>
       hljs.highlightAll();
