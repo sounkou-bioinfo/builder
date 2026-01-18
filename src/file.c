@@ -442,6 +442,13 @@ int first_pass(RFile *files, Define **defs, Plugins *plugins)
       }
     }
 
+    char *output = plugins_call(plugins, "preprocess", current->content, current->src);
+    if(output != NULL) {
+      free(current->content);
+      current->content = strdup(output);
+      free(output);
+    }
+
     current = current->next;
   }
 
@@ -512,9 +519,13 @@ int second_pass(RFile *files, Define **defs, Plugins *plugins)
       return 1;
     }
     char *output = plugins_call(plugins, "postprocess", buffer, current->src);
-    fputs(buffer, dst_file);
+    if(output != NULL) {
+      fputs(output, dst_file);
+      free(output);
+    } else if(buffer != NULL) {
+      fputs(buffer, dst_file);
+    }
     fclose(dst_file);
-    free(output);
     free(buffer);
 
     write_tests(tc.tests, current->src);

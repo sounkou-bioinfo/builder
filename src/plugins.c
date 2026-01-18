@@ -159,6 +159,7 @@ char *plugins_call(Plugins *head, char *fn, char *str, char *file)
 
     if(result == NULL || errorOccurred) {
       printf("%s Failed to call plugin: %s => %s()\n", LOG_ERROR, current->name, fn);
+      UNPROTECT(2);
       head = push_plugins(head, current->name, 0, R_NilValue);
       current = current->next;
       continue;
