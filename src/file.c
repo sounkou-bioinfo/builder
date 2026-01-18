@@ -461,6 +461,9 @@ int second_pass(RFile *files, Define **defs, Plugins *plugins)
     char *line_number_str = NULL;
     int should_write = 1;
 
+    // Test collector
+    TestCollector tc = {NULL, 0, NULL, NULL};
+
     // line
     char *pos = current->content;
 
@@ -485,14 +488,22 @@ int second_pass(RFile *files, Define **defs, Plugins *plugins)
       char *processed = include_replace(defs, replaced, plugins);
       char *deconstructed = deconstruct_replace(processed);
       char *cnst = replace_const(deconstructed);
-      
+
+      // Test collection - if line was consumed, skip to next
+      if(collect_test_line(&tc, cnst)) {
+        free(line);
+        continue;
+      }
+
       // modify content
       should_write = should_write_line(should_write, cnst, defs);
 
       if(!should_write) {
+        free(line);
         continue;
       }
       buffer = append_buffer(buffer, cnst);
+      free(line);
     }
 
     FILE *dst_file = fopen(current->dst, "w");
@@ -504,6 +515,8 @@ int second_pass(RFile *files, Define **defs, Plugins *plugins)
     fwrite(buffer, 1, l, dst_file);
     fclose(dst_file);
     free(buffer);
+
+    write_tests(tc.tests, current->src);
 
     current = current->next;
   }

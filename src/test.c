@@ -60,6 +60,50 @@ int enter_test(char *line)
   return strncmp(trimmed, "#test ", 6) == 0;
 }
 
+int collect_test_line(TestCollector *collector, char *line)
+{
+  char *trimmed = remove_leading_spaces(line);
+
+  // Check for test start
+  if(strncmp(trimmed, "#test ", 6) == 0) {
+    collector->description = strdup(trimmed + 6);
+    size_t len = strlen(collector->description);
+    if(len > 0 && collector->description[len - 1] == '\n') {
+      collector->description[len - 1] = '\0';
+    }
+    collector->in_test = 1;
+    collector->expressions = NULL;
+    return 1;
+  }
+
+  if(!collector->in_test) {
+    return 0;
+  }
+
+  // Check for test end
+  if(strncmp(trimmed, "#endtest", 8) == 0) {
+    Tests *new_test = create_test(collector->description, collector->expressions);
+    push_test(&collector->tests, new_test);
+    free(collector->description);
+    free(collector->expressions);
+    collector->description = NULL;
+    collector->expressions = NULL;
+    collector->in_test = 0;
+    return 1;
+  }
+
+  // Accumulate test expression
+  if(collector->expressions == NULL) {
+    collector->expressions = strdup(trimmed);
+  } else {
+    collector->expressions = realloc(collector->expressions,
+      strlen(collector->expressions) + strlen(trimmed) + 2);
+    strcat(collector->expressions, "\n");
+    strcat(collector->expressions, trimmed);
+  }
+  return 1;
+}
+
 static int create_test_directory(const char *path)
 {
   // Create tests/ directory

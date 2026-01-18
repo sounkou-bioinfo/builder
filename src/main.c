@@ -125,7 +125,7 @@ int main(int argc, char *argv[])
   }
 
   two_pass(files, &defines, plugins);
-  //walk(input, output, copy, &defines, plugins);
+
   char *end_result = plugins_call(plugins, "end", NULL);
   free(end_result);
   free_plugins(plugins);
