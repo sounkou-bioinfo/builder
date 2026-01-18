@@ -152,49 +152,51 @@ in a single directory.</p>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">expect_type</span>(<span class="fu">foo</span>(), <span class="st">&quot;double&quot;</span>)</span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">#endtest</span></span></code></pre></div>
 <p><strong>Command:</strong></p>
-<pre><code>./builder -input srcr -output R</code></pre>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">./builder</span> <span class="at">-input</span> srcr <span class="at">-output</span> R</span></code></pre></div>
 <p><strong>Generated test file
 (tests/testthat/test-builder-main.R):</strong></p>
-<pre><code>test_that(&quot;That it returns one!&quot;, {
-  expect_equal(foo(), 1)
-  expect_type(foo(), &quot;double&quot;)
-})</code></pre>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">&quot;That it returns one!&quot;</span>, {</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">expect_equal</span>(<span class="fu">foo</span>(), <span class="dv">1</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">expect_type</span>(<span class="fu">foo</span>(), <span class="st">&quot;double&quot;</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div>
 <h2 id="multiple-tests">Multiple Tests</h2>
 <p>You can have multiple test blocks in a single source file:</p>
-<pre><code>add &lt;- function(a, b) {
-  return(a + b)
-}
-
-#test Addition works correctly
-expect_equal(add(2, 3), 5)
-expect_equal(add(-1, 1), 0)
-#endtest
-
-multiply &lt;- function(a, b) {
-  return(a * b)
-}
-
-#test Multiplication works correctly
-expect_equal(multiply(2, 3), 6)
-expect_equal(multiply(0, 5), 0)
-#endtest</code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>add <span class="ot">&lt;-</span> <span class="cf">function</span>(a, b) {</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(a <span class="sc">+</span> b)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">#test Addition works correctly</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="fu">expect_equal</span>(<span class="fu">add</span>(<span class="dv">2</span>, <span class="dv">3</span>), <span class="dv">5</span>)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="fu">expect_equal</span>(<span class="fu">add</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>), <span class="dv">0</span>)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">#endtest</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>multiply <span class="ot">&lt;-</span> <span class="cf">function</span>(a, b) {</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(a <span class="sc">*</span> b)</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="co">#test Multiplication works correctly</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="fu">expect_equal</span>(<span class="fu">multiply</span>(<span class="dv">2</span>, <span class="dv">3</span>), <span class="dv">6</span>)</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="fu">expect_equal</span>(<span class="fu">multiply</span>(<span class="dv">0</span>, <span class="dv">5</span>), <span class="dv">0</span>)</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="co">#endtest</span></span></code></pre></div>
 <p>All tests from the same source file are collected into a single test
 file with multiple <code>test_that()</code> blocks.</p>
 <h2 id="cleaning-test-files">Cleaning Test Files</h2>
 <p>When Builder cleans the output directory (default behavior), it also
 automatically removes the corresponding test files. This ensures a fresh
 build each time.</p>
-<pre><code># Default: cleans R/ output and tests/testthat/ test files
-./builder -input srcr -output R
-
-# Skip cleaning with -noclean flag
-./builder -input srcr -output R -noclean</code></pre>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Default: cleans R/ output and tests/testthat/ test files</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="ex">./builder</span> <span class="at">-input</span> srcr <span class="at">-output</span> R</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Skip cleaning with -noclean flag</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="ex">./builder</span> <span class="at">-input</span> srcr <span class="at">-output</span> R <span class="at">-noclean</span></span></code></pre></div>
 <h2 id="integration-with-testthat">Integration with testthat</h2>
 <p>The generated test files are standard testthat format and can be run
 using:</p>
-<pre><code># In R console
-library(testthat)
-test_dir(&quot;tests/testthat&quot;)</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># In R console</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(testthat)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">test_dir</span>(<span class="st">&quot;tests/testthat&quot;</span>)</span></code></pre></div>
 <p>Or with the standard R CMD check workflow for package
 development.</p>
 <h2 id="best-practices">Best Practices</h2>
