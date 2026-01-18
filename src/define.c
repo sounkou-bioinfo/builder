@@ -187,6 +187,20 @@ int ingest_macro(Define **defs, FILE *src_file, size_t line_len, char *namespace
   return 0;
 }
 
+void push_macro(Define **defs, char *macro, char *namespace)
+{
+  char *paren = strchr(macro, '(');
+  if(paren == NULL) {
+    return;
+  }
+  size_t len = paren - macro;
+  char* name = malloc(len + 1);
+  strncpy(name, macro, len);
+  name[len] = '\0';
+  push((*defs), name, macro, DEF_FUNCTION);
+  free(name);
+}
+
 int define(Define **defines, char *line, char *namespace)
 {
   if(strncmp(line, "#define", 7) != 0) {
@@ -225,7 +239,7 @@ int define(Define **defines, char *line, char *namespace)
   // check if already defined
   // CLI overrides defines
   if(get_define_value(defines, name_copy) != NULL) {
-    printf("%s %s is already defined by the command line\n", name_copy, LOG_WARNING);
+    printf("%s %s is already defined\n", LOG_WARNING, name_copy);
     free(name_copy);
     free(copy);
     return 0;

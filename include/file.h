@@ -5,6 +5,15 @@
 #include "parser.h"
 #include "plugins.h"
 
+struct RFile_t {
+  char *src;
+  char *dst;
+  char *content;
+  struct RFile_t *next;
+};
+
+typedef struct RFile_t RFile;
+
 typedef int(*Callback)(char *src, char *dst, Define **defs, Plugins *plugins);
 
 int exists(char *path);
@@ -14,5 +23,7 @@ int walk(char *src_dir, char *dst_dir, Callback func, Define **defs, Plugins *pl
 int copy(char *src, char *dst, Define **defs, Plugins *plugins);
 int clean(char *src, char *dst, Define **defs, Plugins *plugins);
 char *remove_leading_spaces(char *line);
+int collect_files(RFile **files, char *src_dir, char *dst_dir);
+int two_pass(RFile *files, Define **defs, Plugins *plugins);
 
 #endif

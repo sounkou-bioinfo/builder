@@ -222,10 +222,15 @@ char *append_buffer(char *buffer, char *line)
     return strdup(line);
   }
 
-  char *new_buffer = malloc(strlen(buffer) + strlen(line) + 1);
+  char *new_buffer = malloc(strlen(buffer) + strlen(line) + 2);
+  if(new_buffer == NULL) {
+    return NULL;
+  }
 
   strcpy(new_buffer, buffer);
+  strcat(new_buffer, "\n");
   strcat(new_buffer, line);
+  free(buffer);
 
   return new_buffer;
 }
@@ -412,3 +417,172 @@ int walk(char *src_dir, char *dst_dir, Callback func, Define **defs, Plugins *pl
   closedir(source);
   return 0;
 }
+
+RFile *create_rfile(char *src, char *dst, char *content)
+{
+  RFile *file = malloc(sizeof(RFile));
+  if(file == NULL) {
+    printf("%s Failed to allocate memory\n", LOG_ERROR);
+    return NULL;
+  }
+
+  file->src = strdup(src);
+  file->dst = strdup(dst);
+
+  // content is optional
+  if(content != NULL) {
+    file->content = strdup(content);
+  } else {
+    file->content = NULL;
+  }
+  file->next = NULL;
+
+  return file;
+}
+
+void push_rfile(RFile **files, char *src, char *dst, char *content)
+{
+  RFile *file = create_rfile(src, dst, content);
+  if(file == NULL) {
+    return;
+  }
+
+  file->next = *files;
+  *files = file;
+}
+
+int collect_files(RFile **files, char *src_dir, char *dst_dir)
+{
+  DIR *source;
+  struct dirent *entry;
+  char path[PATH_MAX];
+  
+  source = opendir(src_dir);
+  if (source == NULL) {
+    printf("%s Failed to open source directory: %s\n", LOG_ERROR, src_dir);
+    return 0;
+  }
+
+  while((entry = readdir(source)) != NULL) {
+    if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0) {
+      continue;
+    }
+
+    snprintf(path, PATH_MAX, "%s/%s", src_dir, entry->d_name);
+
+    // it's a directory, recurse
+    if (entry->d_type == DT_DIR) {
+      collect_files(files, path, dst_dir);
+    } else {
+      char *ext = strrchr(path, '.');
+      if(strcmp(ext, ".R") != 0 && strcmp(ext, ".r") != 0) continue;
+      char buffer[20000];
+      FILE *file = fopen(path, "r");
+      size_t bytesRead = fread(buffer, 1, sizeof(buffer), file);
+      buffer[bytesRead] = '\0';
+      push_rfile(files, path, dst_dir, buffer);
+      fclose(file);
+    }
+  }
+  
+  closedir(source);
+
+  return 1;
+}
+
+// first pass:
+// - capture defines
+// - Run preflight
+int first_pass(RFile *files, Define **defs, Plugins *plugins)
+{
+  RFile *current = files;
+  while(current != NULL) {
+    printf("Processing file: %s\n", current->src);
+    overwrite(defs, "__FILE__", current->src);
+
+    // state
+    char *buffer = NULL;
+    int line_number = -1;
+    char *line_number_str = NULL;
+    int in_preflight = 0;
+    int in_macro = 0;
+
+    // line
+    char *pos = current->content;
+
+    while (*pos) {
+      line_number++;
+      char *new_line = strchr(pos, '\n');
+      if(!new_line) {
+        break;
+      }
+
+      size_t len = new_line - pos;
+      char *line = malloc(len + 1);
+      strncpy(line, pos, len);
+      line[len] = '\0';
+      pos = new_line + 1;
+
+      asprintf(&line_number_str, "%d", line_number);
+      overwrite(defs, "__LINE__", line_number_str);
+
+      if(strncmp(line, "#enddef", 7) == 0) {
+        in_macro = 0;
+        push_macro(defs, buffer, NULL);
+        buffer = NULL;
+        continue;
+      }
+
+      if(in_macro) {
+        buffer = append_buffer(buffer, line);
+        continue;
+      }
+
+      if(define(defs, line, NULL)) {
+        in_macro = 1;
+        continue;
+      }
+
+      if(strncmp(line, "#preflight", 10) == 0) {
+        in_preflight = 1;
+        buffer = append_buffer(buffer, line);
+        continue;
+      }
+
+      if(strncmp(line, "#endpreflight", 13) == 0) {
+        in_preflight = 0;
+        continue;
+      }
+
+      if(strncmp(line, "#endflight", 10) == 0) {
+        in_preflight = 0;
+        printf("%s Running preflight checks\n", LOG_INFO);
+        SEXP result = evaluate(buffer);
+        if(result == NULL) {
+          printf("%s Preflight checks failed\n", LOG_ERROR);
+          return 1;
+        }
+        buffer = NULL;
+        continue;
+      }
+
+      if(in_preflight) {
+        buffer = append_buffer(buffer, line);
+        continue;
+      }
+    }
+
+    current = current->next;
+  }
+
+  return 0;
+}
+
+int two_pass(RFile *files, Define **defs, Plugins *plugins)
+{
+  int first_pass_result = first_pass(files, defs, plugins);
+  if(first_pass_result) {
+    return 1;
+  }
+  return 0;
+}  
