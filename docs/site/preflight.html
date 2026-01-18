@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>preflight</title>
+        <link rel="stylesheet" href="style.css" />
+        <style>
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      div.columns{display: flex; gap: min(4vw, 1.5em);}
+      div.column{flex: auto; overflow-x: auto;}
+      div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+      /* The extra [class] is a hack that increases specificity enough to
+         override a similar rule in reveal.js */
+      ul.task-list[class]{list-style: none;}
+      ul.task-list li input[type="checkbox"] {
+        font-size: inherit;
+        width: 0.8em;
+        margin: 0 0.8em 0.2em -1.6em;
+        vertical-align: middle;
+      }
+      .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    </style>
+  </head>
+  <body>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="packages.html">Packages</a>
+      <a href="directives.html">Directives</a>
+      <a href="macros.html">Macros</a>
+      <a href="include.html">Include</a>
+      <a href="import.html">Import</a>
+      <a href="fstrings.html">F-strings</a>
+      <a href="const.html">Const</a>
+      <a href="deconstruct.html">Deconstruct</a>
+      <a href="preflight.html">Preflight</a>
+      <a href="plugins.html">Plugins</a>
+      <a href="tests.html">Tests</a>
+    </nav>
+    <main><h1 id="preflight">Preflight</h1>
+<p>Preflight blocks allow you to run R code <strong>before</strong> the
+main preprocessing phase. This is useful for validation checks,
+environment verification, or early-exit conditions that should halt the
+build if requirements aren’t met.</p>
+<h2 id="how-it-works">How It Works</h2>
+<p>When Builder encounters a <code>#preflight</code> block during
+processing, it:</p>
+<ul>
+<li>Extracts all R code between <code>#preflight</code> and the end
+marker</li>
+<li>Immediately evaluates the R code</li>
+<li>If the code fails (throws an error), the build stops</li>
+<li>If successful, preprocessing continues normally</li>
+</ul>
+<p>The preflight code is executed as-is and is <strong>not</strong>
+subject to preprocessor directives or macro expansion.</p>
+<h2 id="syntax">Syntax</h2>
+<p>Preflight blocks are defined using <code>#preflight</code> and closed
+with either <code>#endpreflight</code> or the shorthand
+<code>#endflight</code>:</p>
+<pre><code>#preflight
+# Your R validation code here
+if(!condition) stop(&quot;Requirement not met&quot;)
+#endflight</code></pre>
+<h2 id="example-version-check">Example: Version Check</h2>
+<p>A common use case is verifying the R version meets minimum
+requirements:</p>
+<pre><code>#preflight
+rver &lt;- version$major |&gt;
+  as.integer()
+
+if(rver &lt; 4)
+  stop(&quot;We need R version 4.x.x at least&quot;)
+#endflight
+
+# Rest of your code continues here...
+foo &lt;- function() {
+  return(1)
+}</code></pre>
+<p>If the R version is less than 4, the build will halt immediately with
+the error message. Otherwise, preprocessing continues normally.</p>
+<h2 id="example-package-check">Example: Package Check</h2>
+<p>You can verify required packages are available before building:</p>
+<pre><code>#preflight
+required &lt;- c(&quot;dplyr&quot;, &quot;ggplot2&quot;, &quot;tidyr&quot;)
+missing &lt;- required[!sapply(required, requireNamespace, quietly = TRUE)]
+
+if(length(missing) &gt; 0)
+  stop(&quot;Missing required packages: &quot;, paste(missing, collapse = &quot;, &quot;))
+#endpreflight</code></pre>
+<h2 id="example-environment-check">Example: Environment Check</h2>
+<p>Validate environment variables or system requirements:</p>
+<pre><code>#preflight
+api_key &lt;- Sys.getenv(&quot;API_KEY&quot;)
+if(nchar(api_key) == 0)
+  stop(&quot;API_KEY environment variable must be set&quot;)
+
+if(.Platform$OS.type != &quot;unix&quot;)
+  warning(&quot;This package is optimized for Unix systems&quot;)
+#endflight</code></pre>
+<h2 id="end-markers">End Markers</h2>
+<p>Two end markers are supported:</p>
+<ul>
+<li><code>#endpreflight</code> - The formal closing tag</li>
+<li><code>#endflight</code> - A convenient shorthand</li>
+</ul>
+<p>Both are functionally equivalent.</p>
+<h2 id="behavior-on-failure">Behavior on Failure</h2>
+<p>When preflight code fails:</p>
+<ul>
+<li>The error message is displayed</li>
+<li>Builder exits with a non-zero status code</li>
+<li>No output files are generated</li>
+</ul>
+<p>This makes preflight checks ideal for CI/CD pipelines where you want
+builds to fail fast if requirements aren’t met.</p>
+<h2 id="placement">Placement</h2>
+<p>Preflight blocks can appear anywhere in your source file, but are
+typically placed at the top before any other code. The block is
+processed when encountered during the sequential file reading.</p>
+<h2 id="best-practices">Best Practices</h2>
+<ul>
+<li><strong>Fail early</strong> - Place preflight blocks at the top of
+your main source file</li>
+<li><strong>Clear error messages</strong> - Use descriptive
+<code>stop()</code> messages</li>
+<li><strong>Check essentials only</strong> - Keep preflight checks
+focused on build requirements</li>
+<li><strong>Use warnings wisely</strong> - Use <code>warning()</code>
+for non-fatal issues</li>
+</ul>
+<h2 id="limitations">Limitations</h2>
+<ul>
+<li>Preflight code is not preprocessed (no macros, no
+<code>#define</code> substitution)</li>
+<li>The code block must be valid R syntax on its own</li>
+<li>Output from preflight code is not captured in any output files</li>
+</ul></main>
+  </body>
+</html>

@@ -31,3 +31,6 @@ dev: build
 
 debug: build
 	valgrind --leak-check=full ${CMD}
+
+site:
+	./docs/build.sh

@@ -1,0 +1,115 @@
+# Directives
+
+Builder lets you use directives in your R files and via the command line.
+
+## Command line
+
+You can pass definitions via the command line using `-D` flags. This is useful for setting build-time constants without modifying your source files.
+
+**Syntax:** `-D<NAME>` for boolean flags, or `-D<NAME> <value>` for valued definitions.
+
+```bash
+./builder -input srcr -output R -DDEBUG -DTEST '"a string"' -DXXX 42
+```
+
+Note: Command-line definitions override file-based `#define` directives.
+
+## #define
+
+Define macros or constants that will be replaced throughout your code. All occurrences of the defined name will be replaced with the specified value.
+
+**Syntax:** `#define NAME value`
+
+```r
+#define PI 3.14159
+#define STRING "hello world!"
+
+x <- PI  # becomes: x <- 3.14159
+print(STRING)  # becomes: print("hello world!")
+```
+
+## #ifdef
+
+Include a code block only if the specified name is defined (either via `#define` or command-line `-D` flag).
+
+**Syntax:** `#ifdef NAME ... #endif`
+
+```r
+#ifdef DEBUG
+cat("debugging!\n")
+#endif
+
+# With #else for alternative path
+#ifdef DEBUG
+cat("debug!")
+#else
+cat("world!")
+#endif
+```
+
+## #ifndef
+
+Include a code block only if the specified name is NOT defined. This is the opposite of `#ifdef`.
+
+**Syntax:** `#ifndef NAME ... #endif`
+
+```r
+#ifndef PROD
+cat("Not in production mode")
+#endif
+```
+
+## #if
+
+Evaluate an R expression and include the code block if the result is TRUE. The expression is evaluated using the embedded R interpreter and supports any valid R expression that returns a logical value.
+
+**Syntax:** `#if R_EXPRESSION ... #endif`
+
+```r
+#define VERSION 3
+
+#if VERSION > 2
+cat("Using new API\n")
+#endif
+
+#if XXX > 1
+cat("it's 1!\n")
+#endif
+```
+
+## #else
+
+Provide an alternative code path for conditional blocks. Used with `#ifdef`, `#ifndef`, or `#if` to specify code that should be included when the condition is false.
+
+See the `#ifdef` example above for usage.
+
+## #endif
+
+Close a conditional compilation block. Required for all conditional directives (`#ifdef`, `#ifndef`, `#if`).
+
+## __FILE__
+
+A built-in directive that is automatically replaced with the current source file path. Useful for debugging and logging to track which file generated specific code.
+
+```r
+cat("Processing file: __FILE__\n")
+# If in srcr/analysis.R, becomes: cat("Processing file: srcr/analysis.R \n")
+```
+
+## __LINE__
+
+A built-in directive that is automatically replaced with the current line number in the source file. Useful for debugging and error tracking to identify the exact location of code execution.
+
+```r
+cat("Executing line __LINE__\n")
+# If on line 42, becomes: cat("Executing line 42\n")
+```
+
+## __OS__
+
+A built-in directive that is automatically populated with the current operating system. Useful for conditionally compiling code based on the current OS.
+
+```r
+cat("Running on: __OS__\n")
+# becomes: cat("Running on: Linux\n")
+```
