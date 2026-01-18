@@ -413,6 +413,10 @@ int first_pass(RFile *files, Define **defs, Plugins *plugins)
         continue;
       }
 
+      if(import_defines_from_line(defs, line)){
+        continue;
+      }
+
       if(strncmp(line, "#preflight", 10) == 0) {
         in_preflight = 1;
         buffer = append_buffer(buffer, line);
