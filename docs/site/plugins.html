@@ -121,7 +121,7 @@ paths. Use this to store configuration or perform one-time setup.</p>
 <p>Called on each file’s content before Builder processes it. Receives
 the file content as a string and should return the modified content.</p>
 <h3 id="postprocessstr-file">postprocess(str, file)</h3>
-<p>Called on each file’s content before Builder processes it. Receives
+<p>Called on each file’s content after Builder processes it. Receives
 the file content as a string and should return the modified content.</p>
 <h3 id="end">end()</h3>
 <p>Called when Builder finishes processing all files. Use this for

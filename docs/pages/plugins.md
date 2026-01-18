@@ -22,11 +22,12 @@ Called during initialization with the input and output directory paths. Use this
 
 ### preprocess(str, file)
 
-Called on each file's content before Builder processes it. Receives the file content as a string and should return the modified content.
+Called on each file's content before Builder processes it. 
+Receives the file content as a string and should return the modified content.
 
 ### postprocess(str, file)
 
-Called on each file's content before Builder processes it. Receives the file content as a string and should return the modified content.
+Called on each file's content after Builder processes it. Receives the file content as a string and should return the modified content.
 
 ### end()
 
