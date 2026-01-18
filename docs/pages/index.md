@@ -1,6 +1,6 @@
 # Builder
 
-Pre-processor for R.
+Pre-processor for R (only works on POSIX systems).
 
 ## Install
 
