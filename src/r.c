@@ -52,7 +52,7 @@ SEXP evaluate(char *expr)
     return NULL;
   }
 
-  result = PROTECT(R_tryEval(VECTOR_ELT(parsed, 0), R_GlobalEnv, &has_error));
+  result = PROTECT(R_tryEvalSilent(VECTOR_ELT(parsed, 0), R_GlobalEnv, &has_error));
 
   if (has_error) {
     UNPROTECT(3);

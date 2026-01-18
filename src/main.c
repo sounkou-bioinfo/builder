@@ -126,7 +126,7 @@ int main(int argc, char *argv[])
 
   two_pass(files, &defines, plugins);
 
-  char *end_result = plugins_call(plugins, "end", NULL);
+  char *end_result = plugins_call(plugins, "end", NULL, NULL);
   free(end_result);
   free_plugins(plugins);
   free_value(imports);

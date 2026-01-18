@@ -485,7 +485,7 @@ int second_pass(RFile *files, Define **defs, Plugins *plugins)
 
       char *fstring_result = fstring_replace(line, 0);
       char *replaced = define_replace(defs, fstring_result);
-      char *processed = include_replace(defs, replaced, plugins);
+      char *processed = include_replace(defs, replaced, plugins, current->src);
       char *deconstructed = deconstruct_replace(processed);
       char *cnst = replace_const(deconstructed);
 
@@ -511,9 +511,10 @@ int second_pass(RFile *files, Define **defs, Plugins *plugins)
       printf("%s Failed to open %s\n", LOG_ERROR, current->dst);
       return 1;
     }
-    size_t l = strlen(buffer);
-    fwrite(buffer, 1, l, dst_file);
+    char *output = plugins_call(plugins, "postprocess", buffer, current->src);
+    fputs(buffer, dst_file);
     fclose(dst_file);
+    free(output);
     free(buffer);
 
     write_tests(tc.tests, current->src);
