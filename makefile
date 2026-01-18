@@ -6,7 +6,7 @@ CMD = ./bin/builder \
 			-input srcr \
 			-DDEBUG -DTEST '"a string"' -DXXX 42 \
 			-import builder.r::generate.rh \
-			-plugin piper::plugin minifier::plugin
+			-plugin minifier::plugin
 
 FILES = src/main.c \
   src/r.c \
@@ -31,3 +31,6 @@ dev: build
 
 debug: build
 	valgrind --leak-check=full ${CMD}
+
+site:
+	./docs/build.sh

@@ -116,8 +116,17 @@ int main(int argc, char *argv[])
     printf("%s Not cleaning: %s\n", LOG_INFO, output);
   }
 
-  walk(input, output, copy, &defines, plugins);
-  char *end_result = plugins_call(plugins, "end", NULL);
+  RFile *files = NULL;
+  int success = collect_files(&files, input, output);
+
+  if(!success) {
+    printf("%s Failed to collect files\n", LOG_ERROR);
+    return 1;
+  }
+
+  two_pass(files, &defines, plugins);
+
+  char *end_result = plugins_call(plugins, "end", NULL, NULL);
   free(end_result);
   free_plugins(plugins);
   free_value(imports);

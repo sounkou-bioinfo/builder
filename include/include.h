@@ -10,6 +10,6 @@ typedef struct {
   char *object;
 } Include;
 
-char *include_replace(Define **defs, char *line, Plugins *plugins);
+char *include_replace(Define **defs, char *line, Plugins *plugins, char *file);
 
 #endif

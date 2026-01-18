@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>macros</title>
+        <link rel="stylesheet" href="style.css" />
+        <style>
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      div.columns{display: flex; gap: min(4vw, 1.5em);}
+      div.column{flex: auto; overflow-x: auto;}
+      div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+      /* The extra [class] is a hack that increases specificity enough to
+         override a similar rule in reveal.js */
+      ul.task-list[class]{list-style: none;}
+      ul.task-list li input[type="checkbox"] {
+        font-size: inherit;
+        width: 0.8em;
+        margin: 0 0.8em 0.2em -1.6em;
+        vertical-align: middle;
+      }
+      .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    </style>
+  </head>
+  <body>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="packages.html">Packages</a>
+      <a href="directives.html">Directives</a>
+      <a href="macros.html">Macros</a>
+      <a href="include.html">Include</a>
+      <a href="import.html">Import</a>
+      <a href="fstrings.html">F-strings</a>
+      <a href="const.html">Const</a>
+      <a href="deconstruct.html">Deconstruct</a>
+      <a href="preflight.html">Preflight</a>
+      <a href="plugins.html">Plugins</a>
+      <a href="tests.html">Tests</a>
+    </nav>
+    <main><h1 id="macros">Macros</h1>
+<p>Macros are function-like preprocessor directives that allow you to
+define reusable code templates with parameters. Unlike simple
+<code>#define</code> replacements, macros can accept arguments and
+expand into multiple lines of code.</p>
+<h2 id="advantages">Advantages</h2>
+<ul>
+<li><strong>Easy metaprogramming:</strong> Write code that generates
+code, enabling powerful abstractions and code generation patterns.</li>
+<li><strong>Zero overhead:</strong> Macros have no runtime performance
+cost since they’re expanded at compile time.</li>
+<li><strong>Compile time expansion:</strong> All macro processing
+happens during preprocessing, before your code executes.</li>
+</ul>
+<h2 id="basic-syntax">Basic Syntax</h2>
+<p>Macros are defined using <code>#define</code> on its own line,
+followed by the macro signature and body. The macro ends with
+<code>#enddef</code>.</p>
+<p><strong>Syntax:</strong></p>
+<pre><code>#define
+MACRO_NAME(arg1, arg2, ...){
+  body
+}
+#enddef</code></pre>
+<pre><code>#define
+LOG_EVAL(expr){
+  cat(&quot;Evaluating stuff\n&quot;)
+  expr
+}
+#enddef
+
+LOG_EVAL(sum(1, 1, 1))</code></pre>
+<p><strong>Expands to:</strong></p>
+<pre><code>cat(&quot;Evaluating stuff\n&quot;)
+sum(1, 1, 1)</code></pre>
+<h2 id="multiline-macro-bodies">Multiline Macro Bodies</h2>
+<p>Macro bodies can contain multiple lines of R code with full syntax
+highlighting support in your editor.</p>
+<pre><code>#define
+DEBUG_BLOCK(var, message){
+  cat(&quot;Debug:&quot;, message, &quot;\n&quot;)
+  cat(&quot;Value is&quot;, var, &quot;\n&quot;)
+  cat(&quot;Type:&quot;, typeof(var), &quot;\n&quot;)
+}
+#enddef
+
+x &lt;- 42
+DEBUG_BLOCK(x, &quot;Checking variable&quot;)</code></pre>
+<p><strong>Expands to:</strong></p>
+<pre><code>x &lt;- 42
+cat(&quot;Debug:&quot;, &quot;Checking variable&quot;, &quot;\n&quot;)
+cat(&quot;Value is&quot;, x, &quot;\n&quot;)
+cat(&quot;Type:&quot;, typeof(x), &quot;\n&quot;)</code></pre>
+<h2 id="parameter-substitution">Parameter Substitution</h2>
+<p>Macro parameters are replaced throughout the macro body when the
+macro is invoked. All occurrences of the parameter name will be
+substituted with the corresponding argument.</p>
+<pre><code>#define
+REPEAT(n, action){
+  for (i in 1:n) {
+    action
+  }
+}
+#enddef
+
+REPEAT(3, print(&quot;Hello&quot;))</code></pre>
+<p><strong>Expands to:</strong></p>
+<pre><code>for (i in 1:3) {
+  print(&quot;Hello&quot;)
+}</code></pre>
+<h2 id="macros-with-multiple-arguments">Macros with Multiple
+Arguments</h2>
+<p>Macros can accept multiple arguments, which are separated by commas
+in both the definition and invocation.</p>
+<pre><code>#define
+VALIDATE(value, min, max){
+  if (value &lt; min || value &gt; max) {
+    stop(&quot;Value out of range: &quot;, value)
+  }
+}
+#enddef
+
+x &lt;- 15
+VALIDATE(x, 0, 100)</code></pre>
+<p><strong>Expands to:</strong></p>
+<pre><code>x &lt;- 15
+if (x &lt; 0 || x &gt; 100) {
+  stop(&quot;Value out of range: &quot;, x)
+}</code></pre>
+<h2 id="practical-examples">Practical Examples</h2>
+<h3 id="logging-macro">Logging Macro</h3>
+<pre><code>#define
+LOG(level, msg){
+  cat(&quot;[&quot;, level, &quot;] &quot;, msg, &quot;\n&quot;, sep = &quot;&quot;)
+}
+#enddef
+
+LOG(&quot;INFO&quot;, &quot;Application started&quot;)
+LOG(&quot;ERROR&quot;, &quot;Something went wrong&quot;)</code></pre>
+<p><strong>Expands to:</strong></p>
+<pre><code>cat(&quot;[&quot;, &quot;INFO&quot;, &quot;] &quot;, &quot;Application started&quot;, &quot;\n&quot;, sep = &quot;&quot;)
+cat(&quot;[&quot;, &quot;ERROR&quot;, &quot;] &quot;, &quot;Something went wrong&quot;, &quot;\n&quot;, sep = &quot;&quot;)</code></pre>
+<h3 id="try-catch-wrapper">Try-Catch Wrapper</h3>
+<pre><code>#define
+TRY_CATCH(code, error_msg){
+  tryCatch({
+    code
+  }, error = function(e) {
+    cat(error_msg, &quot;:&quot;, e$message, &quot;\n&quot;)
+  })
+}
+#enddef
+
+TRY_CATCH(risky_operation(), &quot;Operation failed&quot;)</code></pre>
+<p><strong>Expands to:</strong></p>
+<pre><code>tryCatch({
+  risky_operation()
+}, error = function(e) {
+  cat(&quot;Operation failed&quot;, &quot;:&quot;, e$message, &quot;\n&quot;)
+})</code></pre>
+<h3 id="timing-macro">Timing Macro</h3>
+<pre><code>#define
+TIME_IT(expr){
+  start &lt;- Sys.time()
+  result &lt;- expr
+  end &lt;- Sys.time()
+  cat(&quot;Execution time:&quot;, end - start, &quot;\n&quot;)
+  result
+}
+#enddef
+
+TIME_IT(slow_computation())</code></pre>
+<p><strong>Expands to:</strong></p>
+<pre><code>start &lt;- Sys.time()
+result &lt;- slow_computation()
+end &lt;- Sys.time()
+cat(&quot;Execution time:&quot;, end - start, &quot;\n&quot;)
+result</code></pre>
+<h2 id="important-notes">Important Notes</h2>
+<ul>
+<li>Macros start with <code>#define</code> alone on a line</li>
+<li>The macro signature and body follow on subsequent lines</li>
+<li>Macro bodies must be enclosed in curly braces <code>{}</code></li>
+<li>Macros end with <code>#enddef</code></li>
+<li>Macros support multiline definitions and can span many lines (up to
+1024 lines)</li>
+<li>Macro parameters are simple text substitution - be careful with
+expressions that might be evaluated multiple times</li>
+<li>Simple <code>#define NAME value</code> constants still work as
+before</li>
+</ul></main>
+  </body>
+</html>

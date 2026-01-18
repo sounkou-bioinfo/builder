@@ -33,5 +33,6 @@ void *define_macro_init(char **macro);
 int ingest_macro(Define **defs, FILE *src_file, size_t line_len, char *namespace);
 char* str_replace(const char *orig, const char *find, const char *replace);
 void import_defines(Define **defines, Value *paths);
+void push_macro(Define **defs, char *macro, char *namespace);
 
 #endif

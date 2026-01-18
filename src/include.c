@@ -58,13 +58,13 @@ Include parse_include(char *line)
   return result;
 }
 
-char *include_replace(Define **defs, char *line, Plugins *plugins)
+char *include_replace(Define **defs, char *line, Plugins *plugins, char *file)
 {
   if(!has_include(line)) {
     return line;
   }
 
-  char *plugged = plugins_call(plugins, "include", line);
+  char *plugged = plugins_call(plugins, "include", line, file);
   if(strcmp(plugged, line) != 0) {
     free(line);
     return plugged;

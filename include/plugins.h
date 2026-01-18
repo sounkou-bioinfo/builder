@@ -15,7 +15,7 @@ typedef struct Plugins_t Plugins;
 
 Plugins *plugins_init(Value *plugins, char *input, char *output);
 int plugins_failed(Plugins *head);
-char *plugins_call(Plugins *head, char *fn, char *str);
+char *plugins_call(Plugins *head, char *fn, char *str, char *file);
 void free_plugins(Plugins *head);
 
 #endif

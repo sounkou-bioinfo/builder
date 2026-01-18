@@ -112,7 +112,7 @@ int plugins_failed(Plugins *head)
   return 0;
 }
 
-char *plugins_call(Plugins *head, char *fn, char *str)
+char *plugins_call(Plugins *head, char *fn, char *str, char *file)
 {
   char *copy = NULL;
 
@@ -120,10 +120,20 @@ char *plugins_call(Plugins *head, char *fn, char *str)
     copy = strdup(str);
   }
 
+  int max_iter = 64;
   Plugins *current = head;
   while(current != NULL) {
+    max_iter--;
+
+    if(max_iter == 0) {
+      printf("%s Plugin %s call to %s() exceeded max iterations (64)\n", LOG_ERROR, current->name, fn);
+      head = push_plugins(head, current->name, 0, R_NilValue);
+      current = current->next;
+      continue;
+    }
     // that setup failed
     if(current->setup == 0) {
+      current = current->next;
       continue;
     }
 
@@ -135,25 +145,31 @@ char *plugins_call(Plugins *head, char *fn, char *str)
 
     SEXP call = NULL;
     SEXP result = NULL;
-    if(str != NULL) {
+    int errorOccurred = 0;
+    if(str != NULL && file != NULL) {
+      call = PROTECT(lang3(func, mkString(str), mkString(file)));
+      result = R_tryEvalSilent(call, R_GlobalEnv, &errorOccurred);
+    } else if(str != NULL && file == NULL) {
       call = PROTECT(lang2(func, mkString(str)));
-      result = PROTECT(eval(call, R_GlobalEnv));
+      result = R_tryEvalSilent(call, R_GlobalEnv, &errorOccurred);
     } else {
       call = PROTECT(lang1(func));
-      result = PROTECT(eval(call, R_GlobalEnv));
+      result = R_tryEvalSilent(call, R_GlobalEnv, &errorOccurred);
     }
-    UNPROTECT(3);
 
-    if(result == NULL) {
-      printf("%s Failed to initialize plugin: %s\n", LOG_ERROR, current->name);
+    if(result == NULL || errorOccurred) {
+      printf("%s Failed to call plugin: %s => %s()\n", LOG_ERROR, current->name, fn);
+      UNPROTECT(2);
       head = push_plugins(head, current->name, 0, R_NilValue);
       current = current->next;
       continue;
     }
 
+    UNPROTECT(2);
+
     if(result == R_NilValue) {
       if(str != NULL && strcmp(fn, "include") != 0) {
-        printf("%s Plugin %s call to %s() returns NULL\n", LOG_WARNING, current->name, fn);
+        printf("%s Plugin %s call to %s() returns NULL - ingnoring\n", LOG_WARNING, current->name, fn);
       }
       current = current->next;
       continue;

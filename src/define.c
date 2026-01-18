@@ -187,6 +187,21 @@ int ingest_macro(Define **defs, FILE *src_file, size_t line_len, char *namespace
   return 0;
 }
 
+void push_macro(Define **defs, char *macro, char *namespace)
+{
+  char *paren = strchr(macro, '(');
+  if(paren == NULL) {
+    return;
+  }
+
+  size_t len = paren - macro;
+  char* name = malloc(len + 1);
+  strncpy(name, macro, len);
+  name[len] = '\0';
+  push((*defs), strdup(name), macro, DEF_FUNCTION);
+  free(name);
+}
+
 int define(Define **defines, char *line, char *namespace)
 {
   if(strncmp(line, "#define", 7) != 0) {
@@ -225,7 +240,7 @@ int define(Define **defines, char *line, char *namespace)
   // check if already defined
   // CLI overrides defines
   if(get_define_value(defines, name_copy) != NULL) {
-    printf("%s %s is already defined by the command line\n", name_copy, LOG_WARNING);
+    printf("%s %s is already defined\n", LOG_WARNING, name_copy);
     free(name_copy);
     free(copy);
     return 0;
@@ -276,6 +291,9 @@ char* str_replace(const char *orig, const char *find, const char *replace)
   const char *pos = orig;
   int count = 0;
   int find_len = strlen(find);
+  if(find_len == 0) {
+    return strdup(orig);
+  }
   int replace_len = strlen(replace);
   
   while ((pos = strstr(pos, find)) != NULL) {
@@ -341,18 +359,12 @@ char* extract_first_line(const char *str, char *buffer, size_t buffer_size)
 
 char *define_replace(Define **defines, char *line)
 {
+  // we have no defines
   if(*defines == NULL) {
     return strdup(line);
   }
 
-  if(strncmp(line, "#ifdef", 6) == 0) {
-    return strdup(line);
-  }
-
-  if(strncmp(line, "#ifndef", 6) == 0) {
-    return strdup(line);
-  }
-
+  // we define, nothing to do
   if(strncmp(line, "#define", 7) == 0) {
     return strdup(line);
   }

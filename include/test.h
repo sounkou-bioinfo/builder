@@ -9,7 +9,16 @@ struct Tests_t {
 
 typedef struct Tests_t Tests;
 
+typedef struct {
+    Tests *tests;
+    int in_test;
+    char *description;
+    char *expressions;
+} TestCollector;
+
 int enter_test(char *line);
+// Returns 1 if line was consumed (part of test block), 0 otherwise
+int collect_test_line(TestCollector *collector, char *line);
 Tests *create_test(char *description, char *expressions);
 void push_test(Tests **tests, Tests *test);
 void free_test(Tests *test);
