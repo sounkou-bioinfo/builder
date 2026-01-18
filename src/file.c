@@ -497,7 +497,6 @@ int first_pass(RFile *files, Define **defs, Plugins *plugins)
 {
   RFile *current = files;
   while(current != NULL) {
-    printf("Processing file: %s\n", current->src);
     overwrite(defs, "__FILE__", current->src);
 
     // state
@@ -570,6 +569,46 @@ int first_pass(RFile *files, Define **defs, Plugins *plugins)
         buffer = append_buffer(buffer, line);
         continue;
       }
+    }
+
+    current = current->next;
+  }
+
+  return 0;
+}
+
+int second_pass(RFile *files, Define **defs, Plugins *plugins)
+{
+  RFile *current = files;
+  while(current != NULL) {
+    overwrite(defs, "__FILE__", current->src);
+
+    // state
+    char *buffer = NULL;
+    int line_number = -1;
+    char *line_number_str = NULL;
+
+    // line
+    char *pos = current->content;
+
+    while (*pos) {
+      line_number++;
+      char *new_line = strchr(pos, '\n');
+      if(!new_line) {
+        break;
+      }
+
+      size_t len = new_line - pos;
+      char *line = malloc(len + 1);
+      strncpy(line, pos, len);
+      line[len] = '\0';
+      pos = new_line + 1;
+
+      asprintf(&line_number_str, "%d", line_number);
+      overwrite(defs, "__LINE__", line_number_str);
+
+      // TODO: should write?
+      // modify content
     }
 
     current = current->next;
