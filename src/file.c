@@ -129,6 +129,18 @@ int should_write_line(int state, char line[1024], Define **defs)
     return state;
   }
 
+  if(strncmp(trimmed, "#preflight", 10) == 0) {
+    return 0;
+  }
+
+  if(strncmp(trimmed, "#endflight", 10) == 0) {
+    return 0;
+  }
+
+  if(strncmp(trimmed, "#endpreflight", 13) == 0) {
+    return 0;
+  }
+
   if(strncmp(trimmed, "#ifdef", 6) == 0) {
     char *keyword = remove_keyword(trimmed);
     int result = get_define_value(defs, keyword) != NULL;
@@ -235,156 +247,6 @@ char *append_buffer(char *buffer, char *line)
   return new_buffer;
 }
 
-int copy(char *src, char *dst, Define **defs, Plugins *plugins)
-{
-  char *dest = make_dest_path(src, dst);
-  FILE *src_file = fopen(src, "r");
-  FILE *dst_file = fopen(dest, "w");
-
-  if(src_file == NULL) {
-    fclose(dst_file);
-    fclose(src_file);
-    free(dest);
-    printf("%s Failed to open source file\n", LOG_ERROR);
-    return 1;
-  }
-
-  overwrite(defs, "__FILE__", src);
-
-  printf("%s Copying %s to %s\n", LOG_INFO, src, dest);
-
-  size_t line_len = 1024;
-  char line[line_len];
-  int should_write = 1;
-  int i = 0;
-  char *istr = NULL;
-  char *buffer = NULL;
-
-  Tests *tests = NULL;
-
-  int is_macro = 0;
-  while(fgets(line, line_len, src_file) != NULL) {
-    i++;
-    asprintf(&istr, "%d", i);
-    overwrite(defs, "__LINE__", istr);
-    free(istr);
-
-    if(starts_preflight(line)) {
-      char *pf = strdup(line);
-      while(fgets(line, line_len, src_file) != NULL && !ends_preflight(line)){
-        pf = realloc(pf, strlen(pf) + strlen(line) + 1);
-        strcat(pf, line);
-      }
-
-      printf("%s Running preflight checks\n", LOG_INFO);
-      SEXP result = evaluate(pf);
-      if(result == NULL) {
-        return 1;
-      }
-    }
-
-    int imported = import_defines_from_line(defs, line);
-    if(imported) {
-      continue;
-    }
-
-    is_macro = define(defs, line, NULL);
-    if(is_macro) {
-      ingest_macro(defs, src_file, line_len, NULL);
-      continue;
-    }
-
-    char *fstring_result = fstring_replace(line, 0);
-    char *replaced = define_replace(defs, fstring_result);
-    char *processed = include_replace(defs, replaced, plugins);
-    if(processed != replaced) {
-      free(replaced);
-    }
-    char *deconstructed = deconstruct_replace(processed);
-    char *cnst = replace_const(deconstructed);
-    char *processed_copy = strdup(cnst);
-
-    int test = enter_test(processed_copy);
-    if(test) {
-      // Syntax: 
-      // #test Description
-      // expression1
-      // expression2
-      // #endtest
-      char *t = remove_leading_spaces(processed_copy);
-      char *description = strdup(t + 6);
-      size_t desc_len = strlen(description);
-      if(desc_len > 0 && description[desc_len - 1] == '\n') {
-        description[desc_len - 1] = '\0';
-      }
-      char *expressions = NULL;
-
-      while(fgets(line, line_len, src_file) != NULL) {
-        t = remove_leading_spaces(line);
-
-        if(strncmp(t, "#endtest", 8) == 0) {
-          Tests *new_test = create_test(description, expressions);
-          push_test(&tests, new_test);
-          free(description);
-          free(expressions);
-          break;
-        }
-
-        if(expressions == NULL) {
-          expressions = strdup(t);
-        } else {
-          expressions = realloc(expressions, strlen(expressions) + strlen(t) + 1);
-          strcat(expressions, t);
-        }
-      }
-    }
-
-    should_write = should_write_line(should_write, processed_copy, defs);
-    free(processed_copy);
-
-    if(!should_write) {
-      free(cnst);
-      if(deconstructed != cnst) {
-        free(deconstructed);
-      }
-      if(processed != deconstructed) {
-        free(processed);
-      }
-      if(fstring_result != line) {
-        free(fstring_result);
-      }
-      continue;
-    }
-
-    char *old_buffer = buffer;
-    buffer = append_buffer(buffer, cnst);
-    free(old_buffer);
-
-    if(deconstructed != cnst) {
-      free(deconstructed);
-    }
-    free(cnst);
-    if(processed != deconstructed) {
-      free(processed);
-    }
-    if(fstring_result != line) {
-      free(fstring_result);
-    }
-  }
-
-  char *output = plugins_call(plugins, "preprocess", buffer);
-  fputs(output, dst_file);
-  free(output);
-  free(buffer);
-  write_tests(tests, src);
-
-  free(dest);
-  fclose(dst_file);
-  fclose(src_file);
-
-  return 0;
-}
-
 int walk(char *src_dir, char *dst_dir, Callback func, Define **defs, Plugins *plugins)
 {
   DIR *source;
@@ -480,7 +342,8 @@ int collect_files(RFile **files, char *src_dir, char *dst_dir)
       FILE *file = fopen(path, "r");
       size_t bytesRead = fread(buffer, 1, sizeof(buffer), file);
       buffer[bytesRead] = '\0';
-      push_rfile(files, path, dst_dir, buffer);
+      char *dest = make_dest_path(path, dst_dir);
+      push_rfile(files, path, dest, buffer);
       fclose(file);
     }
   }
@@ -581,12 +444,14 @@ int second_pass(RFile *files, Define **defs, Plugins *plugins)
 {
   RFile *current = files;
   while(current != NULL) {
+    printf("%s Copying %s to %s\n", LOG_INFO, current->src, current->dst);
     overwrite(defs, "__FILE__", current->src);
 
     // state
     char *buffer = NULL;
     int line_number = -1;
     char *line_number_str = NULL;
+    int should_write = 1;
 
     // line
     char *pos = current->content;
@@ -607,9 +472,30 @@ int second_pass(RFile *files, Define **defs, Plugins *plugins)
       asprintf(&line_number_str, "%d", line_number);
       overwrite(defs, "__LINE__", line_number_str);
 
-      // TODO: should write?
+      char *fstring_result = fstring_replace(line, 0);
+      char *replaced = define_replace(defs, fstring_result);
+      char *processed = include_replace(defs, replaced, plugins);
+      char *deconstructed = deconstruct_replace(processed);
+      char *cnst = replace_const(deconstructed);
+      
       // modify content
+      should_write = should_write_line(should_write, cnst, defs);
+
+      if(!should_write) {
+        continue;
+      }
+      buffer = append_buffer(buffer, cnst);
     }
+
+    FILE *dst_file = fopen(current->dst, "w");
+    if(dst_file == NULL) {
+      printf("%s Failed to open %s\n", LOG_ERROR, current->dst);
+      return 1;
+    }
+    size_t l = strlen(buffer);
+    fwrite(buffer, 1, l, dst_file);
+    fclose(dst_file);
+    free(buffer);
 
     current = current->next;
   }
@@ -623,5 +509,6 @@ int two_pass(RFile *files, Define **defs, Plugins *plugins)
   if(first_pass_result) {
     return 1;
   }
-  return 0;
-}  
+
+  return second_pass(files, defs, plugins);
+}

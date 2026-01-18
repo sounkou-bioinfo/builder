@@ -80,7 +80,7 @@ static char* find_closing_quote(const char *str)
 char *fstring_replace(char *str, int n)
 {
   // prevent infinite recursion
-  if(n > 16) {
+  if(n > 32) {
     return str;
   }
 
