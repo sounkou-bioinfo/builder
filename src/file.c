@@ -129,16 +129,24 @@ int should_write_line(int state, char line[1024], Define **defs)
     return state;
   }
 
+  if(strncmp(trimmed, "#test", 10) == 0) {
+    return 0;
+  }
+
+  if(strncmp(trimmed, "#endtest", 10) == 0) {
+    return 1;
+  }
+
   if(strncmp(trimmed, "#preflight", 10) == 0) {
     return 0;
   }
 
   if(strncmp(trimmed, "#endflight", 10) == 0) {
-    return 0;
+    return 1;
   }
 
   if(strncmp(trimmed, "#endpreflight", 13) == 0) {
-    return 0;
+    return 1;
   }
 
   if(strncmp(trimmed, "#ifdef", 6) == 0) {
