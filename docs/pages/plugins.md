@@ -1,6 +1,9 @@
 # Plugins
 
-Builder supports plugins to extend processing. Plugins are R packages that export a function returning a list of lifecycle methods.
+Builder supports plugins to extend processing.
+Plugins are R packages that export a function returning a list of lifecycle methods.
+
+See [builder.air](https://github.com/devOpifex/builder.air) for a simple example plugin.
 
 ## Usage
 
@@ -39,7 +42,7 @@ Called when Builder finishes processing all files. Use this for cleanup or final
 
 ## Example Plugin
 
-A simple minifier plugin that replaces newlines with semicolons:
+A simple minifier plugin that replaces newlines with semicolons (it's a toy example that will break your code):
 
 ```r
 #' @export
