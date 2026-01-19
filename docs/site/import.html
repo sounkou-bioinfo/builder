@@ -126,7 +126,11 @@
       <h2 id="package-import">Package Import</h2>
       <p>Import from an installed R package using <code>pkg::path</code>
       syntax. Package imports <strong>must be namespaced</strong> when
-      used.</p>
+      used. Note that for this file to be accessible, the package must
+      be installed and the file must be in the <code>inst</code>
+      directory, you can nest the file in subdirectories if you want,
+      e.g: <code>mypkg::macros/utils.rh</code>
+      (<code>inst/macros/utils.rh</code>).</p>
       <div class="sourceCode" id="cb4"><pre
       class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#import mypkg::macros/utils.rh</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>

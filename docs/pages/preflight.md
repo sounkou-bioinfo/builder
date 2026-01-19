@@ -97,13 +97,6 @@ This makes preflight checks ideal for CI/CD pipelines where you want builds to f
 
 Preflight blocks can appear anywhere in your source file, but are typically placed at the top before any other code. The block is processed when encountered during the sequential file reading.
 
-## Best Practices
-
-- **Fail early** - Place preflight blocks at the top of your main source file
-- **Clear error messages** - Use descriptive `stop()` messages
-- **Check essentials only** - Keep preflight checks focused on build requirements
-- **Use warnings wisely** - Use `warning()` for non-fatal issues
-
 ## Limitations
 
 - Preflight code is not preprocessed (no macros, no `#define` substitution)

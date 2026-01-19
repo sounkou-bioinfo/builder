@@ -55,67 +55,6 @@ When the preprocessor encounters an `#include` directive:
 
 This happens at build time, so the final R code contains no file reading operations—just the processed data.
 
-## Advanced Examples
-
-### Reading and Collapsing SQL
-
-You might want to read a multi-line SQL file and collapse it into a single string:
-
-```r
-#define
-READ_SQL(path){
-  readLines(path) |> paste(collapse = " ")
-}
-#enddef
-
-#include:READ_SQL queries/get_users.sql user_query
-```
-
-If `queries/get_users.sql` contains:
-
-```sql
-SELECT id, name, email
-FROM users
-WHERE active = TRUE
-ORDER BY name
-```
-
-**Expands to:**
-
-```r
-user_query <- "SELECT id, name, email FROM users WHERE active = TRUE ORDER BY name"
-```
-
-### Reading JSON Configuration
-
-You can use `#include` to embed JSON configuration at build time:
-
-```r
-#define
-READ_JSON(path){
-  jsonlite::fromJSON(path, simplifyVector = FALSE)
-}
-#enddef
-
-#include:READ_JSON config/settings.json app_config
-```
-
-If `config/settings.json` contains:
-
-```json
-{
-  "api_url": "https://api.example.com",
-  "timeout": 30,
-  "debug": false
-}
-```
-
-**Expands to:**
-
-```r
-app_config <- list(api_url = "https://api.example.com", timeout = 30, debug = FALSE)
-```
-
 ### Reading CSV Data
 
 Embed small lookup tables or static data directly in your code:

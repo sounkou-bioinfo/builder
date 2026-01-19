@@ -31,6 +31,8 @@ foo <- function() {
 ## Package Import
 
 Import from an installed R package using `pkg::path` syntax. Package imports **must be namespaced** when used.
+Note that for this file to be accessible, the package must be installed and the file must be in the `inst` directory,
+you can nest the file in subdirectories if you want, e.g: `mypkg::macros/utils.rh` (`inst/macros/utils.rh`).
 
 ```r
 #import mypkg::macros/utils.rh

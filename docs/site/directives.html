@@ -184,25 +184,25 @@
       <p>Close a conditional compilation block. Required for all
       conditional directives (<code>#ifdef</code>, <code>#ifndef</code>,
       <code>#if</code>).</p>
-      <h2 id="file"><strong>FILE</strong></h2>
-      <p>A built-in directive that is automatically replaced with the
-      current source file path. Useful for debugging and logging to
-      track which file generated specific code.</p>
+      <h2 id="built-in-directives">Built-in directives</h2>
+      <h3 id="file"><strong>FILE</strong></h3>
+      <p>A directive that is automatically replaced with the current
+      source file path. Useful for debugging and logging to track which
+      file generated specific code.</p>
       <div class="sourceCode" id="cb6"><pre
       class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Processing file: __FILE__</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># If in srcr/analysis.R, becomes: cat(&quot;Processing file: srcr/analysis.R \n&quot;)</span></span></code></pre></div>
-      <h2 id="line"><strong>LINE</strong></h2>
-      <p>A built-in directive that is automatically replaced with the
-      current line number in the source file. Useful for debugging and
-      error tracking to identify the exact location of code
-      execution.</p>
+      <h3 id="line"><strong>LINE</strong></h3>
+      <p>A directive that is automatically replaced with the current
+      line number in the source file. Useful for debugging and error
+      tracking to identify the exact location of code execution.</p>
       <div class="sourceCode" id="cb7"><pre
       class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Executing line __LINE__</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># If on line 42, becomes: cat(&quot;Executing line 42\n&quot;)</span></span></code></pre></div>
-      <h2 id="os"><strong>OS</strong></h2>
-      <p>A built-in directive that is automatically populated with the
-      current operating system. Useful for conditionally compiling code
-      based on the current OS.</p>
+      <h3 id="os"><strong>OS</strong></h3>
+      <p>A directive that is automatically populated with the current
+      operating system. Useful for conditionally compiling code based on
+      the current OS.</p>
       <div class="sourceCode" id="cb8"><pre
       class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Running on: __OS__</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># becomes: cat(&quot;Running on: Linux\n&quot;)</span></span></code></pre></div>

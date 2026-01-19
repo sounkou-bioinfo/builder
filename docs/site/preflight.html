@@ -196,17 +196,6 @@
       are typically placed at the top before any other code. The block
       is processed when encountered during the sequential file
       reading.</p>
-      <h2 id="best-practices">Best Practices</h2>
-      <ul>
-      <li><strong>Fail early</strong> - Place preflight blocks at the
-      top of your main source file</li>
-      <li><strong>Clear error messages</strong> - Use descriptive
-      <code>stop()</code> messages</li>
-      <li><strong>Check essentials only</strong> - Keep preflight checks
-      focused on build requirements</li>
-      <li><strong>Use warnings wisely</strong> - Use
-      <code>warning()</code> for non-fatal issues</li>
-      </ul>
       <h2 id="limitations">Limitations</h2>
       <ul>
       <li>Preflight code is not preprocessed (no macros, no

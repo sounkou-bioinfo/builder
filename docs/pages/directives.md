@@ -87,27 +87,29 @@ See the `#ifdef` example above for usage.
 
 Close a conditional compilation block. Required for all conditional directives (`#ifdef`, `#ifndef`, `#if`).
 
-## __FILE__
+## Built-in directives
 
-A built-in directive that is automatically replaced with the current source file path. Useful for debugging and logging to track which file generated specific code.
+### __FILE__
+
+A directive that is automatically replaced with the current source file path. Useful for debugging and logging to track which file generated specific code.
 
 ```r
 cat("Processing file: __FILE__\n")
 # If in srcr/analysis.R, becomes: cat("Processing file: srcr/analysis.R \n")
 ```
 
-## __LINE__
+### __LINE__
 
-A built-in directive that is automatically replaced with the current line number in the source file. Useful for debugging and error tracking to identify the exact location of code execution.
+A directive that is automatically replaced with the current line number in the source file. Useful for debugging and error tracking to identify the exact location of code execution.
 
 ```r
 cat("Executing line __LINE__\n")
 # If on line 42, becomes: cat("Executing line 42\n")
 ```
 
-## __OS__
+### __OS__
 
-A built-in directive that is automatically populated with the current operating system. Useful for conditionally compiling code based on the current OS.
+A directive that is automatically populated with the current operating system. Useful for conditionally compiling code based on the current OS.
 
 ```r
 cat("Running on: __OS__\n")

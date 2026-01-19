@@ -8,7 +8,7 @@ Builder reads your R files from the srcr (default) directory and writes the outp
 
 This allows building R packages from **multiple**, **nested** directories such as:
 
-```
+```bash
 srcr
 ├── main.R
 └── sub
@@ -17,7 +17,7 @@ srcr
 
 That will produce:
 
-```
+```bash
 R
 ├── main.R
 └── sub-main.R
