@@ -35,27 +35,6 @@ DEBUG -< TRUE
 # API_URL <- "different-url"  # Error: cannot change value of locked binding
 ```
 
-### Mathematical Constants
-
-```r
-EULER -< 2.71828
-GOLDEN_RATIO -< 1.61803
-
-calculate_growth <- function(t) {
-  EULER ^ t  # Safe to use, cannot be accidentally changed
-}
-```
-
-### Application Settings
-
-```r
-APP_NAME -< "MyApp"
-VERSION -< "1.0.0"
-MAX_RETRIES -< 3
-
-print(f'{APP_NAME} v{VERSION}')
-```
-
 ## Benefits
 
 - **Safety:** Prevents accidental modification of critical values
