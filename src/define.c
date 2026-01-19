@@ -436,6 +436,16 @@ char *define_replace(Define **defines, char *line)
 
     if(nargs != nargs_macro) {
       printf("%s Macro %s has %d arguments but function %s has %d arguments\n", LOG_ERROR, name, nargs_macro, fn, nargs);
+      // Cleanup before returning
+      free(body_macro);
+      for(int j = 0; j < nargs_macro; j++) {
+        free(args_macro[j]);
+      }
+      free(args_macro);
+      for(int j = 0; j < nargs; j++) {
+        free(args[j]);
+      }
+      free(args);
       return current;
     }
 

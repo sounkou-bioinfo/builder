@@ -125,6 +125,7 @@ int main(int argc, char *argv[])
   }
 
   two_pass(files, &defines, plugins);
+  free_rfile(files);
 
   char *end_result = plugins_call(plugins, "end", NULL, NULL);
   free(end_result);

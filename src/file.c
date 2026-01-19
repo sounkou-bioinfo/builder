@@ -321,6 +321,19 @@ void push_rfile(RFile **files, char *src, char *dst, char *content)
   *files = file;
 }
 
+void free_rfile(RFile *files)
+{
+  RFile *current = files;
+  while(current != NULL) {
+    RFile *next = current->next;
+    free(current->src);
+    free(current->dst);
+    free(current->content);
+    free(current);
+    current = next;
+  }
+}
+
 int collect_files(RFile **files, char *src_dir, char *dst_dir)
 {
   DIR *source;
@@ -352,6 +365,7 @@ int collect_files(RFile **files, char *src_dir, char *dst_dir)
       buffer[bytesRead] = '\0';
       char *dest = make_dest_path(path, dst_dir);
       push_rfile(files, path, dest, buffer);
+      free(dest);
       fclose(file);
     }
   }
@@ -393,6 +407,7 @@ int first_pass(RFile *files, Define **defs, Plugins *plugins)
       line[len] = '\0';
       pos = new_line + 1;
 
+      free(line_number_str);
       asprintf(&line_number_str, "%d", line_number);
       overwrite(defs, "__LINE__", line_number_str);
 
@@ -400,31 +415,37 @@ int first_pass(RFile *files, Define **defs, Plugins *plugins)
         in_macro = 0;
         push_macro(defs, buffer, NULL);
         buffer = NULL;
+        free(line);
         continue;
       }
 
       if(in_macro) {
         buffer = append_buffer(buffer, line);
+        free(line);
         continue;
       }
 
       if(define(defs, line, NULL)) {
         in_macro = 1;
+        free(line);
         continue;
       }
 
       if(import_defines_from_line(defs, line)){
+        free(line);
         continue;
       }
 
       if(strncmp(line, "#preflight", 10) == 0) {
         in_preflight = 1;
         buffer = append_buffer(buffer, line);
+        free(line);
         continue;
       }
 
       if(strncmp(line, "#endpreflight", 13) == 0) {
         in_preflight = 0;
+        free(line);
         continue;
       }
 
@@ -434,17 +455,27 @@ int first_pass(RFile *files, Define **defs, Plugins *plugins)
         SEXP result = evaluate(buffer);
         if(result == NULL) {
           printf("%s Preflight checks failed\n", LOG_ERROR);
+          free(buffer);
+          free(line);
           return 1;
         }
+        free(buffer);
         buffer = NULL;
+        free(line);
         continue;
       }
 
       if(in_preflight) {
         buffer = append_buffer(buffer, line);
+        free(line);
         continue;
       }
+
+      free(line);
     }
+
+    free(line_number_str);
+    free(buffer);  // Free buffer if preflight wasn't properly closed
 
     char *output = plugins_call(plugins, "preprocess", current->content, current->src);
     if(output != NULL) {
@@ -491,18 +522,28 @@ int second_pass(RFile *files, Define **defs, Plugins *plugins)
       line[len] = '\0';
       pos = new_line + 1;
 
+      free(line_number_str);
       asprintf(&line_number_str, "%d", line_number);
       overwrite(defs, "__LINE__", line_number_str);
 
       char *fstring_result = fstring_replace(line, 0);
       char *replaced = define_replace(defs, fstring_result);
+      // Cleanup line and fstring_result - define_replace always creates new allocation
+      if(fstring_result != line) free(line);
+      free(fstring_result);
+
       char *processed = include_replace(defs, replaced, plugins, current->src);
+      if(processed != replaced) free(replaced);
+
       char *deconstructed = deconstruct_replace(processed);
+      if(deconstructed != processed) free(processed);
+
       char *cnst = replace_const(deconstructed);
+      if(cnst != deconstructed) free(deconstructed);
 
       // Test collection - if line was consumed, skip to next
       if(collect_test_line(&tc, cnst)) {
-        free(line);
+        free(cnst);
         continue;
       }
 
@@ -510,11 +551,11 @@ int second_pass(RFile *files, Define **defs, Plugins *plugins)
       should_write = should_write_line(should_write, cnst, defs);
 
       if(!should_write) {
-        free(line);
+        free(cnst);
         continue;
       }
       buffer = append_buffer(buffer, cnst);
-      free(line);
+      free(cnst);
     }
 
     FILE *dst_file = fopen(current->dst, "w");
@@ -533,6 +574,8 @@ int second_pass(RFile *files, Define **defs, Plugins *plugins)
     free(buffer);
 
     write_tests(tc.tests, current->src);
+
+    free(line_number_str);
 
     current = current->next;
   }

@@ -24,5 +24,6 @@ int clean(char *src, char *dst, Define **defs, Plugins *plugins);
 char *remove_leading_spaces(char *line);
 int collect_files(RFile **files, char *src_dir, char *dst_dir);
 int two_pass(RFile *files, Define **defs, Plugins *plugins);
+void free_rfile(RFile *files);
 
 #endif
