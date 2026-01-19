@@ -46,24 +46,20 @@ Macro bodies can contain multiple lines of R code with full syntax highlighting 
 
 ```r
 #define
-DEBUG_BLOCK(var, message){
-  cat("Debug:", message, "\n")
-  cat("Value is", var, "\n")
-  cat("Type:", typeof(var), "\n")
+CONNECT(){
+  con <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
+  on.exit(DBI::dbDisconnect(con))
 }
 #enddef
 
-x <- 42
-DEBUG_BLOCK(x, "Checking variable")
+CONNECT()
 ```
 
 **Expands to:**
 
 ```r
-x <- 42
-cat("Debug:", "Checking variable", "\n")
-cat("Value is", x, "\n")
-cat("Type:", typeof(x), "\n")
+con <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
+on.exit(DBI::dbDisconnect(con))
 ```
 
 ## Parameter Substitution
