@@ -40,9 +40,11 @@ cat("Evaluating stuff\n")
 sum(1, 1, 1)
 ```
 
-## Multiline Macro Bodies
+## Examples
 
-Macro bodies can contain multiple lines of R code with full syntax highlighting support in your editor.
+### Cleanup
+
+Ensure you close your database connections when you're done.
 
 ```r
 #define
@@ -62,9 +64,9 @@ con <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
 on.exit(DBI::dbDisconnect(con))
 ```
 
-## Parameter Substitution
+### Repeat
 
-Macro parameters are replaced throughout the macro body when the macro is invoked. All occurrences of the parameter name will be substituted with the corresponding argument.
+Macro to easily repeat a block of code.
 
 ```r
 #define
@@ -86,7 +88,7 @@ for (i in 1:3) {
 }
 ```
 
-## Macros with Multiple Arguments
+### Macros with Multiple Arguments
 
 Macros can accept multiple arguments, which are separated by commas in both the definition and invocation.
 
@@ -111,8 +113,6 @@ if (x < 0 || x > 100) {
   stop("Value out of range: ", x)
 }
 ```
-
-## Practical Examples
 
 ### Logging Macro
 

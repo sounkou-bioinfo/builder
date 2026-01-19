@@ -167,9 +167,10 @@
       <div class="sourceCode" id="cb3"><pre
       class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Evaluating stuff</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>)</span></code></pre></div>
-      <h2 id="multiline-macro-bodies">Multiline Macro Bodies</h2>
-      <p>Macro bodies can contain multiple lines of R code with full
-      syntax highlighting support in your editor.</p>
+      <h2 id="examples">Examples</h2>
+      <h3 id="cleanup">Cleanup</h3>
+      <p>Ensure you close your database connections when you’re
+      done.</p>
       <div class="sourceCode" id="cb4"><pre
       class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#define</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">CONNECT</span>(){</span>
@@ -183,10 +184,8 @@
       <div class="sourceCode" id="cb5"><pre
       class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>con <span class="ot">&lt;-</span> DBI<span class="sc">::</span><span class="fu">dbConnect</span>(RSQLite<span class="sc">::</span><span class="fu">SQLite</span>(), <span class="st">&quot;:memory:&quot;</span>)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">on.exit</span>(DBI<span class="sc">::</span><span class="fu">dbDisconnect</span>(con))</span></code></pre></div>
-      <h2 id="parameter-substitution">Parameter Substitution</h2>
-      <p>Macro parameters are replaced throughout the macro body when
-      the macro is invoked. All occurrences of the parameter name will
-      be substituted with the corresponding argument.</p>
+      <h3 id="repeat">Repeat</h3>
+      <p>Macro to easily repeat a block of code.</p>
       <div class="sourceCode" id="cb6"><pre
       class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#define</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">REPEAT</span>(n, action){</span>
@@ -202,8 +201,8 @@
       class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>) {</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">&quot;Hello&quot;</span>)</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-      <h2 id="macros-with-multiple-arguments">Macros with Multiple
-      Arguments</h2>
+      <h3 id="macros-with-multiple-arguments">Macros with Multiple
+      Arguments</h3>
       <p>Macros can accept multiple arguments, which are separated by
       commas in both the definition and invocation.</p>
       <div class="sourceCode" id="cb8"><pre
@@ -223,7 +222,6 @@
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (x <span class="sc">&lt;</span> <span class="dv">0</span> <span class="sc">||</span> x <span class="sc">&gt;</span> <span class="dv">100</span>) {</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stop</span>(<span class="st">&quot;Value out of range: &quot;</span>, x)</span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-      <h2 id="practical-examples">Practical Examples</h2>
       <h3 id="logging-macro">Logging Macro</h3>
       <div class="sourceCode" id="cb10"><pre
       class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#define</span></span>

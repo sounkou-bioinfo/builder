@@ -132,6 +132,9 @@
       <p>Builder supports plugins to extend processing. Plugins are R
       packages that export a function returning a list of lifecycle
       methods.</p>
+      <p>See <a
+      href="https://github.com/devOpifex/builder.air">builder.air</a>
+      for a simple example plugin.</p>
       <h2 id="usage">Usage</h2>
       <p>Specify plugins with the <code>-plugin</code> flag:</p>
       <div class="sourceCode" id="cb1"><pre
@@ -161,8 +164,8 @@
       <p>Called when Builder finishes processing all files. Use this for
       cleanup or final operations.</p>
       <h2 id="example-plugin">Example Plugin</h2>
-      <p>A simple minifier plugin that replaces newlines with
-      semicolons:</p>
+      <p>A simple minifier plugin that replaces newlines with semicolons
+      (it’s a toy example that will break your code):</p>
       <div class="sourceCode" id="cb2"><pre
       class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @export</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>plugin <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
