@@ -1,5 +1,6 @@
 pre {
   overflow: auto;
+  padding: 0.5rem !important;
 }
 
 * {
