@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>fstrings</title>
+    <title>prepend-append</title>
     <style>
       code{white-space: pre-wrap;}
       span.smallcaps{font-variant: small-caps;}
@@ -107,19 +107,15 @@
         <a href="tests.html">Tests</a>
         <a href="prepend-append.html">Prepend</a>
       </nav>
-      <h1 id="f-strings">f-strings</h1>
-      <p>Builder accepts f-strings</p>
+      <h1 id="prepend-and-append">Prepend and append</h1>
+      <p>With the <code>-prepend</code> and <code>-append</code>
+      arguments, you can specify a file to prepend or append to every
+      output file.</p>
+      <h2 id="example">Example</h2>
       <div class="sourceCode" id="cb1"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="dv">2</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(f<span class="st">&#39;{x} + {y} = {x + y}&#39;</span>)</span></code></pre></div>
-      <p>That will produce:</p>
-      <div class="sourceCode" id="cb2"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="dv">2</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">sprintf</span>(<span class="st">&#39;%s + %s = %s&#39;</span>, x, y, x <span class="sc">+</span> y))</span></code></pre></div>
-      <p>Note that it’s currently simple in its implementation and just
-      uses <code>%s</code> formats.</p>
+      class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-input</span> srcr/ <span class="at">-output</span> R/ <span class="at">-prepend</span> LICENSE</span></code></pre></div>
+      <p>The license.txt file will be prepended to every output file,
+      and the append.txt file will be appended to every output file.</p>
     </main>
   </body>
 </html>

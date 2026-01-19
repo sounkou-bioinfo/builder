@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>get-started</title>
+    <style>
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      div.columns{display: flex; gap: min(4vw, 1.5em);}
+      div.column{flex: auto; overflow-x: auto;}
+      div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+      /* The extra [class] is a hack that increases specificity enough to
+         override a similar rule in reveal.js */
+      ul.task-list[class]{list-style: none;}
+      ul.task-list li input[type="checkbox"] {
+        font-size: inherit;
+        width: 0.8em;
+        margin: 0 0.8em 0.2em -1.6em;
+        vertical-align: middle;
+      }
+      .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+      /* CSS for syntax highlighting */
+      pre > code.sourceCode { white-space: pre; position: relative; }
+      pre > code.sourceCode > span { line-height: 1.25; }
+      pre > code.sourceCode > span:empty { height: 1.2em; }
+      .sourceCode { overflow: visible; }
+      code.sourceCode > span { color: inherit; text-decoration: inherit; }
+      div.sourceCode { margin: 1em 0; }
+      pre.sourceCode { margin: 0; }
+      @media screen {
+      div.sourceCode { overflow: auto; }
+      }
+      @media print {
+      pre > code.sourceCode { white-space: pre-wrap; }
+      pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+      }
+      pre.numberSource code
+        { counter-reset: source-line 0; }
+      pre.numberSource code > span
+        { position: relative; left: -4em; counter-increment: source-line; }
+      pre.numberSource code > span > a:first-child::before
+        { content: counter(source-line);
+          position: relative; left: -1em; text-align: right; vertical-align: baseline;
+          border: none; display: inline-block;
+          -webkit-touch-callout: none; -webkit-user-select: none;
+          -khtml-user-select: none; -moz-user-select: none;
+          -ms-user-select: none; user-select: none;
+          padding: 0 4px; width: 4em;
+        }
+      pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+      div.sourceCode
+        { color: #ebdbb2; background-color: #282828; }
+      @media screen {
+      pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+      }
+      code span { color: #ebdbb2; } /* Normal */
+      code span.al { color: #282828; background-color: #cc241d; font-weight: bold; } /* Alert */
+      code span.an { color: #98971a; } /* Annotation */
+      code span.at { color: #d79921; } /* Attribute */
+      code span.bn { color: #f67400; } /* BaseN */
+      code span.bu { color: #d65d0e; } /* BuiltIn */
+      code span.cf { color: #cc241d; font-weight: bold; } /* ControlFlow */
+      code span.ch { color: #b16286; } /* Char */
+      code span.cn { color: #b16286; font-weight: bold; } /* Constant */
+      code span.co { color: #928374; } /* Comment */
+      code span.cv { color: #928374; } /* CommentVar */
+      code span.do { color: #98971a; } /* Documentation */
+      code span.dt { color: #d79921; } /* DataType */
+      code span.dv { color: #f67400; } /* DecVal */
+      code span.er { color: #cc241d; text-decoration: underline; } /* Error */
+      code span.ex { color: #689d6a; font-weight: bold; } /* Extension */
+      code span.fl { color: #f67400; } /* Float */
+      code span.fu { color: #689d6a; } /* Function */
+      code span.im { color: #689d6a; } /* Import */
+      code span.in { color: #282828; background-color: #83a598; } /* Information */
+      code span.kw { color: #ebdbb2; font-weight: bold; } /* Keyword */
+      code span.op { color: #ebdbb2; } /* Operator */
+      code span.ot { color: #689d6a; } /* Other */
+      code span.pp { color: #d65d0e; } /* Preprocessor */
+      code span.re { color: #928374; background-color: #1d2021; } /* RegionMarker */
+      code span.sc { color: #b16286; } /* SpecialChar */
+      code span.ss { color: #98971a; } /* SpecialString */
+      code span.st { color: #98971a; } /* String */
+      code span.va { color: #458588; } /* Variable */
+      code span.vs { color: #98971a; } /* VerbatimString */
+      code span.wa { color: #282828; background-color: #fabd2f; } /* Warning */
+    </style>
+        <link rel="stylesheet" href="style.css" />
+      </head>
+  <body>
+    <main>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="installation.html">Installation</a>
+        <a href="get-started.html">Get started</a>
+        <a href="packages.html">Packages</a>
+        <a href="directives.html">Directives</a>
+        <a href="macros.html">Macros</a>
+        <a href="include.html">Include</a>
+        <a href="import.html">Import</a>
+        <a href="fstrings.html">F-strings</a>
+        <a href="const.html">Const</a>
+        <a href="deconstruct.html">Deconstruct</a>
+        <a href="preflight.html">Preflight</a>
+        <a href="plugins.html">Plugins</a>
+        <a href="tests.html">Tests</a>
+        <a href="prepend-append.html">Prepend</a>
+      </nav>
+      <h1 id="get-started">Get Started</h1>
+      <p>This guide covers the basics of builder: packages, directives,
+      and macros.</p>
+      <h2 id="package">Package</h2>
+      <p>Builder reads R files from the <code>srcr</code> directory
+      (default) and writes to the <code>R</code> directory
+      (default).</p>
+      <div class="sourceCode" id="cb1"><pre
+      class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">./builder</span> <span class="at">-input</span> srcr <span class="at">-output</span> R</span></code></pre></div>
+      <p>This allows organising your R package source in <strong>nested
+      directories</strong>:</p>
+      <div class="sourceCode" id="cb2"><pre
+      class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">srcr</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> main.R</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="ex">└──</span> utils</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="ex">└──</span> helpers.R</span></code></pre></div>
+      <p>Produces:</p>
+      <div class="sourceCode" id="cb3"><pre
+      class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">R</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> main.R</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="ex">└──</span> utils-helpers.R</span></code></pre></div>
+      <p>Subdirectory paths are flattened with hyphens.</p>
+      <h2 id="directives">Directives</h2>
+      <p>Builder supports C-like preprocessor directives.</p>
+      <h3 id="define-constants">Define Constants</h3>
+      <div class="sourceCode" id="cb4"><pre
+      class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#define DEBUG TRUE</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#define VERSION 2</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> DEBUG</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Version:&quot;</span>, VERSION)</span></code></pre></div>
+      <h3 id="conditional-compilation">Conditional Compilation</h3>
+      <div class="sourceCode" id="cb5"><pre
+      class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#ifdef DEBUG</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Debug mode</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#endif</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#if VERSION &gt; 1</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;New version</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#else</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Old version</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">#endif</span></span></code></pre></div>
+      <h3 id="command-line-definitions">Command Line Definitions</h3>
+      <p>Pass definitions at build time:</p>
+      <div class="sourceCode" id="cb6"><pre
+      class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">./builder</span> <span class="at">-input</span> srcr <span class="at">-output</span> R <span class="at">-DDEBUG</span> <span class="at">-DVERSION</span> 3</span></code></pre></div>
+      <p>Command-line definitions override file-based
+      <code>#define</code> directives.</p>
+      <h2 id="macros">Macros</h2>
+      <p>Macros are function-like directives with parameters.</p>
+      <div class="sourceCode" id="cb7"><pre
+      class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#define</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">LOG</span>(level, msg){</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">&quot;[&quot;</span>, level, <span class="st">&quot;] &quot;</span>, msg, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">#enddef</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="fu">LOG</span>(<span class="st">&quot;INFO&quot;</span>, <span class="st">&quot;Started&quot;</span>)</span></code></pre></div>
+      <p>Expands to:</p>
+      <div class="sourceCode" id="cb8"><pre
+      class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;[&quot;</span>, <span class="st">&quot;INFO&quot;</span>, <span class="st">&quot;] &quot;</span>, <span class="st">&quot;Started&quot;</span>, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>)</span></code></pre></div>
+      <h3 id="syntax">Syntax</h3>
+      <ul>
+      <li>Start with <code>#define</code> alone on a line</li>
+      <li>Macro signature: <code>NAME(arg1, arg2, ...){</code></li>
+      <li>Body enclosed in curly braces</li>
+      <li>End with <code>#enddef</code></li>
+      </ul>
+      <h3 id="another-example">Another Example</h3>
+      <div class="sourceCode" id="cb9"><pre
+      class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#define</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">TIME_IT</span>(expr){</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  start <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  result <span class="ot">&lt;-</span> expr</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">&quot;Time:&quot;</span>, <span class="fu">Sys.time</span>() <span class="sc">-</span> start, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  result</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co">#enddef</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="fu">TIME_IT</span>(<span class="fu">slow_function</span>())</span></code></pre></div>
+      <p>See the full documentation for more features.</p>
+    </main>
+  </body>
+</html>

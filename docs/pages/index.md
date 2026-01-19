@@ -1,7 +1,7 @@
 # Builder
 
 Pre-processor for R (only works on POSIX systems).
-See [installation](installation.html) for instructions.
+See [installation](installation.html) to get builder and the [guide](get-started.html) to get started.
 
 ## Usage
 
