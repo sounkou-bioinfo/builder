@@ -104,7 +104,7 @@ char *remove_leading_spaces(char *line)
   return line;
 }
 
-char *remove_keyword(char *line)
+static char *remove_keyword(char *line)
 {
   char *t = strchr(line, ' ');
   if(t == NULL) {
@@ -120,7 +120,7 @@ char *remove_keyword(char *line)
   return strdup(t);
 }
 
-int should_write_line(int state, char line[1024], Define **defs)
+static int should_write_line(int state, char line[1024], Define **defs)
 {
   char *trimmed = remove_leading_spaces(line);
 
@@ -179,7 +179,7 @@ int should_write_line(int state, char line[1024], Define **defs)
   return state;
 }
 
-char *replace_slash(char *path)
+static char *replace_slash(char *path)
 {
   char *new_path = strdup(path);
   for(int i = 0; i < strlen(new_path); i++) {
@@ -191,7 +191,7 @@ char *replace_slash(char *path)
   return new_path;
 }
 
-char *make_dest_path(char *src, char *dst)
+static char *make_dest_path(char *src, char *dst)
 {
   size_t l = strlen(src) + strlen(dst) + 1;
   char *path = malloc(l);
@@ -218,23 +218,7 @@ char *make_dest_path(char *src, char *dst)
   return path;
 }
 
-int count_braces(char *line)
-{
-  int count = 0;
-  for(int i = 0; i < strlen(line); i++) {
-    if(line[i] == '{') {
-      count++;
-    }
-
-    if(line[i] == '}') {
-      count--;
-    }
-  }
-
-  return count;
-}
-
-char *append_buffer(char *buffer, char *line)
+static char *append_buffer(char *buffer, char *line)
 {
   if(buffer == NULL) {
     return strdup(line);
@@ -286,7 +270,7 @@ int walk(char *src_dir, char *dst_dir, Callback func, Define **defs, Plugins *pl
   return 0;
 }
 
-RFile *create_rfile(char *src, char *dst, char *content)
+static RFile *create_rfile(char *src, char *dst, char *content)
 {
   RFile *file = malloc(sizeof(RFile));
   if(file == NULL) {
@@ -308,7 +292,7 @@ RFile *create_rfile(char *src, char *dst, char *content)
   return file;
 }
 
-void push_rfile(RFile **files, char *src, char *dst, char *content)
+static void push_rfile(RFile **files, char *src, char *dst, char *content)
 {
   RFile *file = create_rfile(src, dst, content);
   if(file == NULL) {
@@ -376,7 +360,7 @@ int collect_files(RFile **files, char *src_dir, char *dst_dir)
 // first pass:
 // - capture defines
 // - Run preflight
-int first_pass(RFile *files, Define **defs, Plugins *plugins)
+static int first_pass(RFile *files, Define **defs, Plugins *plugins)
 {
   RFile *current = files;
   while(current != NULL) {
@@ -488,7 +472,7 @@ int first_pass(RFile *files, Define **defs, Plugins *plugins)
   return 0;
 }
 
-int second_pass(RFile *files, Define **defs, Plugins *plugins, char *prepend, char *append)
+static int second_pass(RFile *files, Define **defs, Plugins *plugins, char *prepend, char *append)
 {
   RFile *current = files;
   while(current != NULL) {

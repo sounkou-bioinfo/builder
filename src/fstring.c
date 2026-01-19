@@ -4,7 +4,7 @@
 #include "fstring.h"
 #include "define.h"
 
-Fstring *create_fstring(char *value)
+static Fstring *create_fstring(char *value)
 {
   Fstring *f = (Fstring*)malloc(sizeof(Fstring));
   if(f == NULL) {
@@ -18,7 +18,7 @@ Fstring *create_fstring(char *value)
   return f;
 }
 
-void push_fstring(Fstring **head, char *value)
+static void push_fstring(Fstring **head, char *value)
 {
   Fstring *new = create_fstring(value);
 
@@ -36,7 +36,7 @@ void push_fstring(Fstring **head, char *value)
   curr->next = new;
 }
 
-void free_fstring(Fstring *f)
+static void free_fstring(Fstring *f)
 {
   if(f == NULL) {
     return;

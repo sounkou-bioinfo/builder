@@ -6,7 +6,7 @@
 
 const char *NO_DEFINITION = "<UNDEFINED>";
 
-Value *create_value(char *value)
+static Value *create_value(char *value)
 {
   Value *new_value = malloc(sizeof(Value));
   if(new_value == NULL) {
@@ -17,7 +17,7 @@ Value *create_value(char *value)
   return new_value;
 }
 
-Value *push_value(Value *head, char *name)
+static Value *push_value(Value *head, char *name)
 {
   Value *new_value = create_value(name);
   if(new_value == NULL) {
@@ -36,21 +36,7 @@ Value *push_value(Value *head, char *name)
   return head;
 }
 
-int include(char *arg, char value)
-{
-  const int l = strlen(arg);
-  for (int i = 0; i < l; i++)
-  {
-    if (arg[i] == value)
-    {
-      return 1;
-    }
-  }
-
-  return 0;
-}
-
-int is_directive(char *arg) {
+static int is_directive(char *arg) {
   if(strlen(arg) < 2) {
     return 0;
   }

@@ -6,7 +6,7 @@
 #include "log.h"
 #include "r.h"
 
-Plugins *create_plugins(char *name, int setup, SEXP obj)
+static Plugins *create_plugins(char *name, int setup, SEXP obj)
 {
   Plugins *plugins = malloc(sizeof(Plugins));
   if(plugins == NULL) {
@@ -22,7 +22,7 @@ Plugins *create_plugins(char *name, int setup, SEXP obj)
   return plugins;
 }
 
-Plugins *push_plugins(Plugins *head, char *name, int setup, SEXP obj)
+static Plugins *push_plugins(Plugins *head, char *name, int setup, SEXP obj)
 {
   if(head == NULL) {
     return create_plugins(name, setup, obj);

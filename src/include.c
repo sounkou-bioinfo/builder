@@ -6,19 +6,19 @@
 #include "r.h"
 #include "log.h"
 
-void free_include(Include *include)
+static void free_include(Include *include)
 {
   if(include->function != NULL) free(include->function);
   if(include->path != NULL) free(include->path);
   if(include->object != NULL) free(include->object);
 }
 
-int has_include(char *line)
+static int has_include(char *line)
 {
   return strstr(line, "#include:") != NULL;
 }
 
-Include parse_include(char *line)
+static Include parse_include(char *line)
 {
   Include result = {NULL, NULL, NULL};
 

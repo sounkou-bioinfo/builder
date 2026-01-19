@@ -4,7 +4,7 @@
 #include "deconstruct.h"
 #include "file.h"
 
-Var *create_var(char *value)
+static Var *create_var(char *value)
 {
   Var *f = (Var*)malloc(sizeof(Var));
   if(f == NULL) {
@@ -18,7 +18,7 @@ Var *create_var(char *value)
   return f;
 }
 
-void push_var(Var **head, char *value)
+static void push_var(Var **head, char *value)
 {
   Var *new = create_var(value);
 
@@ -36,7 +36,7 @@ void push_var(Var **head, char *value)
   curr->next = new;
 }
 
-void free_var(Var *f)
+static void free_var(Var *f)
 {
   if(f == NULL) {
     return;

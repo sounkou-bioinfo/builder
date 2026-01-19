@@ -27,7 +27,7 @@ void set_R_home()
   pclose(fp);
 }
 
-char *remove_trailing_newline(char *line)
+static char *remove_trailing_newline(char *line)
 {
   size_t len = strlen(line);
   if(len > 0 && line[len - 1] == '\n') {

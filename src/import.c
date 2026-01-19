@@ -8,7 +8,7 @@
 #include "parser.h"
 #include "define.h"
 
-char *get_path_from_package(char *input)
+static char *get_path_from_package(char *input)
 {
   char *delimiter = "::";
   char *split_point = strstr(input, delimiter);
@@ -43,7 +43,7 @@ char *get_path_from_package(char *input)
   return strdup(filepath);
 }
 
-char *get_path(char *path)
+static char *get_path(char *path)
 {
   if(strstr(path, "::") != NULL) {
     return get_path_from_package(path);
@@ -52,7 +52,7 @@ char *get_path(char *path)
   return strdup(path);
 }
 
-char *get_namespace(char *path)
+static char *get_namespace(char *path)
 {
   if(strstr(path, "::") != NULL) {
     char *token = strtok(path, ":");

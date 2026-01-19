@@ -344,7 +344,7 @@ char* str_replace(const char *orig, const char *find, const char *replace)
   return result;
 }
 
-char* extract_first_line(const char *str, char *buffer, size_t buffer_size) 
+static char* extract_first_line(const char *str, char *buffer, size_t buffer_size)
 {
   if (str == NULL || buffer == NULL || buffer_size == 0) {
     return NULL;
