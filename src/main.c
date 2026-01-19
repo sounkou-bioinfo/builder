@@ -29,6 +29,8 @@ int main(int argc, char *argv[])
     printf("  -D<NAME>              Define directives, e.g.: -DDEBUG -DVALUE 42\n");
     printf("  -plugin               Use plugins, e.g.: -plugin pkg::plugin pkg::plugin2\n");
     printf("  -import               Import .rh files, e.g.: -import inst/main.rh pkg::main.rh\n");
+    printf("  -prepend              Path to file to prepend to every output file (e.g.: license)\n");
+    printf("  -append               Path to file to append to every output file\n");
     printf("  -help                 Show this help message\n");
     printf("\n");
     printf("Example:\n");
@@ -102,6 +104,7 @@ int main(int argc, char *argv[])
   }
 
   Plugins *plugins = plugins_init(plugins_str, input, output);
+  free_value(plugins_str);
   int p_failed = plugins_failed(plugins);
   if(p_failed) {
     printf("%s Failed to initialize plugin(s) - stopping execution\n", LOG_ERROR);
@@ -124,21 +127,35 @@ int main(int argc, char *argv[])
     return 1;
   }
 
-  two_pass(files, &defines, plugins);
+  char *prepend = get_arg_value(argc, argv, "-prepend");
+  if(prepend != NULL) {
+    printf("%s Prepending: %s\n", LOG_INFO, prepend);
+  }
+
+  char *append = get_arg_value(argc, argv, "-append");
+  if(append != NULL) {
+    printf("%s Appending: %s\n", LOG_INFO, append);
+  }
+
+  int success_two_pass = !two_pass(files, &defines, plugins, prepend, append);
   free_rfile(files);
-
-  char *end_result = plugins_call(plugins, "end", NULL, NULL);
-  free(end_result);
-  free_plugins(plugins);
+  free(prepend);
   free_value(imports);
-  free_value(plugins_str);
-
   free(input);
   free(output);
   free_array(defines);
 
   // Terminate R embedded environment
   Rf_endEmbeddedR(0);
+
+  if(!success_two_pass) {
+    printf("%s Failed to process files\n", LOG_ERROR);
+    return 1;
+  }
+
+  char *end_result = plugins_call(plugins, "end", NULL, NULL);
+  free(end_result);
+  free_plugins(plugins);
 
   return 0;
 }

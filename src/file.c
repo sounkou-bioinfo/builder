@@ -490,7 +490,7 @@ int first_pass(RFile *files, Define **defs, Plugins *plugins)
   return 0;
 }
 
-int second_pass(RFile *files, Define **defs, Plugins *plugins)
+int second_pass(RFile *files, Define **defs, Plugins *plugins, char *prepend, char *append)
 {
   RFile *current = files;
   while(current != NULL) {
@@ -564,12 +564,38 @@ int second_pass(RFile *files, Define **defs, Plugins *plugins)
       return 1;
     }
     char *output = plugins_call(plugins, "postprocess", buffer, current->src);
+    if(prepend != NULL) {
+      FILE *prepend_file = fopen(prepend, "r");
+      if(prepend_file == NULL) {
+        printf("%s Failed to open %s\n", LOG_ERROR, prepend);
+        return 1;
+      }
+      char prepend_buffer[1024];
+      while(fgets(prepend_buffer, sizeof(prepend_buffer), prepend_file) != NULL) {
+        fputs(prepend_buffer, dst_file);
+      }
+      fclose(prepend_file);
+    }
     if(output != NULL) {
       fputs(output, dst_file);
       free(output);
     } else if(buffer != NULL) {
       fputs(buffer, dst_file);
     }
+
+    if(append != NULL) {
+      FILE *append_file = fopen(append, "r");
+      if(append_file == NULL) {
+        printf("%s Failed to open %s\n", LOG_ERROR, append);
+        return 1;
+      }
+      char append_buffer[1024];
+      while(fgets(buffer, sizeof(append_buffer), append_file) != NULL) {
+        fputs(buffer, dst_file);
+      }
+      fclose(append_file);
+    }
+
     fclose(dst_file);
     free(buffer);
 
@@ -583,12 +609,12 @@ int second_pass(RFile *files, Define **defs, Plugins *plugins)
   return 0;
 }
 
-int two_pass(RFile *files, Define **defs, Plugins *plugins)
+int two_pass(RFile *files, Define **defs, Plugins *plugins, char *prepend, char *append)
 {
   int first_pass_result = first_pass(files, defs, plugins);
   if(first_pass_result) {
     return 1;
   }
 
-  return second_pass(files, defs, plugins);
+  return second_pass(files, defs, plugins, prepend, append);
 }
