@@ -8,4 +8,4 @@ cd builder
 make
 ```
 
-You must build it from source since we link against your local R installation.
+You must build it from source since we dynamically link against your local R installation.
