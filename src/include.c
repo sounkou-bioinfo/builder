@@ -48,12 +48,6 @@ Include parse_include(char *line)
     token = strtok_r(NULL, " ", &saveptr);
   }
 
-  // remove line break
-  int l = strlen(result.object);
-  if(l > 0) {
-    result.object[l - 1] = '\0';
-  }
-
   free(work);
   return result;
 }

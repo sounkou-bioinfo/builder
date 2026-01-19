@@ -5,8 +5,7 @@ FLS = -Wall -Iinclude -s
 CMD = ./bin/builder \
 			-input srcr \
 			-DDEBUG -DTEST '"a string"' -DXXX 42 \
-			-import builder.r::generate.rh \
-			-plugin minifier::plugin
+			-import builder.r::generate.rh
 
 FILES = src/main.c \
   src/r.c \
