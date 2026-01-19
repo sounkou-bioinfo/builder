@@ -9,6 +9,8 @@
 #include "log.h"
 #include "r.h"
 
+#define MAX_MACRO_DEPTH 32
+
 const char *DYNAMIC_DEFINITION = "<DYNAMIC>";
 
 Define *create_define()
@@ -367,13 +369,8 @@ char* extract_first_line(const char *str, char *buffer, size_t buffer_size)
   return buffer;
 }
 
-char *define_replace(Define **defines, char *line)
+static char *define_replace_once(Define **defines, char *line)
 {
-  // we have no defines
-  if(*defines == NULL) {
-    return strdup(line);
-  }
-
   // we define, nothing to do
   if(strncmp(line, "#define", 7) == 0) {
     return strdup(line);
@@ -471,6 +468,46 @@ char *define_replace(Define **defines, char *line)
     free(current);
 
     return body_macro;
+  }
+
+  return current;
+}
+
+char *define_replace(Define **defines, char *line)
+{
+  if (*defines == NULL) {
+    return strdup(line);
+  }
+
+  char *current = strdup(line);
+  if (current == NULL) {
+    return NULL;
+  }
+
+  int depth = 0;
+
+  while (depth < MAX_MACRO_DEPTH) {
+    char *result = define_replace_once(defines, current);
+    if (result == NULL) {
+      return current;
+    }
+
+    // Nothing changed, we're done
+    if (strcmp(result, current) == 0) {
+      free(result);
+      break;
+    }
+
+    free(current);
+    current = result;
+    depth++;
+  }
+
+  if (depth == MAX_MACRO_DEPTH) {
+    printf(
+      "%s Max macro expansion depth (%d) reached, possible circular definition\n",
+      LOG_WARNING, MAX_MACRO_DEPTH
+    );
   }
 
   return current;

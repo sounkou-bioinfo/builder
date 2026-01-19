@@ -173,9 +173,7 @@ int should_write_line(int state, char line[1024], Define **defs)
   }
 
   if(strncmp(trimmed, "#if", 3) == 0) {
-    // remove #if
-    memmove(trimmed, trimmed + 4, strlen(trimmed + 4) + 1);
-    return eval_if(trimmed);
+    return eval_if(trimmed + 4);
   }
 
   return state;
