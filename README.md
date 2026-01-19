@@ -7,7 +7,8 @@ Only works on Linux and macOS.
 ## Installation
 
 ```bash
-git clone https://github.com/devOpifex/builder.git
+git clone https://github.com/devOpifex/builder.git --depth 1
+cd builder
 make
 ```
 
