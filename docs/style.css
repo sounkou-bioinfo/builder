@@ -1,6 +1,7 @@
 pre {
   overflow: auto;
   padding: 0.5rem !important;
+  border: 1px solid #504945;
 }
 
 * {
@@ -12,8 +13,8 @@ body {
   font-family: "Open Sans", sans-serif;
   line-height: 1.75em;
   font-size: 16px;
-  background-color: #121315;
-  color: #aaa;
+  background-color: #282828;
+  color: #ebdbb2;
 }
 
 .simple-container {
@@ -37,7 +38,7 @@ body {
 }
 
 .simple-ext-info {
-  border-top: 1px solid #aaa;
+  border-top: 1px solid #504945;
 }
 
 p {
@@ -63,18 +64,18 @@ h3 {
 
 hr {
   height: 1px;
-  background-color: #d8d8d8;
+  background-color: #504945;
   border: none;
   width: 100%;
   margin: 0px;
 }
 
 a[href] {
-  color: #1e8ad6;
+  color: #83a598;
 }
 
 a[href]:hover {
-  color: #3ba0e6;
+  color: #8ec07c;
 }
 
 img {
@@ -90,7 +91,7 @@ aside,
 [id*="sidebar"] {
   max-width: 90%;
   margin: 0 auto;
-  border: 1px solid lightgrey;
+  border: 1px solid #504945;
   padding: 5px 15px;
 }
 
