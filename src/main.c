@@ -153,8 +153,7 @@ int main(int argc, char *argv[])
     return 1;
   }
 
-  char *end_result = plugins_call(plugins, "end", NULL, NULL);
-  free(end_result);
+  plugins_call(plugins, "end", NULL, NULL);
   free_plugins(plugins);
 
   return 0;

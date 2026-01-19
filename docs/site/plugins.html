@@ -154,6 +154,9 @@
       <p>Called on each file’s content after Builder processes it.
       Receives the file content as a string and should return the
       modified content.</p>
+      <h3 id="includeline-file">include(line, file)</h3>
+      <p>Called one or more times for each <code>#include</code>
+      directive.</p>
       <h3 id="end">end()</h3>
       <p>Called when Builder finishes processing all files. Use this for
       cleanup or final operations.</p>
@@ -171,9 +174,10 @@
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>      <span class="fu">paste</span>(lines, <span class="at">collapse =</span> <span class="st">&quot;;&quot;</span>)</span>
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    },</span>
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">postprocess =</span> <span class="cf">function</span>(str, file, ...) {},</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">end =</span> <span class="cf">function</span>(...) {}</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">end =</span> <span class="cf">function</span>(...) {},</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">include =</span> <span class="cf">function</span>(line, file, ...) {}</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
       <p>Use it with <code>-plugin minifier::plugin</code>. Methods that
       don’t need to modify content can return <code>NULL</code> or be
       empty. Use <code>...</code> in function signatures for forward

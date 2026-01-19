@@ -29,6 +29,10 @@ Receives the file content as a string and should return the modified content.
 
 Called on each file's content after Builder processes it. Receives the file content as a string and should return the modified content.
 
+### include(line, file)
+
+Called one or more times for each `#include` directive.
+
 ### end()
 
 Called when Builder finishes processing all files. Use this for cleanup or final operations.
@@ -48,7 +52,8 @@ plugin <- function() {
       paste(lines, collapse = ";")
     },
     postprocess = function(str, file, ...) {},
-    end = function(...) {}
+    end = function(...) {},
+    include = function(line, file, ...) {}
   )
 }
 ```

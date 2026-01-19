@@ -5,7 +5,8 @@ FLS = -Wall -Iinclude -s
 CMD = ./bin/builder \
 			-input srcr \
 			-DDEBUG -DTEST '"a string"' -DXXX 42 \
-			-import builder.r::generate.rh
+			-import builder.r::generate.rh \
+			-plugin builder.air::plugin
 
 FILES = src/main.c \
   src/r.c \

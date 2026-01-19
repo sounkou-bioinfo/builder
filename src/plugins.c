@@ -168,15 +168,14 @@ char *plugins_call(Plugins *head, char *fn, char *str, char *file)
     UNPROTECT(2);
 
     if(result == R_NilValue) {
-      if(str != NULL && strcmp(fn, "include") != 0) {
-        printf("%s Plugin %s call to %s() returns NULL - ingnoring\n", LOG_WARNING, current->name, fn);
-      }
       current = current->next;
       continue;
     }
 
-    copy = realloc(copy, strlen(CHAR(STRING_ELT(result, 0))) + 1);
-    strcpy(copy, CHAR(STRING_ELT(result, 0)));
+    if(TYPEOF(result) == STRSXP) {
+      copy = realloc(copy, strlen(CHAR(STRING_ELT(result, 0))) + 1);
+      strcpy(copy, CHAR(STRING_ELT(result, 0)));
+    }
 
     current = current->next;
   }
