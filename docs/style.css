@@ -112,3 +112,35 @@ main {
     padding: 1.5rem 1rem;
   }
 }
+
+.dropdown {
+  position: relative;
+  margin-right: 3rem;
+  float: right;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background: #1d2021;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.dropdown-content a {
+  display: block;
+  padding: 0.5rem 1rem;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+  z-index: 1;
+}
+
+#menu-icon {
+  width: 1rem;
+  height: 1rem;
+}
+
+nav > a {
+  padding-right: 0.75rem;
+}
