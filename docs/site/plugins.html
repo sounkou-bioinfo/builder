@@ -91,47 +91,55 @@
         <link rel="stylesheet" href="style.css" />
       </head>
   <body>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="packages.html">Packages</a>
-      <a href="directives.html">Directives</a>
-      <a href="macros.html">Macros</a>
-      <a href="include.html">Include</a>
-      <a href="import.html">Import</a>
-      <a href="fstrings.html">F-strings</a>
-      <a href="const.html">Const</a>
-      <a href="deconstruct.html">Deconstruct</a>
-      <a href="preflight.html">Preflight</a>
-      <a href="plugins.html">Plugins</a>
-      <a href="tests.html">Tests</a>
-    </nav>
-    <main><h1 id="plugins">Plugins</h1>
-<p>Builder supports plugins to extend processing. Plugins are R packages
-that export a function returning a list of lifecycle methods.</p>
-<h2 id="usage">Usage</h2>
-<p>Specify plugins with the <code>-plugin</code> flag:</p>
-<div class="sourceCode" id="cb1"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">./builder</span> <span class="at">-input</span> srcr <span class="at">-plugin</span> package::function</span></code></pre></div>
-<p>The format is <code>package::function</code> where
-<code>package</code> is the R package name and <code>function</code> is
-the exported function that creates the plugin.</p>
-<h2 id="lifecycle-methods">Lifecycle Methods</h2>
-<p>Plugins can implement the following methods:</p>
-<h3 id="setupinput-output">setup(input, output)</h3>
-<p>Called during initialization with the input and output directory
-paths. Use this to store configuration or perform one-time setup.</p>
-<h3 id="preprocessstr-file">preprocess(str, file)</h3>
-<p>Called on each file’s content before Builder processes it. Receives
-the file content as a string and should return the modified content.</p>
-<h3 id="postprocessstr-file">postprocess(str, file)</h3>
-<p>Called on each file’s content after Builder processes it. Receives
-the file content as a string and should return the modified content.</p>
-<h3 id="end">end()</h3>
-<p>Called when Builder finishes processing all files. Use this for
-cleanup or final operations.</p>
-<h2 id="example-plugin">Example Plugin</h2>
-<p>A simple minifier plugin that replaces newlines with semicolons:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @export</span></span>
+    <main>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="packages.html">Packages</a>
+        <a href="directives.html">Directives</a>
+        <a href="macros.html">Macros</a>
+        <a href="include.html">Include</a>
+        <a href="import.html">Import</a>
+        <a href="fstrings.html">F-strings</a>
+        <a href="const.html">Const</a>
+        <a href="deconstruct.html">Deconstruct</a>
+        <a href="preflight.html">Preflight</a>
+        <a href="plugins.html">Plugins</a>
+        <a href="tests.html">Tests</a>
+      </nav>
+      <h1 id="plugins">Plugins</h1>
+      <p>Builder supports plugins to extend processing. Plugins are R
+      packages that export a function returning a list of lifecycle
+      methods.</p>
+      <h2 id="usage">Usage</h2>
+      <p>Specify plugins with the <code>-plugin</code> flag:</p>
+      <div class="sourceCode" id="cb1"><pre
+      class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">./builder</span> <span class="at">-input</span> srcr <span class="at">-plugin</span> package::function</span></code></pre></div>
+      <p>The format is <code>package::function</code> where
+      <code>package</code> is the R package name and
+      <code>function</code> is the exported function that creates the
+      plugin.</p>
+      <h2 id="lifecycle-methods">Lifecycle Methods</h2>
+      <p>Plugins can implement the following methods:</p>
+      <h3 id="setupinput-output">setup(input, output)</h3>
+      <p>Called during initialization with the input and output
+      directory paths. Use this to store configuration or perform
+      one-time setup.</p>
+      <h3 id="preprocessstr-file">preprocess(str, file)</h3>
+      <p>Called on each file’s content before Builder processes it.
+      Receives the file content as a string and should return the
+      modified content.</p>
+      <h3 id="postprocessstr-file">postprocess(str, file)</h3>
+      <p>Called on each file’s content after Builder processes it.
+      Receives the file content as a string and should return the
+      modified content.</p>
+      <h3 id="end">end()</h3>
+      <p>Called when Builder finishes processing all files. Use this for
+      cleanup or final operations.</p>
+      <h2 id="example-plugin">Example Plugin</h2>
+      <p>A simple minifier plugin that replaces newlines with
+      semicolons:</p>
+      <div class="sourceCode" id="cb2"><pre
+      class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @export</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>plugin <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">setup =</span> <span class="cf">function</span>(input, output, ...) {},</span>
@@ -144,9 +152,10 @@ cleanup or final operations.</p>
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">end =</span> <span class="cf">function</span>(...) {}</span>
 <span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-<p>Use it with <code>-plugin minifier::plugin</code>. Methods that don’t
-need to modify content can return <code>NULL</code> or be empty. Use
-<code>...</code> in function signatures for forward
-compatibility.</p></main>
+      <p>Use it with <code>-plugin minifier::plugin</code>. Methods that
+      don’t need to modify content can return <code>NULL</code> or be
+      empty. Use <code>...</code> in function signatures for forward
+      compatibility.</p>
+    </main>
   </body>
 </html>

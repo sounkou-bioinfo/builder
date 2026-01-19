@@ -91,30 +91,34 @@
         <link rel="stylesheet" href="style.css" />
       </head>
   <body>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="packages.html">Packages</a>
-      <a href="directives.html">Directives</a>
-      <a href="macros.html">Macros</a>
-      <a href="include.html">Include</a>
-      <a href="import.html">Import</a>
-      <a href="fstrings.html">F-strings</a>
-      <a href="const.html">Const</a>
-      <a href="deconstruct.html">Deconstruct</a>
-      <a href="preflight.html">Preflight</a>
-      <a href="plugins.html">Plugins</a>
-      <a href="tests.html">Tests</a>
-    </nav>
-    <main><h1 id="f-strings">f-strings</h1>
-<p>Builder accepts f-strings</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+    <main>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="packages.html">Packages</a>
+        <a href="directives.html">Directives</a>
+        <a href="macros.html">Macros</a>
+        <a href="include.html">Include</a>
+        <a href="import.html">Import</a>
+        <a href="fstrings.html">F-strings</a>
+        <a href="const.html">Const</a>
+        <a href="deconstruct.html">Deconstruct</a>
+        <a href="preflight.html">Preflight</a>
+        <a href="plugins.html">Plugins</a>
+        <a href="tests.html">Tests</a>
+      </nav>
+      <h1 id="f-strings">f-strings</h1>
+      <p>Builder accepts f-strings</p>
+      <div class="sourceCode" id="cb1"><pre
+      class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">1</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="dv">2</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(f<span class="st">&#39;{x} + {y} = {x + y}&#39;</span>)</span></code></pre></div>
-<p>That will produce:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+      <p>That will produce:</p>
+      <div class="sourceCode" id="cb2"><pre
+      class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">1</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="dv">2</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">sprintf</span>(<span class="st">&#39;%s + %s = %s&#39;</span>, x, y, x <span class="sc">+</span> y))</span></code></pre></div>
-<p>Note that it’s currently simple in its implementation and just uses
-<code>%s</code> formats.</p></main>
+      <p>Note that it’s currently simple in its implementation and just
+      uses <code>%s</code> formats.</p>
+    </main>
   </body>
 </html>

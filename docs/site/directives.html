@@ -91,49 +91,54 @@
         <link rel="stylesheet" href="style.css" />
       </head>
   <body>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="packages.html">Packages</a>
-      <a href="directives.html">Directives</a>
-      <a href="macros.html">Macros</a>
-      <a href="include.html">Include</a>
-      <a href="import.html">Import</a>
-      <a href="fstrings.html">F-strings</a>
-      <a href="const.html">Const</a>
-      <a href="deconstruct.html">Deconstruct</a>
-      <a href="preflight.html">Preflight</a>
-      <a href="plugins.html">Plugins</a>
-      <a href="tests.html">Tests</a>
-    </nav>
-    <main><h1 id="directives">Directives</h1>
-<p>Builder lets you use directives in your R files and via the command
-line.</p>
-<h2 id="command-line">Command line</h2>
-<p>You can pass definitions via the command line using <code>-D</code>
-flags. This is useful for setting build-time constants without modifying
-your source files.</p>
-<p><strong>Syntax:</strong> <code>-D&lt;NAME&gt;</code> for boolean
-flags, or <code>-D&lt;NAME&gt; &lt;value&gt;</code> for valued
-definitions.</p>
-<div class="sourceCode" id="cb1"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">./builder</span> <span class="at">-input</span> srcr <span class="at">-output</span> R <span class="at">-DDEBUG</span> <span class="at">-DTEST</span> <span class="st">&#39;&quot;a string&quot;&#39;</span> <span class="at">-DXXX</span> 42</span></code></pre></div>
-<p>Note: Command-line definitions override file-based
-<code>#define</code> directives.</p>
-<h2 id="define">#define</h2>
-<p>Define macros or constants that will be replaced throughout your
-code. All occurrences of the defined name will be replaced with the
-specified value.</p>
-<p><strong>Syntax:</strong> <code>#define NAME value</code></p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#define PI 3.14159</span></span>
+    <main>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="packages.html">Packages</a>
+        <a href="directives.html">Directives</a>
+        <a href="macros.html">Macros</a>
+        <a href="include.html">Include</a>
+        <a href="import.html">Import</a>
+        <a href="fstrings.html">F-strings</a>
+        <a href="const.html">Const</a>
+        <a href="deconstruct.html">Deconstruct</a>
+        <a href="preflight.html">Preflight</a>
+        <a href="plugins.html">Plugins</a>
+        <a href="tests.html">Tests</a>
+      </nav>
+      <h1 id="directives">Directives</h1>
+      <p>Builder lets you use directives in your R files and via the
+      command line.</p>
+      <h2 id="command-line">Command line</h2>
+      <p>You can pass definitions via the command line using
+      <code>-D</code> flags. This is useful for setting build-time
+      constants without modifying your source files.</p>
+      <p><strong>Syntax:</strong> <code>-D&lt;NAME&gt;</code> for
+      boolean flags, or <code>-D&lt;NAME&gt; &lt;value&gt;</code> for
+      valued definitions.</p>
+      <div class="sourceCode" id="cb1"><pre
+      class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">./builder</span> <span class="at">-input</span> srcr <span class="at">-output</span> R <span class="at">-DDEBUG</span> <span class="at">-DTEST</span> <span class="st">&#39;&quot;a string&quot;&#39;</span> <span class="at">-DXXX</span> 42</span></code></pre></div>
+      <p>Note: Command-line definitions override file-based
+      <code>#define</code> directives.</p>
+      <h2 id="define">#define</h2>
+      <p>Define macros or constants that will be replaced throughout
+      your code. All occurrences of the defined name will be replaced
+      with the specified value.</p>
+      <p><strong>Syntax:</strong> <code>#define NAME value</code></p>
+      <div class="sourceCode" id="cb2"><pre
+      class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#define PI 3.14159</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">#define STRING &quot;hello world!&quot;</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> PI  <span class="co"># becomes: x &lt;- 3.14159</span></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(STRING)  <span class="co"># becomes: print(&quot;hello world!&quot;)</span></span></code></pre></div>
-<h2 id="ifdef">#ifdef</h2>
-<p>Include a code block only if the specified name is defined (either
-via <code>#define</code> or command-line <code>-D</code> flag).</p>
-<p><strong>Syntax:</strong> <code>#ifdef NAME ... #endif</code></p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#ifdef DEBUG</span></span>
+      <h2 id="ifdef">#ifdef</h2>
+      <p>Include a code block only if the specified name is defined
+      (either via <code>#define</code> or command-line <code>-D</code>
+      flag).</p>
+      <p><strong>Syntax:</strong>
+      <code>#ifdef NAME ... #endif</code></p>
+      <div class="sourceCode" id="cb3"><pre
+      class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#ifdef DEBUG</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;debugging!</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">#endif</span></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -143,19 +148,24 @@ via <code>#define</code> or command-line <code>-D</code> flag).</p>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">#else</span></span>
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;world!&quot;</span>)</span>
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">#endif</span></span></code></pre></div>
-<h2 id="ifndef">#ifndef</h2>
-<p>Include a code block only if the specified name is NOT defined. This
-is the opposite of <code>#ifdef</code>.</p>
-<p><strong>Syntax:</strong> <code>#ifndef NAME ... #endif</code></p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#ifndef PROD</span></span>
+      <h2 id="ifndef">#ifndef</h2>
+      <p>Include a code block only if the specified name is NOT defined.
+      This is the opposite of <code>#ifdef</code>.</p>
+      <p><strong>Syntax:</strong>
+      <code>#ifndef NAME ... #endif</code></p>
+      <div class="sourceCode" id="cb4"><pre
+      class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#ifndef PROD</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Not in production mode&quot;</span>)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#endif</span></span></code></pre></div>
-<h2 id="if">#if</h2>
-<p>Evaluate an R expression and include the code block if the result is
-TRUE. The expression is evaluated using the embedded R interpreter and
-supports any valid R expression that returns a logical value.</p>
-<p><strong>Syntax:</strong> <code>#if R_EXPRESSION ... #endif</code></p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#define VERSION 3</span></span>
+      <h2 id="if">#if</h2>
+      <p>Evaluate an R expression and include the code block if the
+      result is TRUE. The expression is evaluated using the embedded R
+      interpreter and supports any valid R expression that returns a
+      logical value.</p>
+      <p><strong>Syntax:</strong>
+      <code>#if R_EXPRESSION ... #endif</code></p>
+      <div class="sourceCode" id="cb5"><pre
+      class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#define VERSION 3</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#if VERSION &gt; 2</span></span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Using new API</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
@@ -164,33 +174,38 @@ supports any valid R expression that returns a logical value.</p>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#if XXX &gt; 1</span></span>
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;it&#39;s 1!</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
 <span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">#endif</span></span></code></pre></div>
-<h2 id="else">#else</h2>
-<p>Provide an alternative code path for conditional blocks. Used with
-<code>#ifdef</code>, <code>#ifndef</code>, or <code>#if</code> to
-specify code that should be included when the condition is false.</p>
-<p>See the <code>#ifdef</code> example above for usage.</p>
-<h2 id="endif">#endif</h2>
-<p>Close a conditional compilation block. Required for all conditional
-directives (<code>#ifdef</code>, <code>#ifndef</code>,
-<code>#if</code>).</p>
-<h2 id="file"><strong>FILE</strong></h2>
-<p>A built-in directive that is automatically replaced with the current
-source file path. Useful for debugging and logging to track which file
-generated specific code.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Processing file: __FILE__</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+      <h2 id="else">#else</h2>
+      <p>Provide an alternative code path for conditional blocks. Used
+      with <code>#ifdef</code>, <code>#ifndef</code>, or
+      <code>#if</code> to specify code that should be included when the
+      condition is false.</p>
+      <p>See the <code>#ifdef</code> example above for usage.</p>
+      <h2 id="endif">#endif</h2>
+      <p>Close a conditional compilation block. Required for all
+      conditional directives (<code>#ifdef</code>, <code>#ifndef</code>,
+      <code>#if</code>).</p>
+      <h2 id="file"><strong>FILE</strong></h2>
+      <p>A built-in directive that is automatically replaced with the
+      current source file path. Useful for debugging and logging to
+      track which file generated specific code.</p>
+      <div class="sourceCode" id="cb6"><pre
+      class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Processing file: __FILE__</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># If in srcr/analysis.R, becomes: cat(&quot;Processing file: srcr/analysis.R \n&quot;)</span></span></code></pre></div>
-<h2 id="line"><strong>LINE</strong></h2>
-<p>A built-in directive that is automatically replaced with the current
-line number in the source file. Useful for debugging and error tracking
-to identify the exact location of code execution.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Executing line __LINE__</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+      <h2 id="line"><strong>LINE</strong></h2>
+      <p>A built-in directive that is automatically replaced with the
+      current line number in the source file. Useful for debugging and
+      error tracking to identify the exact location of code
+      execution.</p>
+      <div class="sourceCode" id="cb7"><pre
+      class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Executing line __LINE__</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># If on line 42, becomes: cat(&quot;Executing line 42\n&quot;)</span></span></code></pre></div>
-<h2 id="os"><strong>OS</strong></h2>
-<p>A built-in directive that is automatically populated with the current
-operating system. Useful for conditionally compiling code based on the
-current OS.</p>
-<div class="sourceCode" id="cb8"><pre
-class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Running on: __OS__</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># becomes: cat(&quot;Running on: Linux\n&quot;)</span></span></code></pre></div></main>
+      <h2 id="os"><strong>OS</strong></h2>
+      <p>A built-in directive that is automatically populated with the
+      current operating system. Useful for conditionally compiling code
+      based on the current OS.</p>
+      <div class="sourceCode" id="cb8"><pre
+      class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Running on: __OS__</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># becomes: cat(&quot;Running on: Linux\n&quot;)</span></span></code></pre></div>
+    </main>
   </body>
 </html>

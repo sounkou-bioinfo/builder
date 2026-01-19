@@ -91,50 +91,56 @@
         <link rel="stylesheet" href="style.css" />
       </head>
   <body>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="packages.html">Packages</a>
-      <a href="directives.html">Directives</a>
-      <a href="macros.html">Macros</a>
-      <a href="include.html">Include</a>
-      <a href="import.html">Import</a>
-      <a href="fstrings.html">F-strings</a>
-      <a href="const.html">Const</a>
-      <a href="deconstruct.html">Deconstruct</a>
-      <a href="preflight.html">Preflight</a>
-      <a href="plugins.html">Plugins</a>
-      <a href="tests.html">Tests</a>
-    </nav>
-    <main><h1 id="import">Import</h1>
-<p>Import <code>.rh</code> files containing macro definitions.</p>
-<h2 id="two-ways-to-import">Two Ways to Import</h2>
-<p>Use <code>#import</code> in your <code>.R</code> file:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#import macros.rh</span></span></code></pre></div>
-<p>Or use the <code>-import</code> CLI flag:</p>
-<div class="sourceCode" id="cb2"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-import</span> macros.rh main.R</span></code></pre></div>
-<h2 id="local-import">Local Import</h2>
-<p>Import a local <code>.rh</code> file:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#import utils.rh</span></span>
+    <main>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="packages.html">Packages</a>
+        <a href="directives.html">Directives</a>
+        <a href="macros.html">Macros</a>
+        <a href="include.html">Include</a>
+        <a href="import.html">Import</a>
+        <a href="fstrings.html">F-strings</a>
+        <a href="const.html">Const</a>
+        <a href="deconstruct.html">Deconstruct</a>
+        <a href="preflight.html">Preflight</a>
+        <a href="plugins.html">Plugins</a>
+        <a href="tests.html">Tests</a>
+      </nav>
+      <h1 id="import">Import</h1>
+      <p>Import <code>.rh</code> files containing macro definitions.</p>
+      <h2 id="two-ways-to-import">Two Ways to Import</h2>
+      <p>Use <code>#import</code> in your <code>.R</code> file:</p>
+      <div class="sourceCode" id="cb1"><pre
+      class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#import macros.rh</span></span></code></pre></div>
+      <p>Or use the <code>-import</code> CLI flag:</p>
+      <div class="sourceCode" id="cb2"><pre
+      class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-import</span> macros.rh main.R</span></code></pre></div>
+      <h2 id="local-import">Local Import</h2>
+      <p>Import a local <code>.rh</code> file:</p>
+      <div class="sourceCode" id="cb3"><pre
+      class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#import utils.rh</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>foo <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">LOG</span>(<span class="st">&quot;hello&quot;</span>)</span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-<h2 id="package-import">Package Import</h2>
-<p>Import from an installed R package using <code>pkg::path</code>
-syntax. Package imports <strong>must be namespaced</strong> when
-used.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#import mypkg::macros/utils.rh</span></span>
+      <h2 id="package-import">Package Import</h2>
+      <p>Import from an installed R package using <code>pkg::path</code>
+      syntax. Package imports <strong>must be namespaced</strong> when
+      used.</p>
+      <div class="sourceCode" id="cb4"><pre
+      class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#import mypkg::macros/utils.rh</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>foo <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  mypkg<span class="sc">::</span><span class="fu">LOG</span>(<span class="st">&quot;hello&quot;</span>)</span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> mypkg<span class="sc">::</span>DEFAULT_VALUE</span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-<h2 id="summary">Summary</h2>
-<ul>
-<li>Only <code>.rh</code> files can be imported</li>
-<li>Local imports: use macros directly (<code>MACRO()</code>)</li>
-<li>Package imports: must namespace (<code>pkg::MACRO()</code>)</li>
-</ul></main>
+      <h2 id="summary">Summary</h2>
+      <ul>
+      <li>Only <code>.rh</code> files can be imported</li>
+      <li>Local imports: use macros directly (<code>MACRO()</code>)</li>
+      <li>Package imports: must namespace
+      (<code>pkg::MACRO()</code>)</li>
+      </ul>
+    </main>
   </body>
 </html>

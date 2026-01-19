@@ -91,45 +91,49 @@
         <link rel="stylesheet" href="style.css" />
       </head>
   <body>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="packages.html">Packages</a>
-      <a href="directives.html">Directives</a>
-      <a href="macros.html">Macros</a>
-      <a href="include.html">Include</a>
-      <a href="import.html">Import</a>
-      <a href="fstrings.html">F-strings</a>
-      <a href="const.html">Const</a>
-      <a href="deconstruct.html">Deconstruct</a>
-      <a href="preflight.html">Preflight</a>
-      <a href="plugins.html">Plugins</a>
-      <a href="tests.html">Tests</a>
-    </nav>
-    <main><h1 id="macros">Macros</h1>
-<p>Macros are function-like preprocessor directives that allow you to
-define reusable code templates with parameters. Unlike simple
-<code>#define</code> replacements, macros can accept arguments and
-expand into multiple lines of code.</p>
-<h2 id="advantages">Advantages</h2>
-<ul>
-<li><strong>Easy metaprogramming:</strong> Write code that generates
-code, enabling powerful abstractions and code generation patterns.</li>
-<li><strong>Zero overhead:</strong> Macros have no runtime performance
-cost since they’re expanded at compile time.</li>
-<li><strong>Compile time expansion:</strong> All macro processing
-happens during preprocessing, before your code executes.</li>
-</ul>
-<h2 id="basic-syntax">Basic Syntax</h2>
-<p>Macros are defined using <code>#define</code> on its own line,
-followed by the macro signature and body. The macro ends with
-<code>#enddef</code>.</p>
-<p><strong>Syntax:</strong></p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#define</span></span>
+    <main>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="packages.html">Packages</a>
+        <a href="directives.html">Directives</a>
+        <a href="macros.html">Macros</a>
+        <a href="include.html">Include</a>
+        <a href="import.html">Import</a>
+        <a href="fstrings.html">F-strings</a>
+        <a href="const.html">Const</a>
+        <a href="deconstruct.html">Deconstruct</a>
+        <a href="preflight.html">Preflight</a>
+        <a href="plugins.html">Plugins</a>
+        <a href="tests.html">Tests</a>
+      </nav>
+      <h1 id="macros">Macros</h1>
+      <p>Macros are function-like preprocessor directives that allow you
+      to define reusable code templates with parameters. Unlike simple
+      <code>#define</code> replacements, macros can accept arguments and
+      expand into multiple lines of code.</p>
+      <h2 id="advantages">Advantages</h2>
+      <ul>
+      <li><strong>Easy metaprogramming:</strong> Write code that
+      generates code, enabling powerful abstractions and code generation
+      patterns.</li>
+      <li><strong>Zero overhead:</strong> Macros have no runtime
+      performance cost since they’re expanded at compile time.</li>
+      <li><strong>Compile time expansion:</strong> All macro processing
+      happens during preprocessing, before your code executes.</li>
+      </ul>
+      <h2 id="basic-syntax">Basic Syntax</h2>
+      <p>Macros are defined using <code>#define</code> on its own line,
+      followed by the macro signature and body. The macro ends with
+      <code>#enddef</code>.</p>
+      <p><strong>Syntax:</strong></p>
+      <div class="sourceCode" id="cb1"><pre
+      class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#define</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">MACRO_NAME</span>(arg1, arg2, ...){</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  body</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">#enddef</span></span></code></pre></div>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#define</span></span>
+      <div class="sourceCode" id="cb2"><pre
+      class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#define</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">LOG_EVAL</span>(expr){</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">&quot;Evaluating stuff</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  expr</span>
@@ -137,13 +141,15 @@ followed by the macro signature and body. The macro ends with
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">#enddef</span></span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">LOG_EVAL</span>(<span class="fu">sum</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>))</span></code></pre></div>
-<p><strong>Expands to:</strong></p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Evaluating stuff</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+      <p><strong>Expands to:</strong></p>
+      <div class="sourceCode" id="cb3"><pre
+      class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Evaluating stuff</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>)</span></code></pre></div>
-<h2 id="multiline-macro-bodies">Multiline Macro Bodies</h2>
-<p>Macro bodies can contain multiple lines of R code with full syntax
-highlighting support in your editor.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#define</span></span>
+      <h2 id="multiline-macro-bodies">Multiline Macro Bodies</h2>
+      <p>Macro bodies can contain multiple lines of R code with full
+      syntax highlighting support in your editor.</p>
+      <div class="sourceCode" id="cb4"><pre
+      class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#define</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">DEBUG_BLOCK</span>(var, message){</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">&quot;Debug:&quot;</span>, message, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">&quot;Value is&quot;</span>, var, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
@@ -153,16 +159,18 @@ highlighting support in your editor.</p>
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">42</span></span>
 <span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="fu">DEBUG_BLOCK</span>(x, <span class="st">&quot;Checking variable&quot;</span>)</span></code></pre></div>
-<p><strong>Expands to:</strong></p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">42</span></span>
+      <p><strong>Expands to:</strong></p>
+      <div class="sourceCode" id="cb5"><pre
+      class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">42</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Debug:&quot;</span>, <span class="st">&quot;Checking variable&quot;</span>, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Value is&quot;</span>, x, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Type:&quot;</span>, <span class="fu">typeof</span>(x), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
-<h2 id="parameter-substitution">Parameter Substitution</h2>
-<p>Macro parameters are replaced throughout the macro body when the
-macro is invoked. All occurrences of the parameter name will be
-substituted with the corresponding argument.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#define</span></span>
+      <h2 id="parameter-substitution">Parameter Substitution</h2>
+      <p>Macro parameters are replaced throughout the macro body when
+      the macro is invoked. All occurrences of the parameter name will
+      be substituted with the corresponding argument.</p>
+      <div class="sourceCode" id="cb6"><pre
+      class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#define</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">REPEAT</span>(n, action){</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n) {</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    action</span>
@@ -171,15 +179,17 @@ substituted with the corresponding argument.</p>
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#enddef</span></span>
 <span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="fu">REPEAT</span>(<span class="dv">3</span>, <span class="fu">print</span>(<span class="st">&quot;Hello&quot;</span>))</span></code></pre></div>
-<p><strong>Expands to:</strong></p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>) {</span>
+      <p><strong>Expands to:</strong></p>
+      <div class="sourceCode" id="cb7"><pre
+      class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>) {</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">&quot;Hello&quot;</span>)</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-<h2 id="macros-with-multiple-arguments">Macros with Multiple
-Arguments</h2>
-<p>Macros can accept multiple arguments, which are separated by commas
-in both the definition and invocation.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#define</span></span>
+      <h2 id="macros-with-multiple-arguments">Macros with Multiple
+      Arguments</h2>
+      <p>Macros can accept multiple arguments, which are separated by
+      commas in both the definition and invocation.</p>
+      <div class="sourceCode" id="cb8"><pre
+      class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#define</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">VALIDATE</span>(value, min, max){</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (value <span class="sc">&lt;</span> min <span class="sc">||</span> value <span class="sc">&gt;</span> max) {</span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stop</span>(<span class="st">&quot;Value out of range: &quot;</span>, value)</span>
@@ -189,14 +199,16 @@ in both the definition and invocation.</p>
 <span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">15</span></span>
 <span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="fu">VALIDATE</span>(x, <span class="dv">0</span>, <span class="dv">100</span>)</span></code></pre></div>
-<p><strong>Expands to:</strong></p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">15</span></span>
+      <p><strong>Expands to:</strong></p>
+      <div class="sourceCode" id="cb9"><pre
+      class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">15</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (x <span class="sc">&lt;</span> <span class="dv">0</span> <span class="sc">||</span> x <span class="sc">&gt;</span> <span class="dv">100</span>) {</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stop</span>(<span class="st">&quot;Value out of range: &quot;</span>, x)</span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-<h2 id="practical-examples">Practical Examples</h2>
-<h3 id="logging-macro">Logging Macro</h3>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#define</span></span>
+      <h2 id="practical-examples">Practical Examples</h2>
+      <h3 id="logging-macro">Logging Macro</h3>
+      <div class="sourceCode" id="cb10"><pre
+      class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#define</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">LOG</span>(level, msg){</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">&quot;[&quot;</span>, level, <span class="st">&quot;] &quot;</span>, msg, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>)</span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>}</span>
@@ -204,11 +216,13 @@ in both the definition and invocation.</p>
 <span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="fu">LOG</span>(<span class="st">&quot;INFO&quot;</span>, <span class="st">&quot;Application started&quot;</span>)</span>
 <span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="fu">LOG</span>(<span class="st">&quot;ERROR&quot;</span>, <span class="st">&quot;Something went wrong&quot;</span>)</span></code></pre></div>
-<p><strong>Expands to:</strong></p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;[&quot;</span>, <span class="st">&quot;INFO&quot;</span>, <span class="st">&quot;] &quot;</span>, <span class="st">&quot;Application started&quot;</span>, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>)</span>
+      <p><strong>Expands to:</strong></p>
+      <div class="sourceCode" id="cb11"><pre
+      class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;[&quot;</span>, <span class="st">&quot;INFO&quot;</span>, <span class="st">&quot;] &quot;</span>, <span class="st">&quot;Application started&quot;</span>, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>)</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;[&quot;</span>, <span class="st">&quot;ERROR&quot;</span>, <span class="st">&quot;] &quot;</span>, <span class="st">&quot;Something went wrong&quot;</span>, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>)</span></code></pre></div>
-<h3 id="try-catch-wrapper">Try-Catch Wrapper</h3>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">#define</span></span>
+      <h3 id="try-catch-wrapper">Try-Catch Wrapper</h3>
+      <div class="sourceCode" id="cb12"><pre
+      class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">#define</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">TRY_CATCH</span>(code, error_msg){</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tryCatch</span>({</span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    code</span>
@@ -219,14 +233,16 @@ in both the definition and invocation.</p>
 <span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="co">#enddef</span></span>
 <span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="fu">TRY_CATCH</span>(<span class="fu">risky_operation</span>(), <span class="st">&quot;Operation failed&quot;</span>)</span></code></pre></div>
-<p><strong>Expands to:</strong></p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tryCatch</span>({</span>
+      <p><strong>Expands to:</strong></p>
+      <div class="sourceCode" id="cb13"><pre
+      class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tryCatch</span>({</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">risky_operation</span>()</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>}, <span class="at">error =</span> <span class="cf">function</span>(e) {</span>
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">&quot;Operation failed&quot;</span>, <span class="st">&quot;:&quot;</span>, e<span class="sc">$</span>message, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
 <span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div>
-<h3 id="timing-macro">Timing Macro</h3>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">#define</span></span>
+      <h3 id="timing-macro">Timing Macro</h3>
+      <div class="sourceCode" id="cb14"><pre
+      class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">#define</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">TIME_IT</span>(expr){</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  start <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
 <span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  result <span class="ot">&lt;-</span> expr</span>
@@ -237,24 +253,27 @@ in both the definition and invocation.</p>
 <span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co">#enddef</span></span>
 <span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="fu">TIME_IT</span>(<span class="fu">slow_computation</span>())</span></code></pre></div>
-<p><strong>Expands to:</strong></p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>start <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
+      <p><strong>Expands to:</strong></p>
+      <div class="sourceCode" id="cb15"><pre
+      class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>start <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">slow_computation</span>()</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>end <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
 <span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Execution time:&quot;</span>, end <span class="sc">-</span> start, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
 <span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>result</span></code></pre></div>
-<h2 id="important-notes">Important Notes</h2>
-<ul>
-<li>Macros start with <code>#define</code> alone on a line</li>
-<li>The macro signature and body follow on subsequent lines</li>
-<li>Macro bodies must be enclosed in curly braces <code>{}</code></li>
-<li>Macros end with <code>#enddef</code></li>
-<li>Macros support multiline definitions and can span many lines (up to
-1024 lines)</li>
-<li>Macro parameters are simple text substitution - be careful with
-expressions that might be evaluated multiple times</li>
-<li>Simple <code>#define NAME value</code> constants still work as
-before</li>
-</ul></main>
+      <h2 id="important-notes">Important Notes</h2>
+      <ul>
+      <li>Macros start with <code>#define</code> alone on a line</li>
+      <li>The macro signature and body follow on subsequent lines</li>
+      <li>Macro bodies must be enclosed in curly braces
+      <code>{}</code></li>
+      <li>Macros end with <code>#enddef</code></li>
+      <li>Macros support multiline definitions and can span many lines
+      (up to 1024 lines)</li>
+      <li>Macro parameters are simple text substitution - be careful
+      with expressions that might be evaluated multiple times</li>
+      <li>Simple <code>#define NAME value</code> constants still work as
+      before</li>
+      </ul>
+    </main>
   </body>
 </html>
