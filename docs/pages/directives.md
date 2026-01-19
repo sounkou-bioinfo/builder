@@ -115,3 +115,21 @@ A directive that is automatically populated with the current operating system. U
 cat("Running on: __OS__\n")
 # becomes: cat("Running on: Linux\n")
 ```
+
+### __DATE__
+
+A directive that is automatically populated with the current date (compile time).
+
+```r
+cat("Running on: __DATE__\n")
+# becomes: cat("Running on: 2026-01-01\n")
+```
+
+### __TIME__
+
+A directive that is automatically populated with the current time (compile time).
+
+```r
+cat("Running on: __TIME__\n")
+# becomes: cat("Running on: 12:00:00\n")
+```

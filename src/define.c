@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h> 
+#include <time.h> 
 #include <sys/utsname.h>
 
 #include "define.h"
@@ -59,8 +60,17 @@ void overwrite(Define **arr, char *name, char *value)
 
 void push_builtins(Define *arr)
 {
+  time_t now = time(NULL);
+  struct tm *local = localtime(&now);
+  char date[11];
+  char time_str[9];
+  strftime(date, sizeof(date), "%Y-%m-%d", local);
+  strftime(time_str, sizeof(time_str), "%H:%M:%S", local);
+
   push(arr, strdup("__FILE__"), strdup(DYNAMIC_DEFINITION), DEF_VARIABLE);
   push(arr, strdup("__LINE__"), strdup(DYNAMIC_DEFINITION), DEF_VARIABLE);
+  push(arr, strdup("__DATE__"), strdup(date), DEF_VARIABLE);
+  push(arr, strdup("__TIME__"), strdup(time_str), DEF_VARIABLE);
 
   struct utsname buffer;
 
