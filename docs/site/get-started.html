@@ -207,18 +207,23 @@
       <li>Body enclosed in curly braces</li>
       <li>End with <code>#enddef</code></li>
       </ul>
-      <h3 id="another-example">Another Example</h3>
+      <h2 id="usage">Usage</h2>
+      <p>You may want to place your builder call in a
+      <code>Makefile</code>, <code>build.R</code> or
+      <code>build.sh</code> script.</p>
       <div class="sourceCode" id="cb9"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#define</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">TIME_IT</span>(expr){</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  start <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  result <span class="ot">&lt;-</span> expr</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">&quot;Time:&quot;</span>, <span class="fu">Sys.time</span>() <span class="sc">-</span> start, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  result</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co">#enddef</span></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="fu">TIME_IT</span>(<span class="fu">slow_function</span>())</span></code></pre></div>
+      class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/usr/bin/env Rscript</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">system2</span>(<span class="st">&quot;builder&quot;</span>, <span class="fu">c</span>(<span class="st">&quot;-input&quot;</span>, <span class="st">&quot;srcr&quot;</span>, <span class="st">&quot;-output&quot;</span>, <span class="st">&quot;R&quot;</span>))</span></code></pre></div>
+      <p>You can then easily call it and chain other procedures before
+      or after the preprocessing:</p>
+      <div class="sourceCode" id="cb10"><pre
+      class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/usr/bin/env Rscript</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">system2</span>(<span class="st">&quot;builder&quot;</span>, <span class="fu">c</span>(<span class="st">&quot;-input&quot;</span>, <span class="st">&quot;srcr&quot;</span>, <span class="st">&quot;-output&quot;</span>, <span class="st">&quot;R&quot;</span>))</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">document</span>()</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">check</span>()</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co">#...</span></span></code></pre></div>
       <p>See the full documentation for more features.</p>
     </main>
   </body>

@@ -94,19 +94,25 @@ cat("[", "INFO", "] ", "Started", "\n", sep = "")
 - Body enclosed in curly braces
 - End with `#enddef`
 
-### Another Example
+## Usage
+
+You may want to place your builder call in a `Makefile`, `build.R` or `build.sh` script.
 
 ```r
-#define
-TIME_IT(expr){
-  start <- Sys.time()
-  result <- expr
-  cat("Time:", Sys.time() - start, "\n")
-  result
-}
-#enddef
+#!/usr/bin/env Rscript
 
-TIME_IT(slow_function())
+system2("builder", c("-input", "srcr", "-output", "R"))
+```
+
+You can then easily call it and chain other procedures before or after the preprocessing:
+
+```r
+#!/usr/bin/env Rscript
+
+system2("builder", c("-input", "srcr", "-output", "R"))
+devtools::document()
+devtools::check()
+#...
 ```
 
 See the full documentation for more features.
