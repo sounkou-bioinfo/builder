@@ -129,11 +129,20 @@
         </div>
       </nav>
       <h1 id="installation">Installation</h1>
-      <p>Install from github with make.</p>
+      <h2 id="quick-install">Quick Install</h2>
       <div class="sourceCode" id="cb1"><pre
-      class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/devOpifex/builder.git <span class="at">--depth</span> 1</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> builder</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> make install</span></code></pre></div>
+      class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fsSL</span> https://builder.opifex.org/install.sh <span class="kw">|</span> <span class="fu">sh</span></span></code></pre></div>
+      <p>To install to a custom location:</p>
+      <div class="sourceCode" id="cb2"><pre
+      class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="va">PREFIX</span><span class="op">=</span>~/.local <span class="ex">curl</span> <span class="at">-fsSL</span> https://builder.opifex.org/install.sh <span class="kw">|</span> <span class="fu">sh</span></span></code></pre></div>
+      <h2 id="manual-install">Manual Install</h2>
+      <div class="sourceCode" id="cb3"><pre
+      class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/devOpifex/builder.git <span class="at">--depth</span> 1</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> builder</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> make install</span></code></pre></div>
+      <p>To install to a custom location:</p>
+      <div class="sourceCode" id="cb4"><pre
+      class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> install PREFIX=~/.local</span></code></pre></div>
     </main>
   </body>
 </html>
