@@ -2,16 +2,8 @@
 
 A simple preprocessor for R: use macros, directives, and conditionals to build generate your code.
 
-Only works on Linux and macOS.
-
-## Installation
+Only works on POSIX systems.
 
 ```bash
-git clone https://github.com/devOpifex/builder.git --depth 1
-cd builder
-make
+curl -fsSL https://builder.opifex.org/install.sh | sh
 ```
-
-## Usage
-
-See `builder -help` for usage.

@@ -1,7 +1,13 @@
 # Builder
 
 Pre-processor for R (only works on POSIX systems).
-See [installation](installation.html) to get builder and the [guide](get-started.html) to get started.
+Visit the [guide](get-started.html) to get started.
+
+```bash
+curl -fsSL https://builder.opifex.org/install.sh | sh
+```
+
+See [installation](installation.html) for a custom installation.
 
 ## Usage
 
