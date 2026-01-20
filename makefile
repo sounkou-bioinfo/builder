@@ -1,15 +1,19 @@
+# Installation paths
+PREFIX ?= /usr/local
+BINDIR ?= $(PREFIX)/bin
+
+# Binary name
+NAME = builder
+
+# Compiler settings (requires R)
 CC = $(shell R CMD config CC)
 CFLAGS = $(shell R CMD config --cppflags)
 LDFLAGS = $(shell R CMD config --ldflags)
-FLS = -Wall -Iinclude -s
-CMD = ./bin/builder \
-			-input srcr \
-			-DDEBUG -DTEST '"a string"' -DXXX 42 \
-			-import builder.r::generate.rh \
-			-plugin builder.air::plugin
+EXTRAFLAGS = -Wall -Iinclude -s
 
+# Source files
 FILES = src/main.c \
-  src/r.c \
+	src/r.c \
 	src/parser.c \
 	src/log.c \
 	src/file.c \
@@ -23,14 +27,38 @@ FILES = src/main.c \
 	src/import.c \
 	src/const.c
 
-build: $(FILES)
-	$(CC) $(CFLAGS) $(FLS) $^ -o bin/builder $(LDFLAGS)
+# Development command
+CMD = ./bin/$(NAME) \
+	-input srcr \
+	-DDEBUG -DTEST '"a string"' -DXXX 42 \
+	-import builder.r::generate.rh \
+	-plugin builder.air::plugin
+
+.PHONY: all build clean install uninstall dev debug site
+
+all: build
+
+build: $(FILES) | bin
+	$(CC) $(CFLAGS) $(EXTRAFLAGS) $^ -o bin/$(NAME) $(LDFLAGS)
+
+bin:
+	mkdir -p bin
+
+clean:
+	rm -f bin/$(NAME)
+
+install: build
+	install -d $(DESTDIR)$(BINDIR)
+	install -m 755 bin/$(NAME) $(DESTDIR)$(BINDIR)/$(NAME)
+
+uninstall:
+	rm -f $(DESTDIR)$(BINDIR)/$(NAME)
 
 dev: build
 	$(CMD)
 
 debug: build
-	valgrind --leak-check=full ${CMD}
+	valgrind --leak-check=full $(CMD)
 
 site:
 	./docs/build.sh
