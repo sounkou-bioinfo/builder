@@ -17,6 +17,7 @@
 #include "test.h"
 #include "log.h"
 #include "r.h"
+#include "deadcode.h"
 
 int exists(char *path)
 {
@@ -591,12 +592,21 @@ static int second_pass(RFile *files, Define **defs, Plugins *plugins, char *prep
   return 0;
 }
 
-int two_pass(RFile *files, Define **defs, Plugins *plugins, char *prepend, char *append)
+int two_pass(RFile *files, Define **defs, Plugins *plugins, char *prepend, char *append, int deadcode)
 {
   int first_pass_result = first_pass(files, defs, plugins);
   if(first_pass_result) {
     return 1;
   }
 
-  return second_pass(files, defs, plugins, prepend, append);
+  int second_pass_result = second_pass(files, defs, plugins, prepend, append);
+  if(second_pass_result) {
+    return 1;
+  }
+
+  if(deadcode) {
+    analyse_deadcode(files);
+  }
+
+  return 0;
 }

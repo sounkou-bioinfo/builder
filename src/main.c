@@ -31,6 +31,7 @@ int main(int argc, char *argv[])
     printf("  -import               Import .rh files, e.g.: -import inst/main.rh pkg::main.rh\n");
     printf("  -prepend              Path to file to prepend to every output file (e.g.: license)\n");
     printf("  -append               Path to file to append to every output file\n");
+    printf("  -deadcode             Enable dead variable/function detection\n");
     printf("  -help                 Show this help message\n");
     printf("\n");
     printf("Example:\n");
@@ -137,7 +138,9 @@ int main(int argc, char *argv[])
     printf("%s Appending: %s\n", LOG_INFO, append);
   }
 
-  int success_two_pass = !two_pass(files, &defines, plugins, prepend, append);
+  int deadcode = has_arg(argc, argv, "-deadcode");
+
+  int success_two_pass = !two_pass(files, &defines, plugins, prepend, append, deadcode);
   free_rfile(files);
   free(prepend);
   free_value(imports);
