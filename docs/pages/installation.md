@@ -5,7 +5,6 @@ Install from github with make.
 ```bash
 git clone https://github.com/devOpifex/builder.git --depth 1
 cd builder
-make
+sudo make install
 ```
 
-You must build it from source since we dynamically link against your local R installation.
