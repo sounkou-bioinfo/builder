@@ -26,3 +26,17 @@ To install to a custom location:
 make install PREFIX=~/.local
 ```
 
+## Uninstall
+
+Remove the binary:
+
+```bash
+sudo rm /usr/local/bin/builder
+```
+
+Or if installed to a custom location:
+
+```bash
+rm ~/.local/bin/builder
+```
+
