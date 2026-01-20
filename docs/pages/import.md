@@ -13,7 +13,7 @@ Use `#import` in your `.R` file:
 Or use the `-import` CLI flag:
 
 ```bash
-builder -import macros.rh main.R
+builder -import macros.rh more-macros.rh -input srcr -output R
 ```
 
 ## Local Import

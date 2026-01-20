@@ -128,15 +128,25 @@
           </div>
         </div>
       </nav>
-      <h1 id="prepend-and-append">Prepend and append</h1>
-      <p>With the <code>-prepend</code> and <code>-append</code>
-      arguments, you can specify a file to prepend or append to every
-      output file.</p>
-      <h2 id="example">Example</h2>
+      <h1 id="prepend-and-append">Prepend and Append</h1>
+      <p>With the <code>-prepend</code> and <code>-append</code> flags,
+      you can specify files to prepend or append to every output
+      file.</p>
+      <h2 id="usage">Usage</h2>
       <div class="sourceCode" id="cb1"><pre
-      class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-input</span> srcr/ <span class="at">-output</span> R/ <span class="at">-prepend</span> LICENSE</span></code></pre></div>
-      <p>The license.txt file will be prepended to every output file,
-      and the append.txt file will be appended to every output file.</p>
+      class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-input</span> srcr <span class="at">-output</span> R <span class="at">-prepend</span> header.txt <span class="at">-append</span> footer.txt</span></code></pre></div>
+      <ul>
+      <li><code>-prepend &lt;file&gt;</code> - Content added to the
+      start of every output file</li>
+      <li><code>-append &lt;file&gt;</code> - Content added to the end
+      of every output file</li>
+      </ul>
+      <h2 id="example-license-header">Example: License Header</h2>
+      <p>Add a license header to all generated R files:</p>
+      <div class="sourceCode" id="cb2"><pre
+      class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-input</span> srcr <span class="at">-output</span> R <span class="at">-prepend</span> LICENSE</span></code></pre></div>
+      <p>The contents of <code>LICENSE</code> will be prepended to every
+      output file in <code>R/</code>.</p>
     </main>
   </body>
 </html>
