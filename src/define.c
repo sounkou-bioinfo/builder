@@ -69,14 +69,9 @@ void push_builtins(Define *arr)
   strftime(date, sizeof(date), "%Y-%m-%d", local);
   strftime(time_str, sizeof(time_str), "%H:%M:%S", local);
 
-  char *value = malloc(3);
-  value[0] = '-';
-  value[1] = '1';
-  value[2] = '\0';
-
   push(arr, strdup("__FILE__"), strdup(DYNAMIC_DEFINITION), DEF_VARIABLE);
   push(arr, strdup("__LINE__"), strdup(DYNAMIC_DEFINITION), DEF_VARIABLE);
-  push(arr, strdup("__COUNTER__"), strdup(value), DEF_VARIABLE);
+  push(arr, strdup("__COUNTER__"), strdup("-1"), DEF_VARIABLE);
   push(arr, strdup("__DATE__"), strdup(date), DEF_VARIABLE);
   push(arr, strdup("__TIME__"), strdup(time_str), DEF_VARIABLE);
 
