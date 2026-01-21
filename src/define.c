@@ -144,7 +144,7 @@ void *define_macro_init(char **macro)
   return *macro;
 }
 
-int ingest_macro(Define **defs, FILE *src_file, size_t line_len, char *namespace)
+int ingest_macro(Define **defs, FILE *src_file, size_t line_len, char *ns)
 {
   char *macro;
   define_macro_init(&macro);
@@ -186,10 +186,10 @@ int ingest_macro(Define **defs, FILE *src_file, size_t line_len, char *namespace
     return 1;
   }
 
-  if(namespace != NULL) {
+  if(ns != NULL) {
     char *ccopy = strdup(macro_name);
-    macro_name = realloc(macro_name, strlen(macro_name) + strlen(namespace) + 3);
-    strcpy(macro_name, namespace);
+    macro_name = realloc(macro_name, strlen(macro_name) + strlen(ns) + 3);
+    strcpy(macro_name, ns);
     strcat(macro_name, "::");
     strcat(macro_name, ccopy);
     free(ccopy);
@@ -199,7 +199,7 @@ int ingest_macro(Define **defs, FILE *src_file, size_t line_len, char *namespace
   return 0;
 }
 
-void push_macro(Define **defs, char *macro, char *namespace)
+void push_macro(Define **defs, char *macro, char *ns)
 {
   char *paren = strchr(macro, '(');
   if(paren == NULL) {
@@ -210,32 +210,36 @@ void push_macro(Define **defs, char *macro, char *namespace)
   char* name = malloc(len + 1);
   strncpy(name, macro, len);
   name[len] = '\0';
+
+  if(ns != NULL) {
+    char *prefixed = malloc(strlen(ns) + 2 + strlen(name) + 1);
+    sprintf(prefixed, "%s::%s", ns, name);
+    free(name);
+    name = prefixed;
+  }
+
   push((*defs), strdup(name), macro, DEF_FUNCTION);
   free(name);
 }
 
-int define(Define **defines, char *line, char *namespace)
+int define(Define **defines, char *line, char *ns)
 {
   if(strncmp(line, "#define", 7) != 0) {
     return 0;
   }
 
-  // Check if this is "#define" alone on a line (multiline macro syntax)
-  // Skip "#define" and check if only whitespace/newline remains
   char *check = line + 7;
   while(*check == ' ' || *check == '\t') check++;
   if(*check == '\n' || *check == '\r' || *check == '\0') {
     return 1;
   }
 
-  // Simple variable define: #define NAME value
   char *token;
   char *copy = strdup(line);
   if(copy == NULL) {
     return 0;
   }
 
-  // Skip "#define"
   token = strtok(copy, " ");
   token = strtok(NULL, " ");
   if(token == NULL) {
@@ -249,8 +253,6 @@ int define(Define **defines, char *line, char *namespace)
     return 0;
   }
 
-  // check if already defined
-  // CLI overrides defines
   if(get_define_value(defines, name_copy) != NULL) {
     printf("%s %s is already defined\n", LOG_WARNING, name_copy);
     free(name_copy);
@@ -258,7 +260,6 @@ int define(Define **defines, char *line, char *namespace)
     return 0;
   }
 
-  // Get value - capture everything after the name
   char *value_copy = NULL;
   char *rest = strtok(NULL, "");
   if(rest != NULL) {
@@ -283,10 +284,10 @@ int define(Define **defines, char *line, char *namespace)
     }
   }
 
-  if(namespace != NULL) {
+  if(ns != NULL) {
     char *ccopy = strdup(name_copy);
-    name_copy = realloc(name_copy, strlen(name_copy) + strlen(namespace) + 3);
-    strcpy(name_copy, namespace);
+    name_copy = realloc(name_copy, strlen(name_copy) + strlen(ns) + 3);
+    strcpy(name_copy, ns);
     strcat(name_copy, "::");
     strcat(name_copy, ccopy);
     free(ccopy);

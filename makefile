@@ -24,7 +24,6 @@ FILES = src/main.c \
 	src/test.c \
 	src/preflight.c \
 	src/plugins.c \
-	src/import.c \
 	src/const.c \
 	src/deadcode.c
 

@@ -302,6 +302,10 @@ int analyse_deadcode(RFile *files)
 
   RFile *current = files;
   while (current != NULL) {
+    if (current->dst == NULL) {
+      current = current->next;
+      continue;
+    }
     char *content = read_file(current->dst);
     if (content == NULL) {
       printf("%s Failed to read %s for dead code analysis\n", LOG_WARNING, current->dst);
@@ -331,6 +335,10 @@ int analyse_deadcode(RFile *files)
 
   current = files;
   while (current != NULL) {
+    if (current->dst == NULL) {
+      current = current->next;
+      continue;
+    }
     char *content = read_file(current->dst);
     if (content == NULL) {
       current = current->next;

@@ -8,7 +8,6 @@
 #include "deconstruct.h"
 #include "preflight.h"
 #include "plugins.h"
-#include "import.h"
 #include "define.h"
 #include "include.h"
 #include "fstring.h"
@@ -271,7 +270,7 @@ int walk(char *src_dir, char *dst_dir, Callback func, Define **defs, Plugins *pl
   return 0;
 }
 
-static RFile *create_rfile(char *src, char *dst, char *content)
+static RFile *create_rfile(char *src, char *dst, char *content, char *ns)
 {
   RFile *file = malloc(sizeof(RFile));
   if(file == NULL) {
@@ -280,22 +279,17 @@ static RFile *create_rfile(char *src, char *dst, char *content)
   }
 
   file->src = strdup(src);
-  file->dst = strdup(dst);
-
-  // content is optional
-  if(content != NULL) {
-    file->content = strdup(content);
-  } else {
-    file->content = NULL;
-  }
+  file->dst = dst ? strdup(dst) : NULL;
+  file->content = content ? strdup(content) : NULL;
+  file->ns = ns ? strdup(ns) : NULL;
   file->next = NULL;
 
   return file;
 }
 
-static void push_rfile(RFile **files, char *src, char *dst, char *content)
+static void push_rfile(RFile **files, char *src, char *dst, char *content, char *ns)
 {
-  RFile *file = create_rfile(src, dst, content);
+  RFile *file = create_rfile(src, dst, content, ns);
   if(file == NULL) {
     return;
   }
@@ -312,9 +306,214 @@ void free_rfile(RFile *files)
     free(current->src);
     free(current->dst);
     free(current->content);
+    free(current->ns);
     free(current);
     current = next;
   }
+}
+
+static char *get_path_from_package(char *input)
+{
+  char *delimiter = "::";
+  char *split_point = strstr(input, delimiter);
+  size_t name_len = split_point - input;
+
+  char *name = malloc(name_len + 1);
+  strncpy(name, input, name_len);
+  name[name_len] = '\0';
+
+  char *path = strdup(split_point + strlen(delimiter));
+
+  SEXP system_file = PROTECT(install("system.file"));
+  SEXP filename = PROTECT(mkString(path));
+  SEXP pkg_name = PROTECT(mkString(name));
+
+  free(name);
+  free(path);
+
+  SEXP call = PROTECT(lang3(system_file, filename, pkg_name));
+  SET_TAG(CDDR(call), install("package"));
+
+  SEXP result = PROTECT(eval(call, R_GlobalEnv));
+  UNPROTECT(5);
+
+  const char *filepath = CHAR(asChar(result));
+  return strdup(filepath);
+}
+
+static char *get_import_path(char *path)
+{
+  if(strstr(path, "::") != NULL) {
+    return get_path_from_package(path);
+  }
+  return strdup(path);
+}
+
+static char *get_import_namespace(char *path)
+{
+  char *delim = strstr(path, "::");
+  if(delim == NULL) return NULL;
+
+  size_t len = delim - path;
+  char *ns = malloc(len + 1);
+  strncpy(ns, path, len);
+  ns[len] = '\0';
+  return ns;
+}
+
+static int is_path_seen(char **seen, int seen_count, char *path)
+{
+  for(int i = 0; i < seen_count; i++) {
+    if(strcmp(seen[i], path) == 0) return 1;
+  }
+  return 0;
+}
+
+static void add_seen_path(char ***seen, int *seen_count, char *path)
+{
+  *seen = realloc(*seen, (*seen_count + 1) * sizeof(char*));
+  (*seen)[*seen_count] = strdup(path);
+  (*seen_count)++;
+}
+
+static void free_seen(char **seen, int seen_count)
+{
+  for(int i = 0; i < seen_count; i++) {
+    free(seen[i]);
+  }
+  free(seen);
+}
+
+static Value *scan_for_imports(char *content)
+{
+  Value *imports = NULL;
+  char *pos = content;
+
+  while(*pos) {
+    char *line_end = strchr(pos, '\n');
+    if(!line_end) break;
+
+    if(strncmp(pos, "#import ", 8) == 0) {
+      char *import_start = pos + 8;
+      size_t len = line_end - import_start;
+      char *import_path = malloc(len + 1);
+      strncpy(import_path, import_start, len);
+      import_path[len] = '\0';
+
+      while(len > 0 && (import_path[len-1] == '\r' || import_path[len-1] == ' ')) {
+        import_path[--len] = '\0';
+      }
+
+      Value *v = malloc(sizeof(Value));
+      v->name = import_path;
+      v->next = imports;
+      imports = v;
+    }
+    pos = line_end + 1;
+  }
+
+  return imports;
+}
+
+static int prepend_import(RFile **files, char *import_spec, char ***seen, int *seen_count)
+{
+  char *resolved_path = get_import_path(import_spec);
+  if(resolved_path == NULL || strlen(resolved_path) == 0) {
+    printf("%s Failed to resolve import: %s\n", LOG_ERROR, import_spec);
+    free(resolved_path);
+    return 0;
+  }
+
+  if(is_path_seen(*seen, *seen_count, resolved_path)) {
+    free(resolved_path);
+    return 1;
+  }
+
+  add_seen_path(seen, seen_count, resolved_path);
+
+  FILE *file = fopen(resolved_path, "r");
+  if(file == NULL) {
+    printf("%s Failed to open import: %s\n", LOG_ERROR, resolved_path);
+    free(resolved_path);
+    return 0;
+  }
+
+  fseek(file, 0, SEEK_END);
+  long size = ftell(file);
+  fseek(file, 0, SEEK_SET);
+
+  char *content = malloc(size + 1);
+  fread(content, 1, size, file);
+  content[size] = '\0';
+  fclose(file);
+
+  char *ns = get_import_namespace(import_spec);
+
+  Value *nested = scan_for_imports(content);
+  Value *current = nested;
+  while(current != NULL) {
+    if(!prepend_import(files, current->name, seen, seen_count)) {
+      free(content);
+      free(resolved_path);
+      free(ns);
+      free_value(nested);
+      return 0;
+    }
+    current = current->next;
+  }
+  free_value(nested);
+
+  push_rfile(files, resolved_path, NULL, content, ns);
+  printf("%s Import: %s\n", LOG_INFO, resolved_path);
+
+  free(content);
+  free(resolved_path);
+  free(ns);
+  return 1;
+}
+
+int resolve_imports(RFile **files, Value *cli_imports)
+{
+  char **seen = NULL;
+  int seen_count = 0;
+
+  RFile *current = *files;
+  while(current != NULL) {
+    add_seen_path(&seen, &seen_count, current->src);
+    current = current->next;
+  }
+
+  Value *cli = cli_imports;
+  while(cli != NULL) {
+    if(!prepend_import(files, cli->name, &seen, &seen_count)) {
+      free_seen(seen, seen_count);
+      return 0;
+    }
+    cli = cli->next;
+  }
+
+  current = *files;
+  while(current != NULL) {
+    if(current->dst == NULL) {
+      current = current->next;
+      continue;
+    }
+    Value *imports = scan_for_imports(current->content);
+    Value *imp = imports;
+    while(imp != NULL) {
+      if(!prepend_import(files, imp->name, &seen, &seen_count)) {
+        free_value(imports);
+        free_seen(seen, seen_count);
+        return 0;
+      }
+      imp = imp->next;
+    }
+    free_value(imports);
+    current = current->next;
+  }
+
+  free_seen(seen, seen_count);
+  return 1;
 }
 
 int collect_files(RFile **files, char *src_dir, char *dst_dir)
@@ -347,7 +546,7 @@ int collect_files(RFile **files, char *src_dir, char *dst_dir)
       size_t bytesRead = fread(buffer, 1, sizeof(buffer), file);
       buffer[bytesRead] = '\0';
       char *dest = make_dest_path(path, dst_dir);
-      push_rfile(files, path, dest, buffer);
+      push_rfile(files, path, dest, buffer, NULL);
       free(dest);
       fclose(file);
     }
@@ -396,7 +595,7 @@ static int first_pass(RFile *files, Define **defs, Plugins *plugins)
 
       if(strncmp(line, "#enddef", 7) == 0) {
         in_macro = 0;
-        push_macro(defs, buffer, NULL);
+        push_macro(defs, buffer, current->ns);
         buffer = NULL;
         free(line);
         continue;
@@ -408,13 +607,13 @@ static int first_pass(RFile *files, Define **defs, Plugins *plugins)
         continue;
       }
 
-      if(define(defs, line, NULL)) {
+      if(define(defs, line, current->ns)) {
         in_macro = 1;
         free(line);
         continue;
       }
 
-      if(import_defines_from_line(defs, line)){
+      if(strncmp(line, "#import ", 8) == 0) {
         free(line);
         continue;
       }
@@ -477,6 +676,10 @@ static int second_pass(RFile *files, Define **defs, Plugins *plugins, char *prep
 {
   RFile *current = files;
   while(current != NULL) {
+    if(current->dst == NULL) {
+      current = current->next;
+      continue;
+    }
     printf("%s Copying %s to %s\n", LOG_INFO, current->src, current->dst);
     overwrite(defs, "__FILE__", current->src);
 

@@ -4,7 +4,6 @@
 
 #include "define.h"
 #include "parser.h"
-#include "import.h"
 #include "plugins.h"
 #include "file.h"
 #include "log.h"
@@ -81,16 +80,6 @@ int main(int argc, char *argv[])
   get_definitions(defines, argc, argv);
 
   Value *imports = get_arg_values(argc, argv, "-import");
-  if(imports != NULL) {
-    printf("%s Importing header files:", LOG_INFO);
-    Value *current = imports;
-    while(current != NULL) {
-      printf(" %s", current->name);
-      current = current->next;
-    }
-    printf("\n");
-  }
-  import_defines(&defines, imports);
 
   Value *plugins_str = get_arg_values(argc, argv, "-plugin");
 
@@ -125,6 +114,11 @@ int main(int argc, char *argv[])
 
   if(!success) {
     printf("%s Failed to collect files\n", LOG_ERROR);
+    return 1;
+  }
+
+  if(!resolve_imports(&files, imports)) {
+    printf("%s Failed to resolve imports\n", LOG_ERROR);
     return 1;
   }
 

@@ -9,6 +9,7 @@ struct RFile_t {
   char *src;
   char *dst;
   char *content;
+  char *ns;
   struct RFile_t *next;
 };
 
@@ -23,6 +24,7 @@ int walk(char *src_dir, char *dst_dir, Callback func, Define **defs, Plugins *pl
 int clean(char *src, char *dst, Define **defs, Plugins *plugins);
 char *remove_leading_spaces(char *line);
 int collect_files(RFile **files, char *src_dir, char *dst_dir);
+int resolve_imports(RFile **files, Value *cli_imports);
 int two_pass(RFile *files, Define **defs, Plugins *plugins, char *prepend, char *append, int deadcode);
 void free_rfile(RFile *files);
 
