@@ -1,3 +1,7 @@
+---
+title: Prepend and append
+---
+
 # Prepend and Append
 
 With the `-prepend` and `-append` flags, you can specify files to prepend or append to every output file.

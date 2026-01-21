@@ -1,3 +1,7 @@
+---
+title: "Macros"
+---
+
 # Import
 
 Import `.rh` files containing macro definitions.

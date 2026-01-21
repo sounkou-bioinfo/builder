@@ -1,3 +1,7 @@
+---
+title: Constants
+---
+
 # Constants
 
 Builder provides a special syntax for creating constant (immutable) bindings using the `-<` operator. Once assigned, constant values cannot be changed, providing safety against accidental modification.

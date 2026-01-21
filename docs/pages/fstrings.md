@@ -1,3 +1,7 @@
+---
+title: F-strings
+---
+
 # F-strings
 
 Builder supports Python-style f-strings for string interpolation.

@@ -1,3 +1,7 @@
+---
+title: Directives
+---
+
 # Directives
 
 Builder lets you use directives in your R files and via the command line.

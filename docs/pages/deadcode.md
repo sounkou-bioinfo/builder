@@ -1,3 +1,7 @@
+---
+title: Dead Code
+---
+
 # Dead Code Analysis
 
 Builder can detect unused variables and functions in your R package with the `-deadcode` flag. This helps identify code that may be safe to remove or indicates potential bugs.

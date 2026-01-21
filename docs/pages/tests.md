@@ -1,3 +1,7 @@
+---
+title: Tests
+---
+
 # Tests
 
 Builder automatically generates testthat test files from inline `#test` blocks in your R source code. This allows you to keep tests close to the code they're testing while maintaining a clean separation in the output.

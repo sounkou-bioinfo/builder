@@ -1,3 +1,7 @@
+---
+title: Macros
+---
+
 # Macros
 
 Macros are function-like preprocessor directives that allow you to define reusable code templates with parameters. Unlike simple `#define` replacements, macros can accept arguments and expand into multiple lines of code.

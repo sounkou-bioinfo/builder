@@ -1,3 +1,7 @@
+---
+title: Packages
+---
+
 # Packages
 
 Builder reads your R files from the srcr (default) directory and writes the output to the R (default) directory.

@@ -1,3 +1,7 @@
+---
+title: Include
+---
+
 # Include
 
 The `#include` directive allows you to read external files at build time and process them using macros. This enables you to embed file contents (like SQL queries, templates, or configuration) directly into your R code as variables.

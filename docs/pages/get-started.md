@@ -1,3 +1,7 @@
+---
+title: Get Started
+---
+
 # Get Started
 
 This guide covers the basics of builder: packages, directives, and macros.

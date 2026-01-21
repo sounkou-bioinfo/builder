@@ -1,3 +1,7 @@
+---
+title: Plugins
+---
+
 # Plugins
 
 Builder supports plugins to extend processing.

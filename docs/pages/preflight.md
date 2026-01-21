@@ -1,3 +1,7 @@
+---
+title: Preflight
+---
+
 # Preflight
 
 Preflight blocks allow you to run R code **before** the main preprocessing phase. This is useful for validation checks, environment verification, or early-exit conditions that should halt the build if requirements aren't met.
