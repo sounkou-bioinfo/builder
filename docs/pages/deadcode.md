@@ -8,7 +8,7 @@ Builder can detect unused variables and functions in your R package with the `-d
 
 ⚠️ Warning: this is the only feature that is vibe-coded to some extent and static analysis of R code is 
 notoriously difficult given the capabilities of the language, these are the reasons this 
-feature is not enabled by default.
+feature is not enabled by default. False positive may be reported.
 
 ## Usage
 
@@ -90,7 +90,6 @@ outer <- function() {
 Certain names are automatically excluded from dead code detection:
 
 - Names starting with `.` (e.g., `.onLoad`, `.data`)
-- Names starting with `_`
 - R special functions: `.onLoad`, `.onUnload`, `.onAttach`, `.onDetach`, `.Last.lib`, `.First.lib`
 
 These are typically package lifecycle functions or internal variables that may not have explicit callers in user code.

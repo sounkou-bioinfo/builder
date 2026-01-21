@@ -147,7 +147,8 @@
       <p>⚠️ Warning: this is the only feature that is vibe-coded to some
       extent and static analysis of R code is notoriously difficult
       given the capabilities of the language, these are the reasons this
-      feature is not enabled by default.</p>
+      feature is not enabled by default. False positive may be
+      reported.</p>
       <h2 id="usage">Usage</h2>
       <div class="sourceCode" id="cb1"><pre
       class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-input</span> srcr <span class="at">-output</span> R <span class="at">-deadcode</span></span></code></pre></div>
@@ -211,7 +212,6 @@
       <ul>
       <li>Names starting with <code>.</code> (e.g.,
       <code>.onLoad</code>, <code>.data</code>)</li>
-      <li>Names starting with <code>_</code></li>
       <li>R special functions: <code>.onLoad</code>,
       <code>.onUnload</code>, <code>.onAttach</code>,
       <code>.onDetach</code>, <code>.Last.lib</code>,

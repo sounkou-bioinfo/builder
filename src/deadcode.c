@@ -104,7 +104,6 @@ int is_excluded_name(const char *name)
 {
   if (name == NULL) return 1;
   if (name[0] == '.') return 1;
-  if (name[0] == '_') return 1;
 
   for (int i = 0; EXCLUDED_NAMES[i] != NULL; i++) {
     if (strcmp(name, EXCLUDED_NAMES[i]) == 0) return 1;
