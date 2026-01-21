@@ -81,6 +81,22 @@ cat("it's 1!\n")
 #endif
 ```
 
+## #elif
+
+Chain multiple conditions together. Only the first matching branch is included.
+
+**Syntax:** `#ifdef|#ifndef|#if ... #elif NAME ... #else ... #endif`
+
+```r
+#ifdef BACKEND_POSTGRES
+db <- connect_postgres()
+#elif BACKEND_SQLITE
+db <- connect_sqlite()
+#else
+db <- connect_default()
+#endif
+```
+
 ## #else
 
 Provide an alternative code path for conditional blocks. Used with `#ifdef`, `#ifndef`, or `#if` to specify code that should be included when the condition is false.
@@ -90,6 +106,24 @@ See the `#ifdef` example above for usage.
 ## #endif
 
 Close a conditional compilation block. Required for all conditional directives (`#ifdef`, `#ifndef`, `#if`).
+
+## Nesting Limitation
+
+Nested conditionals are **not supported**. Each `#ifdef`/`#ifndef`/`#if` block must be independent:
+
+```r
+# NOT supported
+#ifdef A
+  #ifdef B
+    code
+  #endif
+#endif
+
+# Use combined conditions instead
+#if A && B
+  code
+#endif
+```
 
 ## Built-in directives
 

@@ -120,20 +120,19 @@ static char *remove_keyword(char *line)
   return strdup(t);
 }
 
-static int should_write_line(int state, char line[1024], Define **defs)
+static int should_write_line(int state, int *branch_taken, char line[1024], Define **defs)
 {
   char *trimmed = remove_leading_spaces(line);
 
-  // line is not a comment
   if(trimmed[0] != '#') {
     return state;
   }
 
-  if(strncmp(trimmed, "#test", 10) == 0) {
+  if(strncmp(trimmed, "#test", 5) == 0) {
     return 0;
   }
 
-  if(strncmp(trimmed, "#endtest", 10) == 0) {
+  if(strncmp(trimmed, "#endtest", 8) == 0) {
     return 1;
   }
 
@@ -153,6 +152,7 @@ static int should_write_line(int state, char line[1024], Define **defs)
     char *keyword = remove_keyword(trimmed);
     int result = get_define_value(defs, keyword) != NULL;
     free(keyword);
+    *branch_taken = result;
     return result;
   }
 
@@ -160,20 +160,35 @@ static int should_write_line(int state, char line[1024], Define **defs)
     char *keyword = remove_keyword(trimmed);
     int result = get_define_value(defs, keyword) == NULL;
     free(keyword);
+    *branch_taken = result;
+    return result;
+  }
+
+  if(strncmp(trimmed, "#elif", 5) == 0) {
+    if(*branch_taken) {
+      return 0;
+    }
+    char *keyword = remove_keyword(trimmed);
+    int result = get_define_value(defs, keyword) != NULL;
+    free(keyword);
+    if(result) *branch_taken = 1;
     return result;
   }
 
   if(strncmp(trimmed, "#else", 5) == 0) {
-    if(state == 1) return 0;
+    if(*branch_taken) return 0;
     return 1;
   }
 
   if(strncmp(trimmed, "#endif", 6) == 0) {
+    *branch_taken = 0;
     return 1;
   }
 
   if(strncmp(trimmed, "#if", 3) == 0) {
-    return eval_if(trimmed + 4);
+    int result = eval_if(trimmed + 4);
+    *branch_taken = result;
+    return result;
   }
 
   return state;
@@ -688,6 +703,7 @@ static int second_pass(RFile *files, Define **defs, Plugins *plugins, char *prep
     int line_number = -1;
     char *line_number_str = NULL;
     int should_write = 1;
+    int branch_taken = 0;
 
     // Test collector
     TestCollector tc = {NULL, 0, NULL, NULL};
@@ -734,7 +750,7 @@ static int second_pass(RFile *files, Define **defs, Plugins *plugins, char *prep
       }
 
       // modify content
-      should_write = should_write_line(should_write, cnst, defs);
+      should_write = should_write_line(should_write, &branch_taken, cnst, defs);
 
       if(!should_write) {
         free(cnst);
