@@ -727,6 +727,7 @@ static int second_pass(RFile *files, Define **defs, Plugins *plugins, char *prep
       free(line_number_str);
       asprintf(&line_number_str, "%d", line_number);
       overwrite(defs, "__LINE__", line_number_str);
+      increment_counter(defs, line);
 
       char *fstring_result = fstring_replace(line, 0);
       char *replaced = define_replace(defs, fstring_result);

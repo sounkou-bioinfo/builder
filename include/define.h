@@ -33,5 +33,6 @@ void *define_macro_init(char **macro);
 int ingest_macro(Define **defs, FILE *src_file, size_t line_len, char *ns);
 char* str_replace(const char *orig, const char *find, const char *replace);
 void push_macro(Define **defs, char *macro, char *ns);
+void increment_counter(Define **arr, char *line);
 
 #endif

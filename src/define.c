@@ -69,8 +69,14 @@ void push_builtins(Define *arr)
   strftime(date, sizeof(date), "%Y-%m-%d", local);
   strftime(time_str, sizeof(time_str), "%H:%M:%S", local);
 
+  char *value = malloc(3);
+  value[0] = '-';
+  value[1] = '1';
+  value[2] = '\0';
+
   push(arr, strdup("__FILE__"), strdup(DYNAMIC_DEFINITION), DEF_VARIABLE);
   push(arr, strdup("__LINE__"), strdup(DYNAMIC_DEFINITION), DEF_VARIABLE);
+  push(arr, strdup("__COUNTER__"), strdup(value), DEF_VARIABLE);
   push(arr, strdup("__DATE__"), strdup(date), DEF_VARIABLE);
   push(arr, strdup("__TIME__"), strdup(time_str), DEF_VARIABLE);
 
@@ -81,6 +87,31 @@ void push_builtins(Define *arr)
   }
 
   push(arr, strdup("__OS__"), strdup(buffer.sysname), DEF_VARIABLE);
+}
+
+void increment_counter(Define **arr, char *line)
+{
+  if(arr == NULL || line == NULL) {
+    return;
+  }
+
+  if(strstr(line, "__COUNTER__") == NULL) {
+    return;
+  }
+
+  char *value = get_define_value(arr, "__COUNTER__");
+
+  if(value == NULL) {
+    return;
+  }
+
+  int counter = atoi(value);
+  counter++;
+  asprintf(&value, "%d", counter);
+  overwrite(arr, "__COUNTER__", value);
+  free(value);
+
+  return;
 }
 
 void push(Define *arr, char *name, char *value, DefineType type)
