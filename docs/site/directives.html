@@ -281,6 +281,16 @@
       <div class="sourceCode" id="cb12"><pre
       class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Running on: __TIME__</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># becomes: cat(&quot;Running on: 12:00:00\n&quot;)</span></span></code></pre></div>
+      <h3 id="counter"><strong>COUNTER</strong></h3>
+      <p>A directive that is automatically replaced with a unique
+      incrementing integer, starting at 0. Each occurrence of
+      <code>__COUNTER__</code> in the source code is replaced with the
+      next value in the sequence. Useful for generating unique
+      identifiers or labels.</p>
+      <div class="sourceCode" id="cb13"><pre
+      class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> __COUNTER__  <span class="co"># becomes: x &lt;- 0</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> __COUNTER__  <span class="co"># becomes: y &lt;- 1</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>z <span class="ot">&lt;-</span> __COUNTER__  <span class="co"># becomes: z &lt;- 2</span></span></code></pre></div>
     </main>
   </body>
 </html>

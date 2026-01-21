@@ -171,3 +171,13 @@ A directive that is automatically populated with the current time (compile time)
 cat("Running on: __TIME__\n")
 # becomes: cat("Running on: 12:00:00\n")
 ```
+
+### __COUNTER__
+
+A directive that is automatically replaced with a unique incrementing integer, starting at 0. Each occurrence of `__COUNTER__` in the source code is replaced with the next value in the sequence. Useful for generating unique identifiers or labels.
+
+```r
+x <- __COUNTER__  # becomes: x <- 0
+y <- __COUNTER__  # becomes: y <- 1
+z <- __COUNTER__  # becomes: z <- 2
+```
