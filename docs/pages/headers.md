@@ -22,7 +22,7 @@ Headers are meant for **preprocessor directives only**:
 | `#define NAME value` | Constants |
 | `#define` / `#enddef` | Macro definitions |
 | `#preflight` / `#endflight` | Build-time validation |
-| `#ifdef` / `#ifndef` / `#if` / `#endif` | Conditional compilation |
+| `#ifdef` / `#ifndef` / `#if` / `#endif` / `#elif` | Conditional compilation |
 | `#import` | Nested header imports |
 
 ## What Headers Should NOT Contain
