@@ -128,7 +128,7 @@ main {
 
 .dropdown-content a {
   display: block;
-  padding: 0.5rem 1rem;
+  padding: 0.2rem 1rem;
 }
 
 .dropdown:hover .dropdown-content {
