@@ -25,7 +25,8 @@ FILES = src/main.c \
 	src/preflight.c \
 	src/plugins.c \
 	src/const.c \
-	src/deadcode.c
+	src/deadcode.c \
+	src/watch.c
 
 # Development command
 CMD = ./bin/$(NAME) \
@@ -33,7 +34,8 @@ CMD = ./bin/$(NAME) \
 	-DDEBUG -DTEST '"a string"' -DXXX 42 \
 	-deadcode \
 	-import builder.r::generate.rh \
-	-plugin builder.air::plugin
+	-plugin builder.air::plugin \
+	-watch
 
 .PHONY: all build clean install uninstall dev debug site
 
