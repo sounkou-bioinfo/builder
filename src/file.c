@@ -704,6 +704,7 @@ static int second_pass(RFile *files, Define **defs, Plugins *plugins, char *prep
     char *line_number_str = NULL;
     int should_write = 1;
     int branch_taken = 0;
+    int in_define = 0;
 
     // Test collector
     TestCollector tc = {NULL, 0, NULL, NULL};
@@ -724,6 +725,34 @@ static int second_pass(RFile *files, Define **defs, Plugins *plugins, char *prep
       line[len] = '\0';
       pos = new_line + 1;
 
+      char *trimmed = remove_leading_spaces(line);
+
+      if(strncmp(trimmed, "#enddef", 7) == 0) {
+        in_define = 0;
+        free(line);
+        continue;
+      }
+
+      if(in_define) {
+        free(line);
+        continue;
+      }
+
+      if(strncmp(trimmed, "#define", 7) == 0) {
+        char *after = trimmed + 7;
+        while(*after == ' ' || *after == '\t') after++;
+        if(*after == '\0' || *after == '\n' || *after == '\r') {
+          in_define = 1;
+        }
+        free(line);
+        continue;
+      }
+
+      if(strncmp(trimmed, "#import ", 8) == 0) {
+        free(line);
+        continue;
+      }
+
       free(line_number_str);
       asprintf(&line_number_str, "%d", line_number);
       overwrite(defs, "__LINE__", line_number_str);
@@ -731,7 +760,6 @@ static int second_pass(RFile *files, Define **defs, Plugins *plugins, char *prep
 
       char *fstring_result = fstring_replace(line, 0);
       char *replaced = define_replace(defs, fstring_result);
-      // Cleanup line and fstring_result - define_replace always creates new allocation
       if(fstring_result != line) free(line);
       free(fstring_result);
 
