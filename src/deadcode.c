@@ -141,14 +141,16 @@ static void walk_function_def(SEXP expr, Environment *env, int pass, int line, c
     if (tag != R_NilValue && TYPEOF(tag) == SYMSXP) {
       const char *param_name = CHAR(PRINTNAME(tag));
       env_define(func_env, param_name, 0, line, file);
-      Binding *b = find_binding_local(func_env, param_name);
-      if (b) b->is_used = 1;
     }
     formals = CDR(formals);
   }
 
   SEXP body = CADDR(expr);
-  walk_expr(body, func_env, pass, line, file);
+
+  // For local scopes, do both passes in one traversal since func_env
+  // doesn't persist between the global passes
+  walk_expr(body, func_env, 1, line, file);
+  walk_expr(body, func_env, 2, line, file);
 
   if (pass == 2) {
     Binding *b = func_env->bindings;
