@@ -11,8 +11,8 @@
 #include "watch.h"
 #include "log.h"
 
-#define EVENT_SIZE (sizeof(struct inotify_event))
-#define BUF_LEN (1024 * (EVENT_SIZE + 16))
+static const size_t EVENT_SIZE = sizeof(struct inotify_event);
+static const size_t BUF_LEN = 1024 * (EVENT_SIZE + 16);
 
 static volatile sig_atomic_t got_signal = 0;
 

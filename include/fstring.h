@@ -1,5 +1,5 @@
-#ifndef __FSTRING_H__
-#define __FSTRING_H__
+#ifndef FSTRING_H
+#define FSTRING_H
 
 typedef struct FString_t {
   char *value;

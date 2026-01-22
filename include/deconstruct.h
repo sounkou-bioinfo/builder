@@ -1,5 +1,5 @@
-#ifndef __DECONSTRUCT_H__
-#define __DECONSTRUCT_H__
+#ifndef DECONSTRUCT_H
+#define DECONSTRUCT_H
 
 typedef struct Var_t {
   char *value;

@@ -9,7 +9,7 @@
 #include "log.h"
 #include "r.h"
 
-#define MAX_MACRO_DEPTH 32
+static const int MAX_MACRO_DEPTH = 32;
 
 const char *DYNAMIC_DEFINITION = "<DYNAMIC>";
 
