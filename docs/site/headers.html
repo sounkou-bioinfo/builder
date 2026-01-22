@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Headers</title>
+    <style>
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      div.columns{display: flex; gap: min(4vw, 1.5em);}
+      div.column{flex: auto; overflow-x: auto;}
+      div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+      /* The extra [class] is a hack that increases specificity enough to
+         override a similar rule in reveal.js */
+      ul.task-list[class]{list-style: none;}
+      ul.task-list li input[type="checkbox"] {
+        font-size: inherit;
+        width: 0.8em;
+        margin: 0 0.8em 0.2em -1.6em;
+        vertical-align: middle;
+      }
+      .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+      /* CSS for syntax highlighting */
+      pre > code.sourceCode { white-space: pre; position: relative; }
+      pre > code.sourceCode > span { line-height: 1.25; }
+      pre > code.sourceCode > span:empty { height: 1.2em; }
+      .sourceCode { overflow: visible; }
+      code.sourceCode > span { color: inherit; text-decoration: inherit; }
+      div.sourceCode { margin: 1em 0; }
+      pre.sourceCode { margin: 0; }
+      @media screen {
+      div.sourceCode { overflow: auto; }
+      }
+      @media print {
+      pre > code.sourceCode { white-space: pre-wrap; }
+      pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+      }
+      pre.numberSource code
+        { counter-reset: source-line 0; }
+      pre.numberSource code > span
+        { position: relative; left: -4em; counter-increment: source-line; }
+      pre.numberSource code > span > a:first-child::before
+        { content: counter(source-line);
+          position: relative; left: -1em; text-align: right; vertical-align: baseline;
+          border: none; display: inline-block;
+          -webkit-touch-callout: none; -webkit-user-select: none;
+          -khtml-user-select: none; -moz-user-select: none;
+          -ms-user-select: none; user-select: none;
+          padding: 0 4px; width: 4em;
+        }
+      pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+      div.sourceCode
+        { color: #ebdbb2; background-color: #282828; }
+      @media screen {
+      pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+      }
+      code span { color: #ebdbb2; } /* Normal */
+      code span.al { color: #282828; background-color: #cc241d; font-weight: bold; } /* Alert */
+      code span.an { color: #98971a; } /* Annotation */
+      code span.at { color: #d79921; } /* Attribute */
+      code span.bn { color: #f67400; } /* BaseN */
+      code span.bu { color: #d65d0e; } /* BuiltIn */
+      code span.cf { color: #cc241d; font-weight: bold; } /* ControlFlow */
+      code span.ch { color: #b16286; } /* Char */
+      code span.cn { color: #b16286; font-weight: bold; } /* Constant */
+      code span.co { color: #928374; } /* Comment */
+      code span.cv { color: #928374; } /* CommentVar */
+      code span.do { color: #98971a; } /* Documentation */
+      code span.dt { color: #d79921; } /* DataType */
+      code span.dv { color: #f67400; } /* DecVal */
+      code span.er { color: #cc241d; text-decoration: underline; } /* Error */
+      code span.ex { color: #689d6a; font-weight: bold; } /* Extension */
+      code span.fl { color: #f67400; } /* Float */
+      code span.fu { color: #689d6a; } /* Function */
+      code span.im { color: #689d6a; } /* Import */
+      code span.in { color: #282828; background-color: #83a598; } /* Information */
+      code span.kw { color: #ebdbb2; font-weight: bold; } /* Keyword */
+      code span.op { color: #ebdbb2; } /* Operator */
+      code span.ot { color: #689d6a; } /* Other */
+      code span.pp { color: #d65d0e; } /* Preprocessor */
+      code span.re { color: #928374; background-color: #1d2021; } /* RegionMarker */
+      code span.sc { color: #b16286; } /* SpecialChar */
+      code span.ss { color: #98971a; } /* SpecialString */
+      code span.st { color: #98971a; } /* String */
+      code span.va { color: #458588; } /* Variable */
+      code span.vs { color: #98971a; } /* VerbatimString */
+      code span.wa { color: #282828; background-color: #fabd2f; } /* Warning */
+    </style>
+        <link rel="stylesheet" href="style.css" />
+        <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@devOpifex" />
+    <meta name="twitter:title" content="builder - R preprocessor" />
+    <meta
+      name="twitter:description"
+      content="An R preprocessor for the R programming language"
+    />
+    <meta
+      name="twitter:image"
+      content="https://builder.opifex.org/builder.png"
+    />
+  </head>
+  <body>
+    <main>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="installation.html">Install</a>
+        <a href="get-started.html">Get started</a>
+        <div class="dropdown">
+          <a href="#">
+            Docs
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              id="menu-icon"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="m19.5 8.25-7.5 7.5-7.5-7.5"
+              />
+            </svg>
+          </a>
+          <div class="dropdown-content">
+            <a href="packages.html">Packages</a>
+            <a href="directives.html">Directives</a>
+            <a href="macros.html">Macros</a>
+            <a href="include.html">Include</a>
+            <a href="headers.html">Headers</a>
+            <a href="import.html">Import</a>
+            <a href="fstrings.html">F-strings</a>
+            <a href="const.html">Const</a>
+            <a href="deconstruct.html">Deconstruct</a>
+            <a href="preflight.html">Preflight</a>
+            <a href="plugins.html">Plugins</a>
+            <a href="tests.html">Tests</a>
+            <a href="prepend-append.html">Prepend</a>
+            <a href="deadcode.html">Dead Code</a>
+            <a href="watch.html">Watch</a>
+          </div>
+        </div>
+      </nav>
+      <h1 id="header-files-.rh">Header Files (.rh)</h1>
+      <p>Header files (<code>.rh</code>) are preprocessor-only files
+      used to share macros, constants, and build-time checks across your
+      project. Unlike <code>.R</code> files, headers should not contain
+      R code intended for runtime execution.</p>
+      <h2 id="purpose">Purpose</h2>
+      <ul>
+      <li>Share macro definitions across multiple source files</li>
+      <li>Define constants used throughout your project</li>
+      <li>Centralize preflight checks that validate your build
+      environment</li>
+      <li>Keep preprocessor logic separate from application code</li>
+      </ul>
+      <h2 id="what-headers-should-contain">What Headers Should
+      Contain</h2>
+      <p>Headers are meant for <strong>preprocessor directives
+      only</strong>:</p>
+      <table>
+      <thead>
+      <tr class="header">
+      <th>Directive</th>
+      <th>Purpose</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr class="odd">
+      <td><code>#define NAME value</code></td>
+      <td>Constants</td>
+      </tr>
+      <tr class="even">
+      <td><code>#define</code> / <code>#enddef</code></td>
+      <td>Macro definitions</td>
+      </tr>
+      <tr class="odd">
+      <td><code>#preflight</code> / <code>#endflight</code></td>
+      <td>Build-time validation</td>
+      </tr>
+      <tr class="even">
+      <td><code>#ifdef</code> / <code>#ifndef</code> / <code>#if</code>
+      / <code>#endif</code></td>
+      <td>Conditional compilation</td>
+      </tr>
+      <tr class="odd">
+      <td><code>#import</code></td>
+      <td>Nested header imports</td>
+      </tr>
+      </tbody>
+      </table>
+      <h2 id="what-headers-should-not-contain">What Headers Should NOT
+      Contain</h2>
+      <p>Headers should <strong>not</strong> contain regular R code:</p>
+      <div class="sourceCode" id="cb1"><pre
+      class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="sc">/</span><span class="er">/</span> BAD<span class="sc">:</span> This belongs <span class="cf">in</span> a .R file, not a header</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>my_function <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  x <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;file.csv&quot;</span>)</span></code></pre></div>
+      <p>The rationale: <code>.rh</code> files are processed by the
+      preprocessor to extract definitions. Any R code outside of
+      <code>#preflight</code> blocks would be silently ignored or cause
+      unexpected behavior. Keep runtime code in <code>.R</code>
+      files.</p>
+      <p>The one exception is <code>#preflight</code> blocks, which
+      contain R code that runs <strong>at build time</strong> to
+      validate your environment:</p>
+      <div class="sourceCode" id="cb2"><pre
+      class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#preflight</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(<span class="st">&quot;rlang&quot;</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>)) {</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stop</span>(<span class="st">&quot;rlang is required to build this project&quot;</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">#endflight</span></span></code></pre></div>
+      <h2 id="example-header">Example Header</h2>
+      <p>A typical header file might look like:</p>
+      <div class="sourceCode" id="cb3"><pre
+      class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="sc">/</span><span class="er">/</span> config.rh <span class="sc">-</span> Project<span class="sc">-</span>wide configuration</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="sc">/</span><span class="er">/</span> Version info</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">#define VERSION &quot;1.2.0&quot;</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">#define VERSION_MAJOR 1</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">#define VERSION_MINOR 2</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="sc">/</span><span class="er">/</span> Feature flags</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">#define ENABLE_LOGGING</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">#define MAX_RETRIES 3</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="sc">/</span><span class="er">/</span> Validate build environment</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">#preflight</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">getRversion</span>() <span class="sc">&lt;</span> <span class="st">&quot;4.0.0&quot;</span>) {</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stop</span>(<span class="st">&quot;R &gt;= 4.0.0 is required&quot;</span>)</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co">#endflight</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="sc">/</span><span class="er">/</span> Utility macros</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="co">#define</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="fu">LOG</span>(msg){</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">message</span>(<span class="fu">paste0</span>(<span class="st">&quot;[&quot;</span>, <span class="fu">Sys.time</span>(), <span class="st">&quot;] &quot;</span>, msg))</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="co">#enddef</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="co">#define</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a><span class="fu">ASSERT</span>(cond, msg){</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span>cond) <span class="fu">stop</span>(msg)</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="co">#enddef</span></span></code></pre></div>
+      <h2 id="importing-headers">Importing Headers</h2>
+      <p>Use <code>#import</code> in your <code>.R</code> files or pass
+      headers via the <code>-import</code> CLI flag. See <a
+      href="import.html">Import</a> for details on local imports,
+      package imports, and nested imports.</p>
+      <div class="sourceCode" id="cb4"><pre
+      class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#import config.rh</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">LOG</span>(<span class="st">&quot;Application starting, version &quot;</span> <span class="sc">%+%</span> VERSION)</span></code></pre></div>
+    </main>
+  </body>
+</html>
