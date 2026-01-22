@@ -6,7 +6,7 @@ title: Dead Code
 
 Builder can detect unused variables and functions in your R package with the `-deadcode` flag. This helps identify code that may be safe to remove or indicates potential bugs.
 
-⚠️ Warning: this is the only feature that is vibe-coded to some extent and static analysis of R code is 
+⚠️ Warning: this feature is vibe-coded to some extent and static analysis of R code is 
 notoriously difficult given the capabilities of the language, these are the reasons this 
 feature is not enabled by default. False positive may be reported.
 

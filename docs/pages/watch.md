@@ -6,6 +6,8 @@ title: Watch Mode
 
 Builder can automatically rebuild your package when source files change using the `-watch` flag. This is useful during active development to see changes immediately without manually running the build command.
 
+⚠️ Warning: this feature is vibe-coded, sorry.
+
 ## Usage
 
 ```bash
