@@ -30,7 +30,7 @@ Headers are meant for **preprocessor directives only**:
 Headers should **not** contain regular R code:
 
 ```r
-// BAD: This belongs in a .R file, not a header
+# BAD: This belongs in a .R file, not a header
 my_function <- function(x) {
   x + 1
 }
@@ -55,25 +55,25 @@ if (!requireNamespace("rlang", quietly = TRUE)) {
 A typical header file might look like:
 
 ```r
-// config.rh - Project-wide configuration
+# config.rh - Project-wide configuration
 
-// Version info
+# Version info
 #define VERSION "1.2.0"
 #define VERSION_MAJOR 1
 #define VERSION_MINOR 2
 
-// Feature flags
+# Feature flags
 #define ENABLE_LOGGING
 #define MAX_RETRIES 3
 
-// Validate build environment
+# Validate build environment
 #preflight
 if (getRversion() < "4.0.0") {
   stop("R >= 4.0.0 is required")
 }
 #endflight
 
-// Utility macros
+# Utility macros
 #define
 LOG(msg){
   message(paste0("[", Sys.time(), "] ", msg))
