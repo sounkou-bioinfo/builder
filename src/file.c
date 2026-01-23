@@ -12,6 +12,7 @@
 #include "include.h"
 #include "fstring.h"
 #include "const.h"
+#include "error.h"
 #include "file.h"
 #include "test.h"
 #include "log.h"
@@ -705,6 +706,7 @@ static int second_pass(RFile *files, Define **defs, Plugins *plugins, char *prep
     int should_write = 1;
     int branch_taken = 0;
     int in_define = 0;
+    int err = 0;
 
     // Test collector
     TestCollector tc = {NULL, 0, NULL, NULL};
@@ -785,6 +787,14 @@ static int second_pass(RFile *files, Define **defs, Plugins *plugins, char *prep
         free(cnst);
         continue;
       }
+
+      err = catch_error(cnst);
+
+      if(err) {
+        free(cnst);
+        return 1;
+      }
+
       buffer = append_buffer(buffer, cnst);
       free(cnst);
     }
@@ -807,6 +817,7 @@ static int second_pass(RFile *files, Define **defs, Plugins *plugins, char *prep
       }
       fclose(prepend_file);
     }
+
     if(output != NULL) {
       fputs(output, dst_file);
       free(output);

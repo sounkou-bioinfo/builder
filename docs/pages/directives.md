@@ -107,6 +107,16 @@ See the `#ifdef` example above for usage.
 
 Close a conditional compilation block. Required for all conditional directives (`#ifdef`, `#ifndef`, `#if`).
 
+## error
+
+You can use `#error` to stop compilation and print an error message.
+
+```r
+#ifdef DEBUG
+#error "DEBUG mode is not supported"
+#endif
+```
+
 ## Nesting Limitation
 
 Nested conditionals are **not supported**. Each `#ifdef`/`#ifndef`/`#if` block must be independent:
