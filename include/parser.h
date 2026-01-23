@@ -16,6 +16,7 @@ char *get_arg_value(int argc, char *argv[], char *arg);
 int has_arg(int argc, char *argv[], char *arg);
 void get_definitions(Define *arr, int argc, char *argv[]);
 Value *get_arg_values(int argc, char *argv[], char *arg);
+Value *push_value(Value *head, char *name);
 void free_value(Value *head);
 
 #endif

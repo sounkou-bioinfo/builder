@@ -28,7 +28,8 @@ FILES = src/main.c \
 	src/deadcode.c \
 	src/error.c \
 	src/sourcemap.c \
-	src/watch.c
+	src/watch.c \
+	src/config.c
 
 # Development command
 CMD = ./bin/$(NAME) \

@@ -17,7 +17,7 @@ static Value *create_value(char *value)
   return new_value;
 }
 
-static Value *push_value(Value *head, char *name)
+Value *push_value(Value *head, char *name)
 {
   Value *new_value = create_value(name);
   if(new_value == NULL) {

@@ -100,15 +100,28 @@ cat("[", "INFO", "] ", "Started", "\n", sep = "")
 
 ## Usage
 
-You may want to place your builder call in a `Makefile`, `build.R` or `build.sh` script.
+You can configure builder in two ways:
 
-```r
-#!/usr/bin/env Rscript
+### Config File
 
-system2("builder", c("-input", "srcr", "-output", "R"))
+Create a `builder.ini` file in your project root:
+
+```ini
+input: srcr/
+output: R/
 ```
 
-You can then easily call it and chain other procedures before or after the preprocessing:
+Then simply run:
+
+```bash
+builder
+```
+
+See [Configuration File](/config) for all options.
+
+### Build Scripts
+
+Alternatively, place your builder call in a `Makefile`, `build.R` or `build.sh` script:
 
 ```r
 #!/usr/bin/env Rscript
@@ -116,7 +129,6 @@ You can then easily call it and chain other procedures before or after the prepr
 system2("builder", c("-input", "srcr", "-output", "R"))
 devtools::document()
 devtools::check()
-#...
 ```
 
 See the full documentation for more features.
