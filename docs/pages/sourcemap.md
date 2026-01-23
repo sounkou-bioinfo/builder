@@ -18,27 +18,41 @@ When enabled, Builder appends a `# line: N` comment to the end of each line, ind
 
 ## Example
 
-**Input (srcr/main.R):**
+**Input (srcr/utils.R):**
 
 ```r
-foo <- function(x) {
-  x + 1
+#define API_URL "https://api.example.com"
+
+#ifdef DEBUG
+log_debug <- function(msg) {
+  cat(msg, "\n")
 }
+#endif
 
-# a comment
-bar <- 42
+fetch_data <- function() {
+  url <- API_URL
+  httr::GET(url)
+}
 ```
 
-**Output (R/main.R):**
+**Output (R/utils.R):**
 
 ```r
-foo <- function(x) { # line: 1
-  x + 1 # line: 2
-} # line: 3
+log_debug <- function(msg) { # line: 4
+  cat(msg, "\n") # line: 5
+} # line: 6
 
-# a comment
-bar <- 42 # line: 6
+fetch_data <- function() { # line: 9
+  url <- "https://api.example.com" # line: 10
+  httr::GET(url) # line: 11
+} # line: 12
 ```
+
+Notice how:
+
+- The `#define` and `#ifdef`/`#endif` directives are removed from output
+- Output has only 8 lines, but annotations reference the original source lines (4-6, 9-12)
+- If R reports an error on "line 5 of R/utils.R", you know to check **line 5 of srcr/utils.R**
 
 ## Skipped Lines
 
