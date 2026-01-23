@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Builder</title>
+    <title>Source Map</title>
     <style>
       code{white-space: pre-wrap;}
       span.smallcaps{font-variant: small-caps;}
@@ -143,19 +143,46 @@
           </div>
         </div>
       </nav>
-      <h1 id="builder">Builder</h1>
-      <p>Pre-processor for R (only works on POSIX systems). Visit the <a
-      href="get-started.html">guide</a> to get started.</p>
-      <div class="sourceCode" id="cb1"><pre
-      class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fsSL</span> https://builder.opifex.org/install.sh <span class="kw">|</span> <span class="fu">sh</span></span></code></pre></div>
-      <p>See <a href="installation.html">installation</a> for a custom
-      installation.</p>
+      <h1 id="source-map">Source Map</h1>
+      <p>Builder can add line number comments to your output files with
+      the <code>-sourcemap</code> flag. This helps trace errors in
+      processed R files back to their original source line numbers.</p>
       <h2 id="usage">Usage</h2>
-      <p>See <code>-help</code> for the complete list of options.</p>
+      <div class="sourceCode" id="cb1"><pre
+      class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-input</span> srcr <span class="at">-output</span> R <span class="at">-sourcemap</span></span></code></pre></div>
+      <h2 id="how-it-works">How It Works</h2>
+      <p>When enabled, Builder appends a <code># line: N</code> comment
+      to the end of each line, indicating the original line number from
+      the source file.</p>
+      <h2 id="example">Example</h2>
+      <p><strong>Input (srcr/main.R):</strong></p>
       <div class="sourceCode" id="cb2"><pre
-      class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-input</span> srcr <span class="at">-output</span> R</span></code></pre></div>
-      <p><a href="https://github.com/devOpifex/builder">Source
-      code</a></p>
+      class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>foo <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  x <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># a comment</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>bar <span class="ot">&lt;-</span> <span class="dv">42</span></span></code></pre></div>
+      <p><strong>Output (R/main.R):</strong></p>
+      <div class="sourceCode" id="cb3"><pre
+      class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>foo <span class="ot">&lt;-</span> <span class="cf">function</span>(x) { <span class="co"># line: 1</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  x <span class="sc">+</span> <span class="dv">1</span> <span class="co"># line: 2</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>} <span class="co"># line: 3</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># a comment</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>bar <span class="ot">&lt;-</span> <span class="dv">42</span> <span class="co"># line: 6</span></span></code></pre></div>
+      <h2 id="skipped-lines">Skipped Lines</h2>
+      <p>The following lines do not receive sourcemap comments:</p>
+      <ul>
+      <li>Empty or whitespace-only lines</li>
+      <li>Lines containing <code>#</code> (comments)</li>
+      </ul>
+      <h2 id="limitations">Limitations</h2>
+      <ul>
+      <li>Line numbers reference the source file lines, but if macros or
+      includes expand content, the mapping reflects the pre-expanded
+      line numbers</li>
+      </ul>
     </main>
   </body>
 </html>

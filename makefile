@@ -27,6 +27,7 @@ FILES = src/main.c \
 	src/const.c \
 	src/deadcode.c \
 	src/error.c \
+	src/sourcemap.c \
 	src/watch.c
 
 # Development command
@@ -36,7 +37,7 @@ CMD = ./bin/$(NAME) \
 	-deadcode \
 	-import builder.r::generate.rh \
 	-plugin builder.air::plugin \
-	-watch
+	-sourcemap
 
 .PHONY: all build clean install uninstall dev debug site
 
