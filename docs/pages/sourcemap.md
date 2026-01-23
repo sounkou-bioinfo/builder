@@ -60,7 +60,3 @@ The following lines do not receive sourcemap comments:
 
 - Empty or whitespace-only lines
 - Lines containing `#` (comments)
-
-## Limitations
-
-- Line numbers reference the source file lines, but if macros or includes expand content, the mapping reflects the pre-expanded line numbers
