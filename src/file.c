@@ -7,6 +7,7 @@
 
 #include "deconstruct.h"
 #include "preflight.h"
+#include "sourcemap.h"
 #include "plugins.h"
 #include "define.h"
 #include "include.h"
@@ -688,7 +689,7 @@ static int first_pass(RFile *files, Define **defs, Plugins *plugins)
   return 0;
 }
 
-static int second_pass(RFile *files, Define **defs, Plugins *plugins, char *prepend, char *append)
+static int second_pass(RFile *files, Define **defs, Plugins *plugins, char *prepend, char *append, int sourcemap)
 {
   RFile *current = files;
   while(current != NULL) {
@@ -701,7 +702,7 @@ static int second_pass(RFile *files, Define **defs, Plugins *plugins, char *prep
 
     // state
     char *buffer = NULL;
-    int line_number = -1;
+    int line_number = 0;
     char *line_number_str = NULL;
     int should_write = 1;
     int branch_taken = 0;
@@ -722,9 +723,20 @@ static int second_pass(RFile *files, Define **defs, Plugins *plugins, char *prep
       }
 
       size_t len = new_line - pos;
-      char *line = malloc(len + 1);
-      strncpy(line, pos, len);
-      line[len] = '\0';
+
+      char *line = NULL;
+
+      if(!sourcemap) {
+        line = malloc(len + 1);
+        strncpy(line, pos, len);
+        line[len] = '\0';
+      } else {
+        line = malloc(len + 1);
+        strncpy(line, pos, len);
+        line[len] = '\0';
+        line = add_sourcemap(line, line_number);
+      }
+
       pos = new_line + 1;
 
       char *trimmed = remove_leading_spaces(line);
@@ -851,14 +863,14 @@ static int second_pass(RFile *files, Define **defs, Plugins *plugins, char *prep
   return 0;
 }
 
-int two_pass(RFile *files, Define **defs, Plugins *plugins, char *prepend, char *append, int deadcode)
+int two_pass(RFile *files, Define **defs, Plugins *plugins, char *prepend, char *append, int deadcode, int sourcemap)
 {
   int first_pass_result = first_pass(files, defs, plugins);
   if(first_pass_result) {
     return 1;
   }
 
-  int second_pass_result = second_pass(files, defs, plugins, prepend, append);
+  int second_pass_result = second_pass(files, defs, plugins, prepend, append, sourcemap);
   if(second_pass_result) {
     return 1;
   }

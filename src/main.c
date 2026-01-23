@@ -20,6 +20,7 @@ typedef struct {
 		char *append;
 		int deadcode;
 		int must_clean;
+    int sourcemap;
 		Plugins *plugins;
 } BuildContext;
 
@@ -49,7 +50,7 @@ static int build(BuildContext *ctx)
 				return 1;
 		}
 
-		int result = two_pass(files, &defines, ctx->plugins, ctx->prepend, ctx->append, ctx->deadcode);
+		int result = two_pass(files, &defines, ctx->plugins, ctx->prepend, ctx->append, ctx->deadcode, ctx->sourcemap);
 
 		free_rfile(files);
 		free_array(defines);
@@ -84,6 +85,7 @@ int main(int argc, char *argv[])
 				printf("  -prepend              Path to file to prepend to every output file (e.g.: license)\n");
 				printf("  -append               Path to file to append to every output file\n");
 				printf("  -deadcode             Enable dead variable/function detection\n");
+				printf("  -sourcemap            Enable source map generation\n");
 				printf("  -help                 Show this help message\n");
 				printf("\n");
 				printf("Example:\n");
@@ -165,6 +167,7 @@ int main(int argc, char *argv[])
 		int deadcode = has_arg(argc, argv, "-deadcode");
 		int must_clean = !has_arg(argc, argv, "-noclean");
 		int watch_mode = has_arg(argc, argv, "-watch");
+    int sourcemap = has_arg(argc, argv, "-sourcemap");
 
 		BuildContext ctx = {
 				.argc = argc,
@@ -175,6 +178,7 @@ int main(int argc, char *argv[])
 				.prepend = prepend,
 				.append = append,
 				.deadcode = deadcode,
+        .sourcemap = sourcemap,
 				.must_clean = must_clean,
 				.plugins = plugins
 		};

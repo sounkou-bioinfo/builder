@@ -111,33 +111,42 @@ int has_arg(int argc, char *argv[], char *arg)
 
 void get_definitions(Define *arr, int argc, char *argv[])
 {
-  for (int i = 1; i < argc; i++)
-  {
-    if (strcmp(argv[i], "-noclean") == 0)
-    {
+  for (int i = 1; i < argc; i++){
+    if (strcmp(argv[i], "-noclean") == 0){
       continue;
     }
 
-    if (strcmp(argv[i], "-input") == 0)
-    {
+    if (strcmp(argv[i], "-input") == 0){
       i++;
       continue;
     }
 
-    if(strcmp(argv[i], "-output") == 0)
-    {
+    if(strcmp(argv[i], "-output") == 0){
       i++;
       continue;
     }
 
-    if(strcmp(argv[i], "-plugin") == 0)
-    {
+    if(strcmp(argv[i], "-plugin") == 0){
       i++;
       continue;
     }
 
-    if(strcmp(argv[i], "-import") == 0)
-    {
+    if(strcmp(argv[i], "-import") == 0){
+      i++;
+      continue;
+    }
+
+    if(strcmp(argv[i], "-deadcode") == 0){
+      i++;
+      continue;
+    }
+
+    if(strcmp(argv[i], "-watch") == 0){
+      i++;
+      continue;
+    }
+
+    if(strcmp(argv[i], "-sourcemap") == 0){
       i++;
       continue;
     }
