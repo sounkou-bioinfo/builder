@@ -773,15 +773,15 @@ static int second_pass(RFile *files, Define **defs, Plugins *plugins, char *prep
       increment_counter(defs, line);
 
       char *fstring_result = fstring_replace(line, 0);
-      char *replaced = define_replace(defs, fstring_result);
+      char *included = include_replace(defs, fstring_result, plugins, current->src);
       if(fstring_result != line) free(line);
-      free(fstring_result);
+      if(included != fstring_result) free(fstring_result);
 
-      char *processed = include_replace(defs, replaced, plugins, current->src);
-      if(processed != replaced) free(replaced);
+      char *replaced = define_replace(defs, included);
+      free(included);
 
-      char *deconstructed = deconstruct_replace(processed);
-      if(deconstructed != processed) free(processed);
+      char *deconstructed = deconstruct_replace(replaced);
+      if(deconstructed != replaced) free(replaced);
 
       char *cnst = replace_const(deconstructed);
       if(cnst != deconstructed) free(deconstructed);

@@ -125,6 +125,7 @@
           </a>
           <div class="dropdown-content">
             <a href="config.html">Config</a>
+            <a href="architecture.html">Architecture</a>
             <a href="packages.html">Packages</a>
             <a href="directives.html">Directives</a>
             <a href="macros.html">Macros</a>
@@ -252,17 +253,20 @@
       created in the global scope</li>
       </ul>
       <h2 id="processing-pipeline">Processing Pipeline</h2>
-      <p>The <code>#include</code> directive is processed after
-      <code>#define</code> macro expansion but as part of the same
-      preprocessing pass. This means:</p>
+      <p>The <code>#include</code> directive is processed
+      <strong>before</strong> macro expansion in the second pass. This
+      means the function name (e.g., <code>READ</code> in
+      <code>#include:READ</code>) is looked up directly from
+      definitions, not expanded as a macro first.</p>
       <ol type="1">
-      <li>First, all <code>#define</code> macros are defined and
-      expanded</li>
-      <li>Then, <code>#include</code> directives are processed using the
-      defined macros</li>
+      <li>First pass: All <code>#define</code> macros are collected</li>
+      <li>Second pass: <code>#include</code> directives are processed,
+      then macros are expanded</li>
       <li>The result is pure R code with all preprocessing directives
       removed</li>
       </ol>
+      <p>See <a href="/architecture">Architecture</a> for the complete
+      processing pipeline.</p>
       <h2 id="common-use-cases">Common Use Cases</h2>
       <ul>
       <li><strong>SQL Queries:</strong> Keep SQL in <code>.sql</code>

@@ -100,11 +100,13 @@ READ_TEMPLATE(path){
 
 ## Processing Pipeline
 
-The `#include` directive is processed after `#define` macro expansion but as part of the same preprocessing pass. This means:
+The `#include` directive is processed **before** macro expansion in the second pass. This means the function name (e.g., `READ` in `#include:READ`) is looked up directly from definitions, not expanded as a macro first.
 
-1. First, all `#define` macros are defined and expanded
-2. Then, `#include` directives are processed using the defined macros
+1. First pass: All `#define` macros are collected
+2. Second pass: `#include` directives are processed, then macros are expanded
 3. The result is pure R code with all preprocessing directives removed
+
+See [Architecture](/architecture) for the complete processing pipeline.
 
 ## Common Use Cases
 
