@@ -5,11 +5,20 @@
 #include "plugins.h"
 
 typedef struct {
-  char *function;
+  char *type;
   char *path;
   char *object;
 } Include;
 
-char *include_replace(Define **defs, char *line, Plugins *plugins, char *file);
+struct Registry_t {
+  char *type;
+  char *call;
+  struct Registry_t *next;
+};
+
+typedef struct Registry_t Registry;
+
+char *include_replace(char *line, Plugins *plugins, char *file, Registry **registry);
+Registry *initialize_registry();
 
 #endif

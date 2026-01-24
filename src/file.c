@@ -188,7 +188,7 @@ static int should_write_line(int state, int *branch_taken, char line[1024], Defi
   }
 
   if(strncmp(trimmed, "#if", 3) == 0) {
-    int result = eval_if(trimmed + 4);
+    int result = evaluate_if(trimmed + 4);
     *branch_taken = result;
     return result;
   }
@@ -689,7 +689,7 @@ static int first_pass(RFile *files, Define **defs, Plugins *plugins)
   return 0;
 }
 
-static int second_pass(RFile *files, Define **defs, Plugins *plugins, char *prepend, char *append, int sourcemap)
+static int second_pass(RFile *files, Define **defs, Plugins *plugins, char *prepend, char *append, int sourcemap, Registry **registry)
 {
   RFile *current = files;
   while(current != NULL) {
@@ -773,7 +773,7 @@ static int second_pass(RFile *files, Define **defs, Plugins *plugins, char *prep
       increment_counter(defs, line);
 
       char *fstring_result = fstring_replace(line, 0);
-      char *included = include_replace(defs, fstring_result, plugins, current->src);
+      char *included = include_replace(fstring_result, plugins, current->src, registry);
       if(fstring_result != line) free(line);
       if(included != fstring_result) free(fstring_result);
 
@@ -863,14 +863,14 @@ static int second_pass(RFile *files, Define **defs, Plugins *plugins, char *prep
   return 0;
 }
 
-int two_pass(RFile *files, Define **defs, Plugins *plugins, char *prepend, char *append, int deadcode, int sourcemap)
+int two_pass(RFile *files, Define **defs, Plugins *plugins, char *prepend, char *append, int deadcode, int sourcemap, Registry **registry)
 {
   int first_pass_result = first_pass(files, defs, plugins);
   if(first_pass_result) {
     return 1;
   }
 
-  int second_pass_result = second_pass(files, defs, plugins, prepend, append, sourcemap);
+  int second_pass_result = second_pass(files, defs, plugins, prepend, append, sourcemap, registry);
   if(second_pass_result) {
     return 1;
   }

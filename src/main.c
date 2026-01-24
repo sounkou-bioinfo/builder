@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "include.h"
 #include "define.h"
 #include "parser.h"
 #include "plugins.h"
@@ -37,7 +38,9 @@ static int build(BuildContext *ctx)
     return 1;
   }
 
-  int result = two_pass(files, &defines, ctx->plugins, ctx->prepend, ctx->append, ctx->deadcode, ctx->sourcemap);
+  Registry *registry = initialize_registry();
+
+  int result = two_pass(files, &defines, ctx->plugins, ctx->prepend, ctx->append, ctx->deadcode, ctx->sourcemap, &registry);
 
   free_rfile(files);
   free_array(defines);

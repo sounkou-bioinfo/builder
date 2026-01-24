@@ -1,14 +1,58 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <Rinternals.h>
+
 #include "include.h"
 #include "define.h"
 #include "r.h"
 #include "log.h"
 
+Registry *create_registry(char *type, char *call)
+{
+  Registry *registry = malloc(sizeof(Registry));
+  registry->type = strdup(type);
+  registry->call = strdup(call);
+  registry->next = NULL;
+  return registry;
+}
+
+void push_registry(Registry **registry, char *type, char *call)
+{
+  Registry *current = *registry;
+  while(current != NULL) {
+    if(strcmp(current->type, type) == 0) {
+      free(current->call);
+      current->call = strdup(call);
+      return;
+    }
+    current = current->next;
+  }
+  Registry *new = create_registry(type, call);
+  new->next = *registry;
+  *registry = new;
+}
+
+Registry *initialize_registry()
+{
+  Registry *registry = create_registry("txt", "readLines");
+  push_registry(&registry, "sql", "readLines");
+  push_registry(&registry, "csv", "read.csv");
+  push_registry(&registry, "tsv", "read.delim");
+  push_registry(&registry, "rds", "readRDS");
+  push_registry(&registry, "json", "jsonlite::fromJSON");
+  push_registry(&registry, "yml", "yaml::read_yaml");
+  push_registry(&registry, "yaml", "yaml::read_yaml");
+  push_registry(&registry, "xml", "xml2::read_xml");
+  push_registry(&registry, "xlsx", "readxl::read_excel");
+  push_registry(&registry, "parquet", "arrow::read_parquet");
+  push_registry(&registry, "fst", "fst::read_fst");
+  return registry;
+}
+
 static void free_include(Include *include)
 {
-  if(include->function != NULL) free(include->function);
+  if(include->type != NULL) free(include->type);
   if(include->path != NULL) free(include->path);
   if(include->object != NULL) free(include->object);
 }
@@ -38,7 +82,7 @@ static Include parse_include(char *line)
   while(token != NULL && part < 3) {
     switch (part) {
       case 0:
-        result.function = strdup(token); break;
+        result.type = strdup(token); break;
       case 1:
         result.path = strdup(token); break;
       case 2:
@@ -52,7 +96,29 @@ static Include parse_include(char *line)
   return result;
 }
 
-char *include_replace(Define **defs, char *line, Plugins *plugins, char *file)
+static const char *capture_object(char *func, char *file)
+{
+  char *call = (char*)malloc(strlen(func) + strlen(file) + 53);
+  snprintf(call, strlen(func) + strlen(file) + 53, "paste0(capture.output(dput((%s)('%s'))),collapse='')", func, file);
+  const char *result = eval_string(call);
+  free(call);
+
+  return strdup(result);
+}
+
+static const char *capture_path(Registry **registry, char *type, char *path)
+{
+  Registry *current = *registry;
+  while(current != NULL) {
+    if(strcmp(current->type, type) == 0) {
+      return capture_object(current->call, path);
+    }
+    current = current->next;
+  }
+  return NULL;
+}
+
+char *include_replace(char *line, Plugins *plugins, char *file, Registry **registry)
 {
   if(!has_include(line)) {
     return line;
@@ -60,102 +126,19 @@ char *include_replace(Define **defs, char *line, Plugins *plugins, char *file)
 
   char *plugged = plugins_call(plugins, "include", line, file);
   if(strcmp(plugged, line) != 0) {
-    free(line);
     return plugged;
   }
   free(plugged);
 
   Include inc = parse_include(line);
 
-  // nothing to do
-  if(inc.function == NULL) {
-    free_include(&inc);
-    return line;
-  }
+  const char *content = capture_path(registry, inc.type, inc.path);
 
-  char *def = get_define_value(defs, inc.function);
-
-  if(def == NULL) {
-    printf("%s Failed to find definition for %s\n", LOG_ERROR, inc.function);
-    free_include(&inc);
-    return line;
-  }
-
-  // Extract argument name from macro signature (e.g., "READ(FILE)" -> "FILE")
-  char *paren_start = strchr(def, '(');
-  char *paren_end = strchr(def, ')');
-  if(paren_start == NULL || paren_end == NULL || paren_end <= paren_start) {
-    printf("%s Invalid macro signature for %s\n", LOG_ERROR, inc.function);
-    free_include(&inc);
-    return line;
-  }
-  
-  size_t arg_len = paren_end - paren_start - 1;
-  char *arg_name = malloc(arg_len + 1);
-  strncpy(arg_name, paren_start + 1, arg_len);
-  arg_name[arg_len] = '\0';
-  
-  // Get the macro body and apply .arg / ..arg replacements
-  char *body = strdup(def);
-  
-  // Replace ..argname -> "value" (stringify) - MUST be first
-  char *dblpat = NULL;
-  asprintf(&dblpat, "..%s", arg_name);
-  char *quoted = NULL;
-  asprintf(&quoted, "\"%s\"", inc.path);
-  char *tmp = str_replace(body, dblpat, quoted);
-  free(body);
-  body = tmp;
-  free(dblpat);
-  free(quoted);
-  
-  // Replace .argname -> 'value' (quoted, since it's a file path)
-  char *dotpat = NULL;
-  asprintf(&dotpat, ".%s", arg_name);
-  char *quoted_path = NULL;
-  asprintf(&quoted_path, "'%s'", inc.path);
-  tmp = str_replace(body, dotpat, quoted_path);
-  free(body);
-  body = tmp;
-  free(dotpat);
-  free(quoted_path);
-  free(arg_name);
-
-  char *replaced = str_replace(body, inc.function, "(\\");
-  free(body);
-
-  size_t expr_size = strlen(replaced) + strlen(")() |> dput() |> capture.output()") + 1;
-  char *expr = malloc(expr_size);
-  if(expr == NULL) {
-    printf("%s Failed to allocate memory for expression\n", LOG_ERROR);
-    free(replaced);
-    free_include(&inc);
-    return line;
-  }
-
-  // Build the full expression (no argument passing needed now, path is already substituted)
-  strcpy(expr, replaced);
-  strcat(expr, ")() |> dput() |> capture.output()");
-  free(replaced);
-
-  const char *result = eval_string(expr);
-  free(expr);
-
-  if(result == NULL) {
-    return line;
-  }
-
-  size_t result_size = strlen(inc.object) + strlen(" <- ") + strlen(result) + 1;
-  char *result_copy = malloc(result_size);
-  if(result_copy == NULL) {
-    printf("%s Failed to allocate memory for result\n", LOG_ERROR);
-    return line;
-  }
-
-  strcpy(result_copy, inc.object);
-  strcat(result_copy, " <- ");
-  strcat(result_copy, result);
+  char *r = (char*)malloc(strlen(content) + strlen(inc.object) + 5);
+  snprintf(r, strlen(content) + strlen(inc.object) + 5, "%s <- %s", inc.object, content);
 
   free_include(&inc);
-  return result_copy;
+  free((void*)content);
+
+  return r;
 }

@@ -65,7 +65,7 @@ SEXP evaluate(char *expr)
   return result;
 }
 
-int eval_if(char *expr)
+int evaluate_if(char *expr)
 {
   SEXP result = evaluate(expr);
 
