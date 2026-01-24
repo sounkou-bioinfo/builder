@@ -21,16 +21,30 @@ Macros are defined using `#define` on its own line, followed by the macro signat
 ```r
 #define
 MACRO_NAME(arg1, arg2, ...){
-  body
+  body using .arg1, .arg2, etc.
 }
 #enddef
 ```
+
+## Argument Syntax
+
+Macro arguments use explicit markers for replacement:
+
+| Syntax | Description | Example (`name` = `count`) |
+|--------|-------------|----------------------------|
+| `name` | Not replaced (literal) | `name` stays `name` |
+| `.name` | Value replacement | `.name` becomes `count` |
+| `..name` | Stringification | `..name` becomes `"count"` |
+
+**Note:** Macro argument names cannot start with `.`.
+
+### Basic Example
 
 ```r
 #define
 LOG_EVAL(expr){
   cat("Evaluating stuff\n")
-  expr
+  .expr
 }
 #enddef
 
@@ -42,6 +56,48 @@ LOG_EVAL(sum(1, 1, 1))
 ```r
 cat("Evaluating stuff\n")
 sum(1, 1, 1)
+```
+
+### Stringification
+
+Use `..arg` to get the argument as a string literal:
+
+```r
+#define
+DEBUG(var){
+  cat(..var, "=", .var, "\n")
+}
+#enddef
+
+my_value <- 42
+DEBUG(my_value)
+```
+
+**Expands to:**
+
+```r
+my_value <- 42
+cat("my_value", "=", my_value, "\n")
+```
+
+### Building Identifiers (Token Pasting)
+
+Use `.arg` within identifier names to build new identifiers:
+
+```r
+#define
+GETTER(name){
+  get_.name <- function() private$.name
+}
+#enddef
+
+GETTER(count)
+```
+
+**Expands to:**
+
+```r
+get_count <- function() private$count
 ```
 
 ## Examples
@@ -75,8 +131,8 @@ Macro to easily repeat a block of code.
 ```r
 #define
 REPEAT(n, action){
-  for (i in 1:n) {
-    action
+  for (i in 1:.n) {
+    .action
   }
 }
 #enddef
@@ -99,8 +155,8 @@ Macros can accept multiple arguments, which are separated by commas in both the 
 ```r
 #define
 VALIDATE(value, min, max){
-  if (value < min || value > max) {
-    stop("Value out of range: ", value)
+  if (.value < .min || .value > .max) {
+    stop("Value out of range: ", .value)
   }
 }
 #enddef
@@ -123,7 +179,7 @@ if (x < 0 || x > 100) {
 ```r
 #define
 LOG(level, msg){
-  cat("[", level, "] ", msg, "\n", sep = "")
+  cat("[", .level, "] ", .msg, "\n", sep = "")
 }
 #enddef
 
@@ -144,9 +200,9 @@ cat("[", "ERROR", "] ", "Something went wrong", "\n", sep = "")
 #define
 TRY_CATCH(code, error_msg){
   tryCatch({
-    code
+    .code
   }, error = function(e) {
-    cat(error_msg, ":", e$message, "\n")
+    cat(.error_msg, ":", e$message, "\n")
   })
 }
 #enddef
@@ -170,7 +226,7 @@ tryCatch({
 #define
 TIME_IT(expr){
   start <- Sys.time()
-  result <- expr
+  result <- .expr
   end <- Sys.time()
   cat("Execution time:", end - start, "\n")
   result
@@ -197,5 +253,7 @@ result
 - Macro bodies must be enclosed in curly braces `{}`
 - Macros end with `#enddef`
 - Macros support multiline definitions and can span many lines (up to 1024 lines)
-- Macro parameters are simple text substitution - be careful with expressions that might be evaluated multiple times
+- Macro argument names **cannot** start with `.`
+- Use `.arg` to substitute the argument value, `..arg` for stringification
+- Bare argument names (without `.` prefix) are **not** replaced
 - Simple `#define NAME value` constants still work as before

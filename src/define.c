@@ -232,6 +232,21 @@ void push_macro(Define **defs, char *macro, char *ns)
     return;
   }
 
+  // Validate that argument names don't start with '.'
+  int temp_nargs;
+  char **temp_args = extract_macro_args(macro, &temp_nargs);
+  for(int i = 0; i < temp_nargs; i++) {
+    if(temp_args[i][0] == '.') {
+      printf("%s Macro argument '%s' cannot start with '.'\n", LOG_ERROR, temp_args[i]);
+      for(int j = 0; j < temp_nargs; j++) free(temp_args[j]);
+      free(temp_args);
+      free(macro);
+      return;
+    }
+  }
+  for(int i = 0; i < temp_nargs; i++) free(temp_args[i]);
+  free(temp_args);
+
   size_t len = paren - macro;
   char* name = malloc(len + 1);
   strncpy(name, macro, len);
@@ -474,9 +489,26 @@ static char *define_replace_once(Define **defines, char *line)
     }
 
     for(int i = 0; i < nargs; i++) {
-      char *old_body = body_macro;
-      body_macro = str_replace(body_macro, args_macro[i], args[i]);
+      char *old_body;
+      
+      // 1. Replace ..argname -> "value" (stringify) - MUST be first
+      char *dblpat = NULL;
+      asprintf(&dblpat, "..%s", args_macro[i]);
+      char *quoted = NULL;
+      asprintf(&quoted, "\"%s\"", args[i]);
+      old_body = body_macro;
+      body_macro = str_replace(body_macro, dblpat, quoted);
       free(old_body);
+      free(dblpat);
+      free(quoted);
+      
+      // 2. Replace .argname -> value (second)
+      char *dotpat = NULL;
+      asprintf(&dotpat, ".%s", args_macro[i]);
+      old_body = body_macro;
+      body_macro = str_replace(body_macro, dotpat, args[i]);
+      free(old_body);
+      free(dotpat);
     }
 
     // Free args_macro array and individual strings

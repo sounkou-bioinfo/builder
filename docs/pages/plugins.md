@@ -9,6 +9,8 @@ Plugins are R packages that export a function returning a list of lifecycle meth
 
 See [builder.air](https://github.com/devOpifex/builder.air) for a simple example plugin.
 
+If your plugin requires configuration use a config file.
+
 ## Usage
 
 Specify plugins with the `-plugin` flag:

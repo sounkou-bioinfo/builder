@@ -81,9 +81,50 @@ char *include_replace(Define **defs, char *line, Plugins *plugins, char *file)
     return line;
   }
 
-  char *replaced = str_replace(def, inc.function, "(\\");
+  // Extract argument name from macro signature (e.g., "READ(FILE)" -> "FILE")
+  char *paren_start = strchr(def, '(');
+  char *paren_end = strchr(def, ')');
+  if(paren_start == NULL || paren_end == NULL || paren_end <= paren_start) {
+    printf("%s Invalid macro signature for %s\n", LOG_ERROR, inc.function);
+    free_include(&inc);
+    return line;
+  }
+  
+  size_t arg_len = paren_end - paren_start - 1;
+  char *arg_name = malloc(arg_len + 1);
+  strncpy(arg_name, paren_start + 1, arg_len);
+  arg_name[arg_len] = '\0';
+  
+  // Get the macro body and apply .arg / ..arg replacements
+  char *body = strdup(def);
+  
+  // Replace ..argname -> "value" (stringify) - MUST be first
+  char *dblpat = NULL;
+  asprintf(&dblpat, "..%s", arg_name);
+  char *quoted = NULL;
+  asprintf(&quoted, "\"%s\"", inc.path);
+  char *tmp = str_replace(body, dblpat, quoted);
+  free(body);
+  body = tmp;
+  free(dblpat);
+  free(quoted);
+  
+  // Replace .argname -> 'value' (quoted, since it's a file path)
+  char *dotpat = NULL;
+  asprintf(&dotpat, ".%s", arg_name);
+  char *quoted_path = NULL;
+  asprintf(&quoted_path, "'%s'", inc.path);
+  tmp = str_replace(body, dotpat, quoted_path);
+  free(body);
+  body = tmp;
+  free(dotpat);
+  free(quoted_path);
+  free(arg_name);
 
-  size_t expr_size = strlen(replaced) + strlen(")('") + strlen(inc.path) + strlen("') |> dput() |> capture.output()") + 1;
+  char *replaced = str_replace(body, inc.function, "(\\");
+  free(body);
+
+  size_t expr_size = strlen(replaced) + strlen(")() |> dput() |> capture.output()") + 1;
   char *expr = malloc(expr_size);
   if(expr == NULL) {
     printf("%s Failed to allocate memory for expression\n", LOG_ERROR);
@@ -92,11 +133,9 @@ char *include_replace(Define **defs, char *line, Plugins *plugins, char *file)
     return line;
   }
 
-  // Build the full expression
+  // Build the full expression (no argument passing needed now, path is already substituted)
   strcpy(expr, replaced);
-  strcat(expr, ")('");
-  strcat(expr, inc.path);
-  strcat(expr, "') |> dput() |> capture.output()");
+  strcat(expr, ")() |> dput() |> capture.output()");
   free(replaced);
 
   const char *result = eval_string(expr);
