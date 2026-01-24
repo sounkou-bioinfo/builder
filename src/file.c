@@ -734,7 +734,7 @@ static int second_pass(RFile *files, Define **defs, Plugins *plugins, char *prep
         line = malloc(len + 1);
         strncpy(line, pos, len);
         line[len] = '\0';
-        line = add_sourcemap(line, line_number);
+        line = add_sourcemap(line, line_number, current->src);
       }
 
       pos = new_line + 1;

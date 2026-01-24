@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-char *add_sourcemap(char *line, int line_number)
+char *add_sourcemap(char *line, int line_number, char *filename)
 {
   // there's a special comment in the R code that we don't want to touch
   if(strstr(line, "#") != NULL) {
@@ -16,7 +16,7 @@ char *add_sourcemap(char *line, int line_number)
   }
 
   char *line_str = NULL;
-  asprintf(&line_str, "# line: %d", line_number);
+  asprintf(&line_str, "# %s:%d", filename, line_number);
 
   size_t len = strlen(line);
   if(len > 0 && line[len - 1] == '\n') {
