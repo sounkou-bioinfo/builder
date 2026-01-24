@@ -107,7 +107,7 @@ See the `#ifdef` example above for usage.
 
 Close a conditional compilation block. Required for all conditional directives (`#ifdef`, `#ifndef`, `#if`).
 
-## error
+## #error
 
 You can use `#error` to stop compilation and print an error message.
 

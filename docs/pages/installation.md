@@ -16,7 +16,7 @@ To install to a custom location:
 PREFIX=~/.local curl -fsSL https://builder.opifex.org/install.sh | sh
 ```
 
-## Manual Install
+## Install from source
 
 ```bash
 git clone https://github.com/devOpifex/builder.git --depth 1
