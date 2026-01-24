@@ -3,6 +3,7 @@
 
 #include "parser.h"
 #include "plugins.h"
+#include "include.h"
 
 typedef struct {
   int argc;
@@ -18,10 +19,11 @@ typedef struct {
   int sourcemap;
   int watch;
   Plugins *plugins;
+  Registry *registry;
 } BuildContext;
 
 int has_config();
-BuildContext *get_config();
+BuildContext *get_config(Registry **registry);
 void free_config(BuildContext *ctx);
 
 #endif

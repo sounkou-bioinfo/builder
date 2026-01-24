@@ -22,6 +22,7 @@ void push_registry(Registry **registry, char *type, char *call)
   Registry *current = *registry;
   while(current != NULL) {
     if(strcmp(current->type, type) == 0) {
+      printf("%s Overriding reader for '%s'\n", LOG_WARNING, type);
       free(current->call);
       current->call = strdup(call);
       return;
@@ -31,6 +32,18 @@ void push_registry(Registry **registry, char *type, char *call)
   Registry *new = create_registry(type, call);
   new->next = *registry;
   *registry = new;
+}
+
+void free_registry(Registry *registry)
+{
+  Registry *current = registry;
+  while(current != NULL) {
+    Registry *next = current->next;
+    free(current->type);
+    free(current->call);
+    free(current);
+    current = next;
+  }
 }
 
 Registry *initialize_registry()

@@ -59,7 +59,33 @@ static Value *parse_values(char *line)
   return values;
 }
 
-BuildContext *get_config()
+static void parse_registry(char *line, Registry **registry)
+{
+  char *str = get_value(line);
+  if (str == NULL) return;
+
+  // First space-separated token is the type, rest is the function
+  char *space = strchr(str, ' ');
+  if (space == NULL) {
+    free(str);
+    return;
+  }
+
+  *space = '\0';
+  char *type = str;
+  char *func = space + 1;
+
+  // Skip leading spaces in function
+  while (*func == ' ') func++;
+
+  if (strlen(type) > 0 && strlen(func) > 0) {
+    push_registry(registry, type, func);
+  }
+
+  free(str);
+}
+
+BuildContext *get_config(Registry **registry)
 {
   FILE *fp = fopen("builder.ini", "r");
   if (fp == NULL) return NULL;
@@ -80,6 +106,7 @@ BuildContext *get_config()
   ctx->append = NULL;
   ctx->plugins_str = NULL;
   ctx->plugins = NULL;
+  ctx->registry = NULL;
   ctx->deadcode = 0;
   ctx->sourcemap = 0;
   ctx->must_clean = 1;
@@ -151,6 +178,11 @@ BuildContext *get_config()
         while (current->next != NULL) current = current->next;
         current->next = imports;
       }
+      continue;
+    }
+
+    if (strstr(line, "reader:") != NULL) {
+      parse_registry(line, registry);
       continue;
     }
   }

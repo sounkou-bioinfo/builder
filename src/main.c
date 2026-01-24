@@ -38,9 +38,7 @@ static int build(BuildContext *ctx)
     return 1;
   }
 
-  Registry *registry = initialize_registry();
-
-  int result = two_pass(files, &defines, ctx->plugins, ctx->prepend, ctx->append, ctx->deadcode, ctx->sourcemap, &registry);
+  int result = two_pass(files, &defines, ctx->plugins, ctx->prepend, ctx->append, ctx->deadcode, ctx->sourcemap, &ctx->registry);
 
   free_rfile(files);
   free_array(defines);
@@ -74,6 +72,7 @@ int main(int argc, char *argv[])
     printf("  -append               Path to file to append to every output file\n");
     printf("  -deadcode             Enable dead variable/function detection\n");
     printf("  -sourcemap            Enable source map generation\n");
+    printf("  -reader <t> <fn>      Define file type reader, e.g.: -reader tsv read.delim\n");
     printf("  -help                 Show this help message\n");
     printf("\n");
     printf("Example:\n");
@@ -81,9 +80,11 @@ int main(int argc, char *argv[])
     return 0;
   }
 
+  Registry *registry = initialize_registry();
+
   BuildContext *cfg = NULL;
   if (has_config()) {
-    cfg = get_config();
+    cfg = get_config(&registry);
   }
 
   char *input = get_arg_value(argc, argv, "-input");
@@ -208,6 +209,14 @@ int main(int argc, char *argv[])
     watch_mode = cfg->watch;
   }
 
+  // Parse CLI -reader arguments: -reader type function
+  for (int i = 1; i < argc - 2; i++) {
+    if (strcmp(argv[i], "-reader") == 0) {
+      push_registry(&registry, argv[i + 1], argv[i + 2]);
+      i += 2;
+    }
+  }
+
   free_config(cfg);
 
   BuildContext ctx = {
@@ -223,7 +232,8 @@ int main(int argc, char *argv[])
     .sourcemap = sourcemap,
     .must_clean = must_clean,
     .watch = watch_mode,
-    .plugins = plugins
+    .plugins = plugins,
+    .registry = registry
   };
 
   int result = 0;
@@ -253,6 +263,7 @@ int main(int argc, char *argv[])
 
   plugins_call(plugins, "end", NULL, NULL);
   free_plugins(plugins);
+  free_registry(registry);
   free(prepend);
   free(append);
   free_value(imports);
