@@ -147,9 +147,10 @@
       </nav>
       <h1 id="include">Include</h1>
       <p>The <code>#include</code> directive allows you to read external
-      files at build time and process them using macros. This enables
-      you to embed file contents (like SQL queries, templates, or
-      configuration) directly into your R code as variables.</p>
+      files at build time and embed their contents directly into your R
+      code as variables. This enables you to keep SQL queries, data
+      files, templates, and other content in separate files while
+      embedding them at build time.</p>
       <h2 id="advantages">Advantages</h2>
       <ul>
       <li><strong>Separation of concerns:</strong> Keep SQL queries,
@@ -158,87 +159,171 @@
       <li><strong>Build-time processing:</strong> File contents are read
       and processed during preprocessing, not at runtime, eliminating
       file I/O overhead.</li>
-      <li><strong>Macro integration:</strong> Use any macro to process
-      file contents, enabling custom transformations and
-      formatting.</li>
       <li><strong>Type safety:</strong> File contents are converted to R
       objects at build time, catching errors early.</li>
+      <li><strong>Built-in support:</strong> Common file types are
+      supported out of the box with no configuration needed.</li>
       </ul>
-      <h2 id="basic-syntax">Basic Syntax</h2>
-      <p>The <code>#include</code> directive uses a special syntax that
-      specifies a macro to apply, a file path to read, and a variable
-      name for the result.</p>
-      <p><strong>Syntax:</strong>
-      <code>#include:MACRO_NAME file_path variable_name</code></p>
+      <h2 id="syntax">Syntax</h2>
+      <pre><code>#include:TYPE file_path variable_name</code></pre>
       <p>The directive consists of three space-separated parts:</p>
       <ul>
-      <li><code>MACRO_NAME</code> - The name of a previously defined
-      macro that takes one argument (the file path)</li>
+      <li><code>TYPE</code> - The file type (e.g., <code>txt</code>,
+      <code>csv</code>, <code>json</code>) which determines how the file
+      is read</li>
       <li><code>file_path</code> - The path to the file to include</li>
       <li><code>variable_name</code> - The R variable name that will be
-      assigned the processed result</li>
+      assigned the result</li>
       </ul>
-      <h2 id="basic-example">Basic Example</h2>
-      <p>The most common use case is reading text files like SQL
-      queries. First, define a macro that specifies how to read the
-      file:</p>
-      <div class="sourceCode" id="cb1"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#define</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">READ</span>(path){</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">readLines</span>(path)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">#enddef</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">#include:READ sql/query.sql my_query</span></span></code></pre></div>
-      <p><strong>Expands to:</strong></p>
+      <h2 id="built-in-readers">Built-in Readers</h2>
+      <p>Builder includes readers for common file types:</p>
+      <table>
+      <thead>
+      <tr class="header">
+      <th>Type</th>
+      <th>Function</th>
+      <th>Package</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr class="odd">
+      <td><code>txt</code></td>
+      <td><code>readLines</code></td>
+      <td>base</td>
+      </tr>
+      <tr class="even">
+      <td><code>sql</code></td>
+      <td><code>readLines</code></td>
+      <td>base</td>
+      </tr>
+      <tr class="odd">
+      <td><code>csv</code></td>
+      <td><code>read.csv</code></td>
+      <td>base</td>
+      </tr>
+      <tr class="even">
+      <td><code>tsv</code></td>
+      <td><code>read.delim</code></td>
+      <td>base</td>
+      </tr>
+      <tr class="odd">
+      <td><code>rds</code></td>
+      <td><code>readRDS</code></td>
+      <td>base</td>
+      </tr>
+      <tr class="even">
+      <td><code>json</code></td>
+      <td><code>jsonlite::fromJSON</code></td>
+      <td>jsonlite</td>
+      </tr>
+      <tr class="odd">
+      <td><code>yml</code></td>
+      <td><code>yaml::read_yaml</code></td>
+      <td>yaml</td>
+      </tr>
+      <tr class="even">
+      <td><code>yaml</code></td>
+      <td><code>yaml::read_yaml</code></td>
+      <td>yaml</td>
+      </tr>
+      <tr class="odd">
+      <td><code>xml</code></td>
+      <td><code>xml2::read_xml</code></td>
+      <td>xml2</td>
+      </tr>
+      <tr class="even">
+      <td><code>xlsx</code></td>
+      <td><code>readxl::read_excel</code></td>
+      <td>readxl</td>
+      </tr>
+      <tr class="odd">
+      <td><code>parquet</code></td>
+      <td><code>arrow::read_parquet</code></td>
+      <td>arrow</td>
+      </tr>
+      <tr class="even">
+      <td><code>fst</code></td>
+      <td><code>fst::read_fst</code></td>
+      <td>fst</td>
+      </tr>
+      </tbody>
+      </table>
+      <h2 id="basic-examples">Basic Examples</h2>
+      <h3 id="reading-sql-files">Reading SQL Files</h3>
       <div class="sourceCode" id="cb2"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>my_query <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;SELECT * FROM users&quot;</span>)</span></code></pre></div>
-      <p>The <code>READ</code> macro uses R’s <code>readLines()</code>
-      function to read the file. The result is captured using R’s
-      <code>dput()</code> function and assigned to the specified
-      variable.</p>
+      class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#include:sql queries/users.sql user_query</span></span></code></pre></div>
+      <p><strong>Expands to:</strong></p>
+      <div class="sourceCode" id="cb3"><pre
+      class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>user_query <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;SELECT * FROM users&quot;</span>, <span class="st">&quot;WHERE active = 1&quot;</span>)</span></code></pre></div>
+      <h3 id="reading-csv-data">Reading CSV Data</h3>
+      <p>Embed small lookup tables or static data directly in your
+      code:</p>
+      <div class="sourceCode" id="cb4"><pre
+      class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#include:csv data/lookup_table.csv lookup_data</span></span></code></pre></div>
+      <p><strong>Expands to:</strong></p>
+      <div class="sourceCode" id="cb5"><pre
+      class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>lookup_data <span class="ot">&lt;-</span> <span class="fu">structure</span>(<span class="fu">list</span>(<span class="at">id =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">name =</span> <span class="fu">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;b&quot;</span>, <span class="st">&quot;c&quot;</span>)), <span class="at">class =</span> <span class="st">&quot;data.frame&quot;</span>, <span class="at">row.names =</span> <span class="fu">c</span>(<span class="cn">NA</span>, <span class="sc">-</span><span class="dv">3</span><span class="dt">L</span>))</span></code></pre></div>
+      <h3 id="reading-json-configuration">Reading JSON
+      Configuration</h3>
+      <div class="sourceCode" id="cb6"><pre
+      class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#include:json config/settings.json app_config</span></span></code></pre></div>
+      <h2 id="custom-readers">Custom Readers</h2>
+      <p>You can define custom readers for new file types or override
+      the defaults using the <code>-reader</code> CLI argument or
+      <code>reader:</code> config option.</p>
+      <h3 id="via-cli">Via CLI</h3>
+      <div class="sourceCode" id="cb7"><pre
+      class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-reader</span> tsv <span class="st">&#39;\(x) read.delim(x, sep=&quot;\t&quot;, header=FALSE)&#39;</span></span></code></pre></div>
+      <h3 id="via-config-file">Via Config File</h3>
+      <div class="sourceCode" id="cb8"><pre
+      class="sourceCode ini"><code class="sourceCode ini"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="dt">reader: tsv \(x) read.delim(x, sep</span><span class="ot">=</span><span class="st">&quot;\t&quot;, header=FALSE)</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="dt">reader: myformat \(x) mypackage::read_myformat(x)</span></span></code></pre></div>
+      <h3 id="custom-reader-format">Custom Reader Format</h3>
+      <p>The reader function must accept a single argument (the file
+      path). You can use:</p>
+      <ul>
+      <li>Simple function names: <code>readLines</code>,
+      <code>read.csv</code></li>
+      <li>Namespaced functions: <code>jsonlite::fromJSON</code></li>
+      <li>Lambda functions:
+      <code>\(x) read.csv(x, header=FALSE)</code></li>
+      </ul>
+      <p>When you override a built-in reader, a warning is
+      displayed:</p>
+      <pre><code>[WARNING] Overriding reader for &#39;tsv&#39;</code></pre>
       <h2 id="how-it-works">How It Works</h2>
       <p>When the preprocessor encounters an <code>#include</code>
       directive:</p>
       <ol type="1">
-      <li>It parses the macro name, file path, and variable name</li>
-      <li>It looks up the macro definition (e.g., <code>READ</code>)
-      from your <code>#define</code> statements</li>
+      <li>It parses the file type, file path, and variable name</li>
+      <li>It looks up the reader function for that file type</li>
       <li>It constructs an R expression:
-      <code>MACRO_NAME('file_path') |&gt; dput() |&gt; capture.output()</code></li>
-      <li>It executes this R expression to process the file</li>
+      <code>reader_function('file_path')</code></li>
+      <li>It captures the result using <code>dput()</code> and
+      <code>capture.output()</code></li>
       <li>It generates an assignment:
       <code>variable_name &lt;- &lt;result&gt;</code></li>
       </ol>
       <p>This happens at build time, so the final R code contains no
-      file reading operations—just the processed data.</p>
-      <h3 id="reading-csv-data">Reading CSV Data</h3>
-      <p>Embed small lookup tables or static data directly in your
-      code:</p>
-      <div class="sourceCode" id="cb3"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#define</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">READ_CSV</span>(path){</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">read.csv</span>(path)</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">#enddef</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">#include:READ_CSV data/lookup_table.csv lookup_data</span></span></code></pre></div>
-      <h3 id="reading-template-files">Reading Template Files</h3>
-      <p>Read template strings for reports or emails:</p>
-      <div class="sourceCode" id="cb4"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#define</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">READ_TEMPLATE</span>(path){</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">readLines</span>(path) <span class="sc">|&gt;</span> <span class="fu">paste</span>(<span class="at">collapse =</span> <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">#enddef</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">#include:READ_TEMPLATE templates/email_body.txt email_template</span></span></code></pre></div>
+      file reading operations—just the embedded data.</p>
+      <h2 id="extending-via-plugins">Extending via Plugins</h2>
+      <p>For more complex include handling, you can use a <a
+      href="/plugins">plugin</a> that implements the
+      <code>include</code> hook. This allows you to intercept and
+      transform <code>#include</code> directives with custom logic.</p>
+      <div class="sourceCode" id="cb10"><pre
+      class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>plugin <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output) {</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">include =</span> <span class="cf">function</span>(line, file) {</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Custom include handling</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Return modified line or the original</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>      line</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+      <p>See <a href="/plugins">Plugins</a> for more details.</p>
       <h2 id="important-notes">Important Notes</h2>
       <ul>
-      <li>The macro specified in <code>#include:MACRO_NAME</code> must
-      be defined before the <code>#include</code> directive</li>
-      <li>The macro must accept exactly one parameter (the file
-      path)</li>
       <li>File paths are relative to the build directory or can be
       absolute paths</li>
       <li>The result is captured using R’s <code>dput()</code> function,
@@ -247,17 +332,14 @@
       exist when running the builder</li>
       <li>Changes to included files require rebuilding to be reflected
       in the output</li>
-      <li>The macro can use any R code for processing—you’re not limited
-      to simple <code>readLines()</code></li>
-      <li>Variable names should follow R naming conventions and will be
-      created in the global scope</li>
+      <li>For readers that require external packages (json, yaml, etc.),
+      ensure the package is installed</li>
+      <li>Variable names should follow R naming conventions</li>
       </ul>
       <h2 id="processing-pipeline">Processing Pipeline</h2>
-      <p>The <code>#include</code> directive is processed
-      <strong>before</strong> macro expansion in the second pass. This
-      means the function name (e.g., <code>READ</code> in
-      <code>#include:READ</code>) is looked up directly from
-      definitions, not expanded as a macro first.</p>
+      <p>The <code>#include</code> directive is processed in the second
+      pass, after macro definitions are collected but before macro
+      expansion.</p>
       <ol type="1">
       <li>First pass: All <code>#define</code> macros are collected</li>
       <li>Second pass: <code>#include</code> directives are processed,

@@ -159,6 +159,12 @@
       class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span></span></code></pre></div>
       <h2 id="options">Options</h2>
       <table>
+      <colgroup>
+      <col style="width: 22%" />
+      <col style="width: 16%" />
+      <col style="width: 25%" />
+      <col style="width: 36%" />
+      </colgroup>
       <thead>
       <tr class="header">
       <th>Option</th>
@@ -228,6 +234,13 @@
       <td>-</td>
       <td>Space-separated imports</td>
       </tr>
+      <tr class="odd">
+      <td><code>reader</code></td>
+      <td>string</td>
+      <td>-</td>
+      <td>Define custom file type reader (format:
+      <code>type function</code>)</td>
+      </tr>
       </tbody>
       </table>
       <h2 id="full-example">Full Example</h2>
@@ -248,7 +261,11 @@
 <span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Plugins and imports (space-separated)</span></span>
 <span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="dt">plugin: mypkg::minify mypkg::lint</span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="dt">import: inst/types.rh inst/utils.rh</span></span></code></pre></div>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="dt">import: inst/types.rh inst/utils.rh</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Custom file readers (one per line)</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="dt">reader: tsv \(x) read.delim(x, sep</span><span class="ot">=</span><span class="st">&quot;\t&quot;, header=FALSE)</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="dt">reader: myformat mypackage::read_myformat</span></span></code></pre></div>
       <h2 id="overriding-with-cli">Overriding with CLI</h2>
       <p>Config values are defaults. CLI arguments take precedence:</p>
       <div class="sourceCode" id="cb4"><pre

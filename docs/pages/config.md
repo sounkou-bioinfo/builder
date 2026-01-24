@@ -35,6 +35,7 @@ builder
 | `watch` | bool | `false` | Enable watch mode |
 | `plugin` | list | - | Space-separated plugins |
 | `import` | list | - | Space-separated imports |
+| `reader` | string | - | Define custom file type reader (format: `type function`) |
 
 ## Full Example
 
@@ -56,6 +57,10 @@ watch: false
 # Plugins and imports (space-separated)
 plugin: mypkg::minify mypkg::lint
 import: inst/types.rh inst/utils.rh
+
+# Custom file readers (one per line)
+reader: tsv \(x) read.delim(x, sep="\t", header=FALSE)
+reader: myformat mypackage::read_myformat
 ```
 
 ## Overriding with CLI
