@@ -4,6 +4,15 @@ pre {
   border: 1px solid #504945;
 }
 
+th {
+  text-align: left;
+}
+
+table {
+  width: 100%;
+  border-color: #504945;
+}
+
 * {
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
