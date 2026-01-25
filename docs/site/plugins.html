@@ -148,7 +148,8 @@
       <h1 id="plugins">Plugins</h1>
       <p>Builder supports plugins to extend processing. Plugins are R
       packages that export a function returning a list of lifecycle
-      methods.</p>
+      methods. Note that all lifecycle methods are mandatory even if
+      they don’t do anything.</p>
       <hr />
       <h2 id="using-plugins">Using Plugins</h2>
       <h3 id="via-cli">Via CLI</h3>
@@ -247,23 +248,22 @@
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a> <span class="fu">list</span>(</span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>   <span class="at">setup =</span> <span class="cf">function</span>(input, output, ...) {</span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>     enabled <span class="ot">&lt;&lt;-</span> <span class="fu">requireNamespace</span>(<span class="st">&quot;readr&quot;</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>   },</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>   <span class="at">preprocess =</span> <span class="cf">function</span>(str, file, ...) {</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>   },</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>   <span class="at">postprocess =</span> <span class="cf">function</span>(str, file, ...) {</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>     str</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>   },</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>   <span class="at">include =</span> <span class="cf">function</span>(type, path, object, file, ...) {</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>     <span class="cf">if</span>(<span class="sc">!</span>enabled) <span class="fu">return</span>(<span class="cn">NULL</span>)</span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>     <span class="cf">if</span>(type <span class="sc">!=</span> <span class="st">&quot;csv&quot;</span>) <span class="fu">return</span>(<span class="cn">NULL</span>)</span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>     readr<span class="sc">::</span><span class="fu">read_csv</span>(path)</span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>   },</span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>   <span class="at">end =</span> <span class="cf">function</span>(...) {</span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>   }</span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a> )</span>
-<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>     <span class="fu">warning</span>(<span class="st">&quot;readr not installed, fallback on default `csv` support&quot;</span>)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>   },</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>   <span class="at">preprocess =</span> <span class="cf">function</span>(str, file, ...) {},</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>   <span class="at">postprocess =</span> <span class="cf">function</span>(str, file, ...) {},</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>   <span class="at">include =</span> <span class="cf">function</span>(type, path, object, file, ...) {</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>     <span class="cf">if</span>(<span class="sc">!</span>enabled) <span class="fu">return</span>(<span class="cn">NULL</span>)</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>     <span class="cf">if</span>(type <span class="sc">!=</span> <span class="st">&quot;csv&quot;</span>) <span class="fu">return</span>(<span class="cn">NULL</span>)</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>     readr<span class="sc">::</span><span class="fu">read_csv</span>(path)</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>   },</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>   <span class="at">end =</span> <span class="cf">function</span>(...) {</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>   }</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a> )</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
       <p>A formatter plugin that uses <a
-      href="github.com/posit-dev/air">air</a> to format the files:</p>
+      href="https://github.com/posit-dev/air">air</a> to format the
+      files:</p>
       <div class="sourceCode" id="cb7"><pre
       class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @export</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>plugin <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
@@ -293,6 +293,47 @@
       <li>If your plugin requires configuration, read from a config file
       in <code>setup()</code></li>
       <li>Plugins are called in the order they are specified</li>
+      </ul>
+      <h3 id="using-r6-classes">Using R6 Classes</h3>
+      <p>For plugins with complex state or when you want inheritance,
+      you can use R6 classes:</p>
+      <div class="sourceCode" id="cb8"><pre
+      class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @export</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>Plugin <span class="ot">&lt;-</span> R6<span class="sc">::</span><span class="fu">R6Class</span>(<span class="st">&quot;Plugin&quot;</span>,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">private =</span> <span class="fu">list</span>(</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">out_dir =</span> <span class="cn">NULL</span>,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">file_count =</span> <span class="dv">0</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">public =</span> <span class="fu">list</span>(</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">setup =</span> <span class="cf">function</span>(input, output, ...) {</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>      private<span class="sc">$</span>out_dir <span class="ot">&lt;-</span> output</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    },</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">preprocess =</span> <span class="cf">function</span>(str, file, ...) {</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>      str</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    },</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">postprocess =</span> <span class="cf">function</span>(str, file, ...) {</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>      private<span class="sc">$</span>file_count <span class="ot">&lt;-</span> private<span class="sc">$</span>file_count <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>      str</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>    },</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">include =</span> <span class="cf">function</span>(type, path, object, file, ...) {</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>      <span class="cn">NULL</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>    },</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">end =</span> <span class="cf">function</span>(...) {</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>      <span class="fu">message</span>(<span class="fu">sprintf</span>(<span class="st">&quot;Processed %d files&quot;</span>, private<span class="sc">$</span>file_count))</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @export</span></span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>plugin <span class="ot">&lt;-</span> \() Plugin<span class="sc">$</span><span class="fu">new</span>()</span></code></pre></div>
+      <p>This approach offers:</p>
+      <ul>
+      <li><strong>Encapsulated state</strong> - Private fields instead
+      of <code>&lt;&lt;-</code> assignments</li>
+      <li><strong>Inheritance</strong> - Create plugin families with
+      shared behavior</li>
+      <li><strong>Testability</strong> - Instantiate and test methods
+      directly</li>
       </ul>
     </main>
   </body>

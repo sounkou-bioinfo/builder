@@ -4,7 +4,9 @@ title: Plugins
 
 # Plugins
 
-Builder supports plugins to extend processing. Plugins are R packages that export a function returning a list of lifecycle methods.
+Builder supports plugins to extend processing.
+Plugins are R packages that export a function returning a list of lifecycle methods.
+Note that all lifecycle methods are mandatory even if they don't do anything.
 
 ---
 
@@ -123,12 +125,10 @@ plugin <- function() {
  list(
    setup = function(input, output, ...) {
      enabled <<- requireNamespace("readr", quietly = TRUE)
+     warning("readr not installed, fallback on default `csv` support")
    },
-   preprocess = function(str, file, ...) {
-   },
-   postprocess = function(str, file, ...) {
-     str
-   },
+   preprocess = function(str, file, ...) {},
+   postprocess = function(str, file, ...) {},
    include = function(type, path, object, file, ...) {
      if(!enabled) return(NULL)
      if(type != "csv") return(NULL)
@@ -140,7 +140,7 @@ plugin <- function() {
 }
 ```
 
-A formatter plugin that uses [air](github.com/posit-dev/air) to format the files:
+A formatter plugin that uses [air](https://github.com/posit-dev/air) to format the files:
 
 ```r
 #' @export
@@ -170,3 +170,44 @@ plugin <- function() {
 - Methods that don't modify content can return `NULL`
 - If your plugin requires configuration, read from a config file in `setup()`
 - Plugins are called in the order they are specified
+
+### Using R6 Classes
+
+For plugins with complex state or when you want inheritance, you can use R6 classes:
+
+```r
+#' @export
+Plugin <- R6::R6Class("Plugin",
+  private = list(
+    out_dir = NULL,
+    file_count = 0
+  ),
+  public = list(
+    setup = function(input, output, ...) {
+      private$out_dir <- output
+    },
+    preprocess = function(str, file, ...) {
+      str
+    },
+    postprocess = function(str, file, ...) {
+      private$file_count <- private$file_count + 1
+      str
+    },
+    include = function(type, path, object, file, ...) {
+      NULL
+    },
+    end = function(...) {
+      message(sprintf("Processed %d files", private$file_count))
+    }
+  )
+)
+
+#' @export
+plugin <- \() Plugin$new()
+```
+
+This approach offers:
+
+- **Encapsulated state** - Private fields instead of `<<-` assignments
+- **Inheritance** - Create plugin families with shared behavior
+- **Testability** - Instantiate and test methods directly
