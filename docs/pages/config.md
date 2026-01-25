@@ -8,7 +8,7 @@ Instead of passing command-line arguments, you can use a `builder.ini` file in y
 
 ## Usage
 
-Create a `builder.ini` file:
+Create a `builder.ini` file, you can also call `builder -init` to create one.
 
 ```ini
 input: srcr/
