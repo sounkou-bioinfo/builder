@@ -183,6 +183,52 @@ char *plugins_call(Plugins *head, char *fn, char *str, char *file)
   return copy;
 }
 
+char *plugins_call_include(Plugins *head, char *type, char *path, char *object, char *file)
+{
+  char *result_str = NULL;
+
+  Plugins *current = head;
+  while(current != NULL) {
+    if(current->setup == 0) {
+      current = current->next;
+      continue;
+    }
+
+    SEXP func = PROTECT(
+      eval(
+        lang3(install("$"), current->obj, install("include")), R_GlobalEnv
+      )
+    );
+
+    int errorOccurred = 0;
+    SEXP call = PROTECT(lang5(func, mkString(type), mkString(path), mkString(object), mkString(file)));
+    SEXP result = R_tryEvalSilent(call, R_GlobalEnv, &errorOccurred);
+
+    if(result == NULL || errorOccurred) {
+      printf("%s Failed to call plugin: %s => include()\n", LOG_ERROR, current->name);
+      UNPROTECT(2);
+      current = current->next;
+      continue;
+    }
+
+    UNPROTECT(2);
+
+    if(result == R_NilValue) {
+      current = current->next;
+      continue;
+    }
+
+    if(TYPEOF(result) == STRSXP) {
+      result_str = strdup(CHAR(STRING_ELT(result, 0)));
+      return result_str;
+    }
+
+    current = current->next;
+  }
+
+  return NULL;
+}
+
 void free_plugins(Plugins *head) {
   Plugins *current = head;
   while (current != NULL) {

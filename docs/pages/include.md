@@ -128,10 +128,15 @@ For more complex include handling, you can use a [plugin](/plugins) that impleme
 ```r
 plugin <- function(input, output) {
   list(
-    include = function(line, file) {
-      # Custom include handling
-      # Return modified line or the original
-      line
+    include = function(type, path, object, file) {
+      # type = file type (e.g., "csv")
+      # path = file path to include
+      # object = variable name for result
+      # file = source file being processed
+      
+      # Return NULL to use default processing
+      # Or return a replacement line
+      NULL
     }
   )
 }

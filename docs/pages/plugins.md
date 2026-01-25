@@ -38,9 +38,16 @@ Receives the file content as a string and should return the modified content.
 
 Called on each file's content after Builder processes it. Receives the file content as a string and should return the modified content.
 
-### include(line, file)
+### include(type, path, object, file)
 
-Called one or more times for each `#include` directive.
+Called for each `#include` directive with parsed components:
+
+- `type` - The file type (e.g., `"csv"`, `"json"`)
+- `path` - The file path to include
+- `object` - The variable name for the result
+- `file` - The source file being processed
+
+Return `NULL` to use default processing, or return a replacement line.
 
 ### end()
 
@@ -62,7 +69,10 @@ plugin <- function() {
     },
     postprocess = function(str, file, ...) {},
     end = function(...) {},
-    include = function(line, file, ...) {}
+    include = function(type, path, object, file, ...) {
+      # Return NULL to use default processing
+      NULL
+    }
   )
 }
 ```

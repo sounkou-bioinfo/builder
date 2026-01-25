@@ -137,13 +137,13 @@ char *include_replace(char *line, Plugins *plugins, char *file, Registry **regis
     return line;
   }
 
-  char *plugged = plugins_call(plugins, "include", line, file);
-  if(strcmp(plugged, line) != 0) {
+  Include inc = parse_include(line);
+
+  char *plugged = plugins_call_include(plugins, inc.type, inc.path, inc.object, file);
+  if(plugged != NULL) {
+    free_include(&inc);
     return plugged;
   }
-  free(plugged);
-
-  Include inc = parse_include(line);
 
   const char *content = capture_path(registry, inc.type, inc.path);
 
