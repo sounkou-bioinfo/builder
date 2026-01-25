@@ -79,20 +79,6 @@ After replacements, the line goes through:
 
 The replacement order has important implications:
 
-### #include: before Macros
-
-The `#include:` directive is processed **before** macro expansion. This means the function name in `#include:READER path var` is looked up directly, not expanded as a macro first.
-
-```r
-#define
-READER(path){
-  readLines(path)
-}
-#enddef
-
-#include:READER data.sql query  # READER is looked up, not expanded
-```
-
 ### F-strings First
 
 F-strings are processed before macros, so you can use macro-defined values inside f-strings:

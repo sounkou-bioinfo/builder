@@ -252,32 +252,19 @@
       </ul>
       <h2 id="why-order-matters">Why Order Matters</h2>
       <p>The replacement order has important implications:</p>
-      <h3 id="include-before-macros">#include: before Macros</h3>
-      <p>The <code>#include:</code> directive is processed
-      <strong>before</strong> macro expansion. This means the function
-      name in <code>#include:READER path var</code> is looked up
-      directly, not expanded as a macro first.</p>
-      <div class="sourceCode" id="cb2"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#define</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">READER</span>(path){</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">readLines</span>(path)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">#enddef</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">#include:READER data.sql query  # READER is looked up, not expanded</span></span></code></pre></div>
       <h3 id="f-strings-first">F-strings First</h3>
       <p>F-strings are processed before macros, so you can use
       macro-defined values inside f-strings:</p>
-      <div class="sourceCode" id="cb3"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#define VERSION 2.0.0</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(f<span class="st">&#39;Version: {VERSION}&#39;</span>)  <span class="co"># VERSION expanded after f-string processing</span></span></code></pre></div>
+      <div class="sourceCode" id="cb2"><pre
+      class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#define VERSION 2.0.0</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(f<span class="st">&#39;Version: {VERSION}&#39;</span>)  <span class="co"># VERSION expanded after f-string processing</span></span></code></pre></div>
       <h3 id="constants-last">Constants Last</h3>
       <p>The constant operator <code>-&lt;</code> is processed after all
       other transformations, ensuring the final value is locked:</p>
-      <div class="sourceCode" id="cb4"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#define DEFAULT 42</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>x <span class="sc">-</span><span class="er">&lt;</span> DEFAULT  <span class="co"># First: DEFAULT → 42, Then: x &lt;- 42;lockBinding(&quot;x&quot;, environment())</span></span></code></pre></div>
+      <div class="sourceCode" id="cb3"><pre
+      class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#define DEFAULT 42</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>x <span class="sc">-</span><span class="er">&lt;</span> DEFAULT  <span class="co"># First: DEFAULT → 42, Then: x &lt;- 42;lockBinding(&quot;x&quot;, environment())</span></span></code></pre></div>
       <h2 id="built-in-definitions">Built-in Definitions</h2>
       <p>These definitions are automatically available and updated
       during processing:</p>
