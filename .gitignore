@@ -4,3 +4,4 @@ sql/
 tests/
 main.rh
 .opencode/
+builder.ini
