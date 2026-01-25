@@ -116,6 +116,10 @@ static const char *capture_object(char *func, char *file)
   const char *result = eval_string(call);
   free(call);
 
+  if(result == NULL) {
+    return NULL;
+  }
+
   return strdup(result);
 }
 
@@ -146,6 +150,12 @@ char *include_replace(char *line, Plugins *plugins, char *file, Registry **regis
   }
 
   const char *content = capture_path(registry, inc.type, inc.path);
+
+  if(content == NULL) {
+    printf("%s Could not find reader for include:%s\n", LOG_ERROR, inc.type);
+    free_include(&inc);
+    return line;
+  }
 
   char *r = (char*)malloc(strlen(content) + strlen(inc.object) + 5);
   snprintf(r, strlen(content) + strlen(inc.object) + 5, "%s <- %s", inc.object, content);

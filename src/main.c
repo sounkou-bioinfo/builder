@@ -53,10 +53,10 @@ static int build(BuildContext *ctx)
 
 int main(int argc, char *argv[])
 {
-  set_R_home();
-
-  char *r_argv[] = {"R", "--silent", "--no-save"};
-  Rf_initEmbeddedR(3, r_argv);
+  if (has_arg(argc, argv, "-init")) {
+    create_config();
+    return 0;
+  }
 
   if (has_arg(argc, argv, "-help")) {
     printf("Usage: builder [OPTIONS]\n\n");
@@ -79,6 +79,11 @@ int main(int argc, char *argv[])
     printf("  builder -input srcr/ -output R/ -DDEBUG\n");
     return 0;
   }
+
+  set_R_home();
+
+  char *r_argv[] = {"R", "--silent", "--no-save"};
+  Rf_initEmbeddedR(3, r_argv);
 
   Registry *registry = initialize_registry();
 

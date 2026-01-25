@@ -202,3 +202,28 @@ void free_config(BuildContext *ctx)
   free_value(ctx->plugins_str);
   free(ctx);
 }
+
+void create_config()
+{
+  FILE *check = fopen("builder.ini", "r");
+  fclose(check);
+  if (check != NULL) {
+    printf("%s builder.ini already exists\n", LOG_INFO);
+    return;
+  }
+
+  FILE *fp = fopen("builder.ini", "w");
+  if (fp == NULL) {
+    printf("%s builder.ini cannot be create\n", LOG_INFO);
+    return;
+  }
+
+  fprintf(fp, "input: srcr/\n");
+  fprintf(fp, "output: R/\n");
+  fprintf(fp, "must_clean: true\n");
+  fprintf(fp, "sourcemap: false\n");
+
+  fclose(fp);
+
+  printf("%s builder.ini created\n", LOG_INFO);
+}
