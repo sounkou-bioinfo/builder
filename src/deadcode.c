@@ -370,10 +370,14 @@ int analyse_deadcode(RFile *files)
   Binding *b = global_env->bindings;
   while (b != NULL) {
     if (!b->is_used && !is_excluded_name(b->name)) {
-      printf("%s Unused %s '%s' at line %d in %s\n", 
-             LOG_WARNING,
-             b->is_function ? "function" : "variable",
-             b->name, b->line, b->file ? b->file : "<unknown>");
+      printf(
+        "%s Unused %s '%s' - %s:%d\n", 
+        LOG_WARNING,
+        b->is_function ? "function" : "variable",
+        b->name, 
+        b->file ? b->file : "<unknown>",
+        b->line
+      );
       unused_count++;
     }
     b = b->next;
