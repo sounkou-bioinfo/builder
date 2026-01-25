@@ -40,13 +40,6 @@ builder -plugin pkg1::fn1 pkg2::fn2
 plugin: pkg1::fn1 pkg2::fn2
 ```
 
-### Format
-
-The format is `package::function` where:
-
-- `package` - The R package name
-- `function` - The exported function that creates the plugin
-
 ---
 
 ## Developing Plugins
