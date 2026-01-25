@@ -73,6 +73,7 @@ int main(int argc, char *argv[])
     printf("  -deadcode             Enable dead variable/function detection\n");
     printf("  -sourcemap            Enable source map generation\n");
     printf("  -reader <t> <fn>      Define file type reader, e.g.: -reader tsv read.delim\n");
+    printf("  -init                 Create builder.ini file\n");
     printf("  -help                 Show this help message\n");
     printf("\n");
     printf("Example:\n");
