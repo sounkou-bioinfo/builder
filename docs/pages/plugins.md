@@ -32,7 +32,7 @@ You can use multiple plugins. They are called in order.
 
 **CLI:**
 ```bash
-builder -plugin pkg1::fn1 -plugin pkg2::fn2
+builder -plugin pkg1::fn1 pkg2::fn2
 ```
 
 **Config (space-separated):**
