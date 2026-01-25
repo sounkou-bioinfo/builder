@@ -149,34 +149,55 @@
       <p>Builder supports plugins to extend processing. Plugins are R
       packages that export a function returning a list of lifecycle
       methods.</p>
-      <p>See <a
-      href="https://github.com/devOpifex/builder.air">builder.air</a>
-      for a simple example plugin.</p>
-      <p>If your plugin requires configuration use a config file.</p>
-      <h2 id="usage">Usage</h2>
+      <hr />
+      <h2 id="using-plugins">Using Plugins</h2>
+      <h3 id="via-cli">Via CLI</h3>
       <p>Specify plugins with the <code>-plugin</code> flag:</p>
       <div class="sourceCode" id="cb1"><pre
-      class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">./builder</span> <span class="at">-input</span> srcr <span class="at">-plugin</span> package::function</span></code></pre></div>
-      <p>The format is <code>package::function</code> where
-      <code>package</code> is the R package name and
-      <code>function</code> is the exported function that creates the
-      plugin.</p>
-      <h2 id="lifecycle-methods">Lifecycle Methods</h2>
-      <p>Plugins can implement the following methods:</p>
-      <h3 id="setupinput-output">setup(input, output)</h3>
+      class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-plugin</span> package::function</span></code></pre></div>
+      <h3 id="via-config-file">Via Config File</h3>
+      <p>Add plugins to your <code>builder.ini</code>:</p>
+      <div class="sourceCode" id="cb2"><pre
+      class="sourceCode ini"><code class="sourceCode ini"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="dt">plugin: package::function</span></span></code></pre></div>
+      <h3 id="multiple-plugins">Multiple Plugins</h3>
+      <p>You can use multiple plugins. They are called in order.</p>
+      <p><strong>CLI:</strong></p>
+      <div class="sourceCode" id="cb3"><pre
+      class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-plugin</span> pkg1::fn1 <span class="at">-plugin</span> pkg2::fn2</span></code></pre></div>
+      <p><strong>Config (space-separated):</strong></p>
+      <div class="sourceCode" id="cb4"><pre
+      class="sourceCode ini"><code class="sourceCode ini"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="dt">plugin: pkg1::fn1 pkg2::fn2</span></span></code></pre></div>
+      <h3 id="format">Format</h3>
+      <p>The format is <code>package::function</code> where:</p>
+      <ul>
+      <li><code>package</code> - The R package name</li>
+      <li><code>function</code> - The exported function that creates the
+      plugin</li>
+      </ul>
+      <hr />
+      <h2 id="developing-plugins">Developing Plugins</h2>
+      <h3 id="overview">Overview</h3>
+      <p>A plugin is an R function that returns a list of lifecycle
+      methods. Each method is called at a specific point during the
+      build process.</p>
+      <p>See <a
+      href="https://github.com/devOpifex/builder.air">builder.air</a>
+      for a real-world example plugin.</p>
+      <h3 id="lifecycle-methods">Lifecycle Methods</h3>
+      <h4 id="setupinput-output">setup(input, output)</h4>
       <p>Called during initialization with the input and output
       directory paths. Use this to store configuration or perform
       one-time setup.</p>
-      <h3 id="preprocessstr-file">preprocess(str, file)</h3>
-      <p>Called on each file’s content before Builder processes it.
-      Receives the file content as a string and should return the
-      modified content.</p>
-      <h3 id="postprocessstr-file">postprocess(str, file)</h3>
-      <p>Called on each file’s content after Builder processes it.
-      Receives the file content as a string and should return the
-      modified content.</p>
-      <h3 id="includetype-path-object-file">include(type, path, object,
-      file)</h3>
+      <h4 id="preprocessstr-file">preprocess(str, file)</h4>
+      <p>Called on each file’s content <strong>before</strong> Builder
+      processes it. Receives the file content as a string and should
+      return the modified content.</p>
+      <h4 id="postprocessstr-file">postprocess(str, file)</h4>
+      <p>Called on each file’s content <strong>after</strong> Builder
+      processes it. Receives the file content as a string and should
+      return the modified content.</p>
+      <h4 id="includetype-path-object-file">include(type, path, object,
+      file)</h4>
       <p>Called for each <code>#include</code> directive with parsed
       components:</p>
       <ul>
@@ -188,34 +209,51 @@
       </ul>
       <p>Return <code>NULL</code> to use default processing, or return a
       replacement line.</p>
-      <h3 id="end">end()</h3>
+      <h4 id="end">end()</h4>
       <p>Called when Builder finishes processing all files. Use this for
       cleanup or final operations.</p>
-      <h2 id="example-plugin">Example Plugin</h2>
-      <p>A simple minifier plugin that replaces newlines with semicolons
-      (it’s a toy example that will break your code):</p>
-      <div class="sourceCode" id="cb2"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @export</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>plugin <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">setup =</span> <span class="cf">function</span>(input, output, ...) {},</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">preprocess =</span> <span class="cf">function</span>(str, file, ...) {</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>      lines <span class="ot">&lt;-</span> <span class="fu">strsplit</span>(str, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)[[<span class="dv">1</span>]]</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>      lines <span class="ot">&lt;-</span> lines[<span class="fu">nzchar</span>(<span class="fu">trimws</span>(lines))]</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>      <span class="fu">paste</span>(lines, <span class="at">collapse =</span> <span class="st">&quot;;&quot;</span>)</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    },</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">postprocess =</span> <span class="cf">function</span>(str, file, ...) {},</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">end =</span> <span class="cf">function</span>(...) {},</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">include =</span> <span class="cf">function</span>(type, path, object, file, ...) {</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Return NULL to use default processing</span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>      <span class="cn">NULL</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-      <p>Use it with <code>-plugin minifier::plugin</code>. Methods that
-      don’t need to modify content can return <code>NULL</code> or be
-      empty. Use <code>...</code> in function signatures for forward
-      compatibility.</p>
+      <h3 id="example-plugin">Example Plugin</h3>
+      <p>A simple minifier plugin that removes empty lines and joins
+      with semicolons:</p>
+      <div class="sourceCode" id="cb5"><pre
+      class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @export</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>plugin <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a> <span class="fu">list</span>(</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>   <span class="at">setup =</span> <span class="cf">function</span>(input, output, ...) {</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>     <span class="co"># Store paths or initialize state</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>   },</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>   <span class="at">preprocess =</span> <span class="cf">function</span>(str, file, ...) {</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>     <span class="co"># Modify content before processing</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>     lines <span class="ot">&lt;-</span> <span class="fu">strsplit</span>(str, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)[[<span class="dv">1</span>]]</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>     lines <span class="ot">&lt;-</span> lines[<span class="fu">nzchar</span>(<span class="fu">trimws</span>(lines))]</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>     <span class="fu">paste</span>(lines, <span class="at">collapse =</span> <span class="st">&quot;;&quot;</span>)</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>   },</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>   <span class="at">postprocess =</span> <span class="cf">function</span>(str, file, ...) {</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>     <span class="co"># Modify content after processing</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>     str</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>   },</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>   <span class="at">include =</span> <span class="cf">function</span>(type, path, object, file, ...) {</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>     <span class="co"># Handle #include directives</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>     <span class="co"># Return NULL to use default processing</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>     <span class="cn">NULL</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>   },</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>   <span class="at">end =</span> <span class="cf">function</span>(...) {</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>     <span class="co"># Cleanup or final operations</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>   }</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a> )</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+      <p>Use it with <code>-plugin minifier::plugin</code>.</p>
+      <h3 id="tips">Tips</h3>
+      <ul>
+      <li>Use <code>...</code> in function signatures for forward
+      compatibility</li>
+      <li>Methods that don’t modify content can return
+      <code>NULL</code></li>
+      <li>If your plugin requires configuration, read from a config file
+      in <code>setup()</code></li>
+      <li>Plugins are called in the order they are specified</li>
+      </ul>
     </main>
   </body>
 </html>
