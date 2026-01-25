@@ -79,15 +79,15 @@ Return `NULL` to use default processing, or return a replacement line.
 
 Called when Builder finishes processing all files. Use this for cleanup or final operations.
 
-### Example Plugin
+### Examples
 
-A simple minifier plugin that removes empty lines and joins with semicolons:
+A simple minifier plugin that removes empty lines and joins with semicolons
+(_It's doing it wrong, don't actually use this!_):
 
 ```r
 #' @export
 plugin <- function() {
  list(
-
    setup = function(input, output, ...) {
      # Store paths or initialize state
    },
@@ -113,7 +113,56 @@ plugin <- function() {
 }
 ```
 
-Use it with `-plugin minifier::plugin`.
+A plugin that uses [readr](https://readr.tidyverse.org/) to read CSV files
+(and overrides the default `csv` type which uses the built-in `read.csv`):
+
+```r
+#' @export
+plugin <- function() {
+  enabled <- FALSE
+ list(
+   setup = function(input, output, ...) {
+     enabled <<- requireNamespace("readr", quietly = TRUE)
+   },
+   preprocess = function(str, file, ...) {
+   },
+   postprocess = function(str, file, ...) {
+     str
+   },
+   include = function(type, path, object, file, ...) {
+     if(!enabled) return(NULL)
+     if(type != "csv") return(NULL)
+     readr::read_csv(path)
+   },
+   end = function(...) {
+   }
+ )
+}
+```
+
+A formatter plugin that uses [air](github.com/posit-dev/air) to format the files:
+
+```r
+#' @export
+plugin <- function() {
+  out_dir <- NULL
+  list(
+    setup = function(input, output, ...) {
+      out_dir <<- output
+    },
+    preprocess = function(str, file, ...) {},
+    postprocess = function(str, file, ...) {},
+    end = function(...) {
+      if (is.null(out_dir)) {
+        return()
+      }
+
+      system2("air", c("format", out_dir))
+    },
+    include = function(type, path, object, file, ...) {}
+  )
+}
+```
 
 ### Tips
 
