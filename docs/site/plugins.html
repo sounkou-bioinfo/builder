@@ -163,17 +163,10 @@
       <p>You can use multiple plugins. They are called in order.</p>
       <p><strong>CLI:</strong></p>
       <div class="sourceCode" id="cb3"><pre
-      class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-plugin</span> pkg1::fn1 <span class="at">-plugin</span> pkg2::fn2</span></code></pre></div>
+      class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-plugin</span> pkg1::fn1 pkg2::fn2</span></code></pre></div>
       <p><strong>Config (space-separated):</strong></p>
       <div class="sourceCode" id="cb4"><pre
       class="sourceCode ini"><code class="sourceCode ini"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="dt">plugin: pkg1::fn1 pkg2::fn2</span></span></code></pre></div>
-      <h3 id="format">Format</h3>
-      <p>The format is <code>package::function</code> where:</p>
-      <ul>
-      <li><code>package</code> - The R package name</li>
-      <li><code>function</code> - The exported function that creates the
-      plugin</li>
-      </ul>
       <hr />
       <h2 id="developing-plugins">Developing Plugins</h2>
       <h3 id="overview">Overview</h3>
