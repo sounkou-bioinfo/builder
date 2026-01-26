@@ -104,22 +104,23 @@ char *deconstruct_replace(char *line)
     subbed[strlen(subbed) - 1] = '\0';
   }
   char new[1024];
-  strcpy(new, vars->value);
-  strcat(new, subbed);
-  strcat(new, "[[1]]");
-  int i = 2;
   char str[32];
 
-  Var *next = vars->next;
-  while(next != NULL) {
+  // First: assign RHS to temp variable (evaluated once)
+  strcpy(new, ".destructure_tmp_");
+  strcat(new, subbed);
+
+  // Then: extract each element from the temp variable
+  int i = 1;
+  Var *current = vars;
+  while(current != NULL) {
     strcat(new, "\n");
-    strcat(new, next->value);
-    strcat(new, subbed);
-    strcat(new, "[[");
+    strcat(new, current->value);
+    strcat(new, " <- .destructure_tmp_[[");
     sprintf(str, "%d", i);
     strcat(new, str);
     strcat(new, "]]");
-    next = next->next;
+    current = current->next;
     i++;
   }
 
