@@ -15,7 +15,6 @@ EXTRAFLAGS = -Wall -Iinclude -s
 FILES = src/main.c \
 	src/r.c \
 	src/parser.c \
-	src/log.c \
 	src/file.c \
 	src/define.c \
 	src/include.c \
