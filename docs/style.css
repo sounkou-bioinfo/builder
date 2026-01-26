@@ -120,6 +120,9 @@ main {
   main {
     padding: 1.5rem 1rem;
   }
+  .desktop-only {
+    display: none;
+  }
 }
 
 .dropdown {

@@ -150,6 +150,7 @@
       Understanding this architecture helps you write more predictable
       preprocessing directives.</p>
       <h2 id="two-pass-system">Two-Pass System</h2>
+      <div class="desktop-only">
       <pre><code>┌─────────────────────────────────────────────────────────────┐
 │                       FIRST PASS                            │
 │  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐  │
@@ -164,23 +165,21 @@
 │                      SECOND PASS                            │
 │  For each line:                                             │
 │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌────────────┐   │
-│  │ F-string │─▶│ #include │─▶│  Macro   │─▶│Deconstruct │──▶│
+│  │ F-string │─▶│ #include │─▶│  Macro   │─▶│Deconstruct │   │
 │  │ replace  │  │ replace  │  │ replace  │  │  replace   │   │
 │  └──────────┘  └──────────┘  └──────────┘  └────────────┘   │
 │                                                   │         │
-│                                                   ▼         │
-│                                            ┌──────────┐     │
-│                                            │  Const   │     │
-│                                            │ replace  │     │
-│                                            └──────────┘     │
-│                                                   │         │
-│                                                   ▼         │
-│                              Conditional compilation        │
-│                              (#ifdef, #if, #ifndef)         │
+│       ┌───────────────────────────────────────────┘         │
+│       ▼                                                     │
+│  ┌──────────┐  ┌──────────┐  ┌────────────┐  ┌───────────┐  │
+│  │  Const   │─▶│  #test   │─▶│ Directive  │─▶│Conditional│  │
+│  │ replace  │  │ collect  │  │   filter   │  │   check   │  │
+│  └──────────┘  └──────────┘  └────────────┘  └───────────┘  │
 │                                                   │         │
 │                                                   ▼         │
 │                              Plugin postprocess hook        │
 └─────────────────────────────────────────────────────────────┘</code></pre>
+      </div>
       <h2 id="first-pass">First Pass</h2>
       <p>The first pass scans all source files to collect definitions
       and run preflight checks. No output is written during this

@@ -8,6 +8,8 @@ Builder uses a two-pass system to process R source files. Understanding this arc
 
 ## Two-Pass System
 
+<div class="desktop-only">
+
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                       FIRST PASS                            │
@@ -23,24 +25,23 @@ Builder uses a two-pass system to process R source files. Understanding this arc
 │                      SECOND PASS                            │
 │  For each line:                                             │
 │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌────────────┐   │
-│  │ F-string │─▶│ #include │─▶│  Macro   │─▶│Deconstruct │──▶│
+│  │ F-string │─▶│ #include │─▶│  Macro   │─▶│Deconstruct │   │
 │  │ replace  │  │ replace  │  │ replace  │  │  replace   │   │
 │  └──────────┘  └──────────┘  └──────────┘  └────────────┘   │
 │                                                   │         │
-│                                                   ▼         │
-│                                            ┌──────────┐     │
-│                                            │  Const   │     │
-│                                            │ replace  │     │
-│                                            └──────────┘     │
-│                                                   │         │
-│                                                   ▼         │
-│                              Conditional compilation        │
-│                              (#ifdef, #if, #ifndef)         │
+│       ┌───────────────────────────────────────────┘         │
+│       ▼                                                     │
+│  ┌──────────┐  ┌──────────┐  ┌────────────┐  ┌───────────┐  │
+│  │  Const   │─▶│  #test   │─▶│ Directive  │─▶│Conditional│  │
+│  │ replace  │  │ collect  │  │   filter   │  │   check   │  │
+│  └──────────┘  └──────────┘  └────────────┘  └───────────┘  │
 │                                                   │         │
 │                                                   ▼         │
 │                              Plugin postprocess hook        │
 └─────────────────────────────────────────────────────────────┘
 ```
+
+</div>
 
 ## First Pass
 
