@@ -1,4 +1,7 @@
-# builder
+<div align="center">
+    <h1>Builder</h1>
+    <a href="https://builder.opifex.org">docs</a>
+</div>
 
 A simple preprocessor for R: use macros, directives, and conditionals to generate your code.
 
