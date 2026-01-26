@@ -4,7 +4,9 @@ title: Architecture
 
 # Architecture
 
-Builder uses a two-pass system to process R source files. Understanding this architecture helps you write more predictable preprocessing directives.
+Builder assumes you're building a package
+and simulates R's lazy loading behavior by performing a two-pass build.
+Understanding this architecture helps you write more predictable preprocessing directives.
 
 ## Two-Pass System
 
