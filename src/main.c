@@ -38,7 +38,18 @@ static int build(BuildContext *ctx)
     return 1;
   }
 
-  int result = two_pass(files, &defines, ctx->plugins, ctx->prepend, ctx->append, ctx->deadcode, ctx->sourcemap, &ctx->registry);
+  Arguments args = {
+    .files = files,
+    .defs = &defines,
+    .plugins = ctx->plugins,
+    .prepend = ctx->prepend,
+    .append = ctx->append,
+    .sourcemap = ctx->sourcemap,
+    .deadcode = ctx->deadcode,
+    .registry = &ctx->registry
+  };
+
+  int result = two_pass(&args);
 
   free_rfile(files);
   free_array(defines);

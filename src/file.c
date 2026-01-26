@@ -876,20 +876,20 @@ static int second_pass(RFile *files, Define **defs, Plugins *plugins, char *prep
   return 0;
 }
 
-int two_pass(RFile *files, Define **defs, Plugins *plugins, char *prepend, char *append, int deadcode, int sourcemap, Registry **registry)
+int two_pass(Arguments *args)
 {
-  int first_pass_result = first_pass(files, defs, plugins);
+  int first_pass_result = first_pass(args->files, args->defs, args->plugins);
   if(first_pass_result) {
     return 1;
   }
 
-  int second_pass_result = second_pass(files, defs, plugins, prepend, append, sourcemap, registry);
+  int second_pass_result = second_pass(args->files, args->defs, args->plugins, args->prepend, args->append, args->sourcemap, args->registry);
   if(second_pass_result) {
     return 1;
   }
 
-  if(deadcode) {
-    analyse_deadcode(files);
+  if(args->deadcode) {
+    analyse_deadcode(args->files);
   }
 
   return 0;
