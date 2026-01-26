@@ -9,7 +9,9 @@ NAME = builder
 CC = $(shell R CMD config CC)
 CFLAGS = $(shell R CMD config --cppflags)
 LDFLAGS = $(shell R CMD config --ldflags)
-EXTRAFLAGS = -Wall -Iinclude -s
+EXTRAFLAGS = -Wall -Iinclude
+RELEASEFLAGS = -s
+DEBUGFLAGS = -g
 
 # Source files
 FILES = src/main.c \
@@ -30,7 +32,7 @@ FILES = src/main.c \
 	src/watch.c \
 	src/config.c
 
-# Development command
+# Development commands
 CMD = ./bin/$(NAME) \
 	-input srcr \
 	-DDEBUG -DTEST '"a string"' -DXXX 42 \
@@ -39,18 +41,29 @@ CMD = ./bin/$(NAME) \
 	-plugin builder.air::plugin \
 	-sourcemap
 
-.PHONY: all build clean install uninstall dev debug site
+CMD_DEBUG = ./bin/$(NAME)-debug \
+	-input srcr \
+	-DDEBUG -DTEST '"a string"' -DXXX 42 \
+	-deadcode \
+	-import builder.r::generate.rh \
+	-plugin builder.air::plugin \
+	-sourcemap
+
+.PHONY: all build build-debug clean install uninstall dev debug site
 
 all: build
 
 build: $(FILES) | bin
-	$(CC) $(CFLAGS) $(EXTRAFLAGS) $^ -o bin/$(NAME) $(LDFLAGS)
+	$(CC) $(CFLAGS) $(EXTRAFLAGS) $(RELEASEFLAGS) $^ -o bin/$(NAME) $(LDFLAGS)
+
+build-debug: $(FILES) | bin
+	$(CC) $(CFLAGS) $(EXTRAFLAGS) $(DEBUGFLAGS) $^ -o bin/$(NAME)-debug $(LDFLAGS)
 
 bin:
 	mkdir -p bin
 
 clean:
-	rm -f bin/$(NAME)
+	rm -f bin/$(NAME) bin/$(NAME)-debug
 
 install: build
 	install -d $(DESTDIR)$(BINDIR)
@@ -62,8 +75,8 @@ uninstall:
 dev: build
 	$(CMD)
 
-debug: build
-	valgrind --leak-check=full $(CMD)
+debug: build-debug
+	valgrind --leak-check=full $(CMD_DEBUG)
 
 site:
 	./docs/build.sh

@@ -18,6 +18,21 @@ typedef struct RFile_t RFile;
 
 typedef int(*Callback)(char *src, char *dst, Define **defs, Plugins *plugins);
 
+struct Arguments_t {
+  int deadcode;
+  int sourcemap;
+  char *src;
+  char *dst;
+  char *append;
+  char *prepend;
+  RFile *files;
+  Define **defs;
+  Plugins *plugins;
+  Registry **registry;
+};
+
+typedef struct Arguments_t Arguments;
+
 int exists(char *path);
 char *strip_last_slash(char *path);
 char *ensure_dir(char *path);
@@ -26,7 +41,7 @@ int clean(char *src, char *dst, Define **defs, Plugins *plugins);
 char *remove_leading_spaces(char *line);
 int collect_files(RFile **files, char *src_dir, char *dst_dir);
 int resolve_imports(RFile **files, Value *cli_imports);
-int two_pass(RFile *files, Define **defs, Plugins *plugins, char *prepend, char *append, int deadcode, int sourcemap, Registry **registry);
+int two_pass(Arguments *args);
 void free_rfile(RFile *files);
 
 #endif

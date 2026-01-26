@@ -87,11 +87,11 @@ Value *get_arg_values(int argc, char *argv[], char *arg)
     }
 
     if(values == NULL) {
-      values = create_value(argv[i]);
+      values = create_value(strdup(argv[i]));
       continue;
     }
 
-    values = push_value(values, argv[i]);
+    values = push_value(values, strdup(argv[i]));
   }
 
   return values;
@@ -182,6 +182,7 @@ void free_value(Value *head) {
   Value *current = head;
   while (current != NULL) {
     Value *next = current->next;
+    free(current->name);
     free(current);
     current = next;
   }
