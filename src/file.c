@@ -792,9 +792,22 @@ static int second_pass(RFile *files, Define **defs, Plugins *plugins, char *prep
         continue;
       }
 
-      // modify content
-      should_write = should_write_line(should_write, &branch_taken, cnst, defs);
+      // Check for preprocessor directives
+      // Lines starting with # that aren't comments (#' or # ) are directives - always skip
+      char *directive_check = remove_leading_spaces(cnst);
+      if(
+        directive_check[0] == '#' &&
+        directive_check[1] != '\'' && 
+        directive_check[1] != ' ' && 
+        directive_check[1] != '\0' && 
+        directive_check[1] != '\n'
+      ) {
+        should_write = should_write_line(should_write, &branch_taken, cnst, defs);
+        free(cnst);
+        continue;
+      }
 
+      // For content lines (including # comments), check if we should write
       if(!should_write) {
         free(cnst);
         continue;

@@ -169,6 +169,14 @@
       <p>Subdirectory paths are flattened with hyphens.</p>
       <h2 id="directives">Directives</h2>
       <p>Builder supports C-like preprocessor directives.</p>
+      <blockquote>
+      <p><strong>Note:</strong> Lines starting with <code>#</code> are
+      treated as directives and removed from output. R comments
+      (<code># comment</code>) and roxygen (<code>#' @export</code>) are
+      preserved because they have a space or <code>'</code> after the
+      <code>#</code>. If you want a comment like <code>#TODO</code>,
+      write <code># TODO</code> instead.</p>
+      </blockquote>
       <h3 id="define-constants">Define Constants</h3>
       <div class="sourceCode" id="cb4"><pre
       class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#define DEBUG TRUE</span></span>

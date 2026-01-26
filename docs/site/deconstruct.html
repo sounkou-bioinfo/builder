@@ -154,8 +154,19 @@
       class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>.[x, my_var] <span class="ot">&lt;-</span> <span class="fu">call</span>()</span></code></pre></div>
       <p>That will produce:</p>
       <div class="sourceCode" id="cb2"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">call</span>()[[<span class="dv">1</span>]]</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>my_var <span class="ot">&lt;-</span> <span class="fu">call</span>()[[<span class="dv">2</span>]]</span></code></pre></div>
+      class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>.destructure_tmp_ <span class="ot">&lt;-</span> <span class="fu">call</span>()</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> .destructure_tmp_[[<span class="dv">1</span>]]</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>my_var <span class="ot">&lt;-</span> .destructure_tmp_[[<span class="dv">2</span>]]</span></code></pre></div>
+      <p>The expression on the right-hand side is evaluated once and
+      stored in a hidden temporary variable
+      (<code>.destructure_tmp_</code>). Each variable is then assigned
+      from the corresponding index of that temporary. This ensures:</p>
+      <ul>
+      <li>Side effects only occur once</li>
+      <li>Expensive computations aren’t repeated</li>
+      <li>Consistent behavior with functions that return different
+      values on each call</li>
+      </ul>
       <p>Variables are assigned in order using list accessor
       <code>[[1]]</code>, <code>[[2]]</code>, etc. This makes it
       convenient to work with functions that return multiple values in a

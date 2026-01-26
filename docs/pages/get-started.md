@@ -37,6 +37,10 @@ Subdirectory paths are flattened with hyphens.
 
 Builder supports C-like preprocessor directives.
 
+> **Note:** Lines starting with `#` are treated as directives and removed from output.
+> R comments (`# comment`) and roxygen (`#' @export`) are preserved because they have
+> a space or `'` after the `#`. If you want a comment like `#TODO`, write `# TODO` instead.
+
 ### Define Constants
 
 ```r
