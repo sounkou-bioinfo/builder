@@ -4,6 +4,8 @@ title: Plugins
 
 # Plugins
 
+WARNING: The plugins API is subject to change!
+
 Builder supports plugins to extend processing.
 Plugins are R packages that export a function returning a list of lifecycle methods.
 Note that all lifecycle methods are mandatory even if they don't do anything.
