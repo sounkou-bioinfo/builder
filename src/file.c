@@ -17,6 +17,7 @@
 #include "file.h"
 #include "test.h"
 #include "log.h"
+#include "for.h"
 #include "r.h"
 #include "deadcode.h"
 
@@ -243,6 +244,8 @@ static char *append_buffer(char *buffer, char *line)
 
   char *new_buffer = malloc(strlen(buffer) + strlen(line) + 2);
   if(new_buffer == NULL) {
+    // we're fucked down here
+    // heap failed to allocate memory: run for the hills
     return NULL;
   }
 
@@ -707,6 +710,7 @@ static int second_pass(RFile *files, Define **defs, Plugins *plugins, char *prep
     int should_write = 1;
     int branch_taken = 0;
     int in_define = 0;
+    int in_for = 0;
     int err = 0;
 
     // Test collector
@@ -765,6 +769,29 @@ static int second_pass(RFile *files, Define **defs, Plugins *plugins, char *prep
       if(strncmp(trimmed, "#import ", 8) == 0) {
         free(line);
         continue;
+      }
+
+      if(enter_for(trimmed)) {
+        in_for = 1;
+        free(buffer);
+        buffer = strdup(line);
+        free(line);
+        continue;
+      }
+
+      if(in_for && !exit_for(trimmed)) {
+        buffer = append_buffer(buffer, line);
+        free(line);
+        continue;
+      }
+
+      if(exit_for(trimmed)) {
+        char *expanded = replace_for(buffer, line);
+        free(buffer);
+        buffer = NULL;
+        free(line);
+        line = expanded;
+        in_for = 0;
       }
 
       free(line_number_str);
