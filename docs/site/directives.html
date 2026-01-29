@@ -279,49 +279,49 @@
 <span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  code</span>
 <span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="co">#endif</span></span></code></pre></div>
       <h2 id="built-in-directives">Built-in directives</h2>
-      <h3 id="file"><strong>FILE</strong></h3>
+      <h3 id="file..">..FILE..</h3>
       <p>A directive that is automatically replaced with the current
       source file path. Useful for debugging and logging to track which
       file generated specific code.</p>
       <div class="sourceCode" id="cb11"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Processing file: __FILE__</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+      class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Processing file: ..FILE..</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co"># If in srcr/analysis.R, becomes: cat(&quot;Processing file: srcr/analysis.R \n&quot;)</span></span></code></pre></div>
-      <h3 id="line"><strong>LINE</strong></h3>
+      <h3 id="line..">..LINE..</h3>
       <p>A directive that is automatically replaced with the current
       line number in the source file. Useful for debugging and error
       tracking to identify the exact location of code execution.</p>
       <div class="sourceCode" id="cb12"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Executing line __LINE__</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+      class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Executing line ..LINE..</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># If on line 42, becomes: cat(&quot;Executing line 42\n&quot;)</span></span></code></pre></div>
-      <h3 id="os"><strong>OS</strong></h3>
+      <h3 id="os..">..OS..</h3>
       <p>A directive that is automatically populated with the current
       operating system. Useful for conditionally compiling code based on
       the current OS.</p>
       <div class="sourceCode" id="cb13"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Running on: __OS__</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+      class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Running on: ..OS..</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># becomes: cat(&quot;Running on: Linux\n&quot;)</span></span></code></pre></div>
-      <h3 id="date"><strong>DATE</strong></h3>
+      <h3 id="date..">..DATE..</h3>
       <p>A directive that is automatically populated with the current
       date (compile time).</p>
       <div class="sourceCode" id="cb14"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Running on: __DATE__</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+      class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Running on: ..DATE..</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co"># becomes: cat(&quot;Running on: 2026-01-01\n&quot;)</span></span></code></pre></div>
-      <h3 id="time"><strong>TIME</strong></h3>
+      <h3 id="time..">..TIME..</h3>
       <p>A directive that is automatically populated with the current
       time (compile time).</p>
       <div class="sourceCode" id="cb15"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Running on: __TIME__</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+      class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Running on: ..TIME..</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co"># becomes: cat(&quot;Running on: 12:00:00\n&quot;)</span></span></code></pre></div>
-      <h3 id="counter"><strong>COUNTER</strong></h3>
+      <h3 id="counter..">..COUNTER..</h3>
       <p>A directive that is automatically replaced with a unique
       incrementing integer, starting at 0. Each occurrence of
-      <code>__COUNTER__</code> in the source code is replaced with the
+      <code>..COUNTER..</code> in the source code is replaced with the
       next value in the sequence. Useful for generating unique
       identifiers or labels.</p>
       <div class="sourceCode" id="cb16"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> __COUNTER__  <span class="co"># becomes: x &lt;- 0</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> __COUNTER__  <span class="co"># becomes: y &lt;- 1</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>z <span class="ot">&lt;-</span> __COUNTER__  <span class="co"># becomes: z &lt;- 2</span></span></code></pre></div>
+      class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> ..COUNTER..  <span class="co"># becomes: x &lt;- 0</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> ..COUNTER..  <span class="co"># becomes: y &lt;- 1</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>z <span class="ot">&lt;-</span> ..COUNTER..  <span class="co"># becomes: z &lt;- 2</span></span></code></pre></div>
     </main>
   </body>
 </html>

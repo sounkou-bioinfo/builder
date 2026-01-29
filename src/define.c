@@ -69,11 +69,11 @@ void push_builtins(Define *arr)
   strftime(date, sizeof(date), "%Y-%m-%d", local);
   strftime(time_str, sizeof(time_str), "%H:%M:%S", local);
 
-  push(arr, strdup("__FILE__"), strdup(DYNAMIC_DEFINITION), DEF_VARIABLE);
-  push(arr, strdup("__LINE__"), strdup(DYNAMIC_DEFINITION), DEF_VARIABLE);
-  push(arr, strdup("__COUNTER__"), strdup("-1"), DEF_VARIABLE);
-  push(arr, strdup("__DATE__"), strdup(date), DEF_VARIABLE);
-  push(arr, strdup("__TIME__"), strdup(time_str), DEF_VARIABLE);
+  push(arr, strdup("..FILE.."), strdup(DYNAMIC_DEFINITION), DEF_VARIABLE);
+  push(arr, strdup("..LINE.."), strdup(DYNAMIC_DEFINITION), DEF_VARIABLE);
+  push(arr, strdup("..COUNTER.."), strdup("-1"), DEF_VARIABLE);
+  push(arr, strdup("..DATE.."), strdup(date), DEF_VARIABLE);
+  push(arr, strdup("..TIME.."), strdup(time_str), DEF_VARIABLE);
 
   struct utsname buffer;
 
@@ -81,7 +81,7 @@ void push_builtins(Define *arr)
     return;
   }
 
-  push(arr, strdup("__OS__"), strdup(buffer.sysname), DEF_VARIABLE);
+  push(arr, strdup("..OS.."), strdup(buffer.sysname), DEF_VARIABLE);
 }
 
 void increment_counter(Define **arr, char *line)
@@ -90,11 +90,11 @@ void increment_counter(Define **arr, char *line)
     return;
   }
 
-  if(strstr(line, "__COUNTER__") == NULL) {
+  if(strstr(line, "..COUNTER..") == NULL) {
     return;
   }
 
-  char *value = get_define_value(arr, "__COUNTER__");
+  char *value = get_define_value(arr, "..COUNTER..");
 
   if(value == NULL) {
     return;
@@ -103,7 +103,7 @@ void increment_counter(Define **arr, char *line)
   int counter = atoi(value);
   counter++;
   asprintf(&value, "%d", counter);
-  overwrite(arr, "__COUNTER__", value);
+  overwrite(arr, "..COUNTER..", value);
   free(value);
 
   return;

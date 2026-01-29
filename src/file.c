@@ -584,7 +584,7 @@ static int first_pass(RFile *files, Define **defs, Plugins *plugins)
 {
   RFile *current = files;
   while(current != NULL) {
-    overwrite(defs, "__FILE__", current->src);
+    overwrite(defs, "..FILE..", current->src);
 
     // state
     char *buffer = NULL;
@@ -611,7 +611,7 @@ static int first_pass(RFile *files, Define **defs, Plugins *plugins)
 
       free(line_number_str);
       asprintf(&line_number_str, "%d", line_number);
-      overwrite(defs, "__LINE__", line_number_str);
+      overwrite(defs, "..LINE..", line_number_str);
 
       if(strncmp(line, "#enddef", 7) == 0) {
         in_macro = 0;
@@ -701,7 +701,7 @@ static int second_pass(RFile *files, Define **defs, Plugins *plugins, char *prep
       continue;
     }
     printf("%s Copying %s to %s\n", LOG_INFO, current->src, current->dst);
-    overwrite(defs, "__FILE__", current->src);
+    overwrite(defs, "..FILE..", current->src);
 
     // state
     char *buffer = NULL;
@@ -796,7 +796,7 @@ static int second_pass(RFile *files, Define **defs, Plugins *plugins, char *prep
 
       free(line_number_str);
       asprintf(&line_number_str, "%d", line_number);
-      overwrite(defs, "__LINE__", line_number_str);
+      overwrite(defs, "..LINE..", line_number_str);
       increment_counter(defs, line);
 
       char *fstring_result = fstring_replace(line, 0);

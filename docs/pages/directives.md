@@ -161,57 +161,57 @@ Nested conditionals are **not supported**. Each `#ifdef`/`#ifndef`/`#if` block m
 
 ## Built-in directives
 
-### __FILE__
+### ..FILE..
 
 A directive that is automatically replaced with the current source file path. Useful for debugging and logging to track which file generated specific code.
 
 ```r
-cat("Processing file: __FILE__\n")
+cat("Processing file: ..FILE..\n")
 # If in srcr/analysis.R, becomes: cat("Processing file: srcr/analysis.R \n")
 ```
 
-### __LINE__
+### ..LINE..
 
 A directive that is automatically replaced with the current line number in the source file. Useful for debugging and error tracking to identify the exact location of code execution.
 
 ```r
-cat("Executing line __LINE__\n")
+cat("Executing line ..LINE..\n")
 # If on line 42, becomes: cat("Executing line 42\n")
 ```
 
-### __OS__
+### ..OS..
 
 A directive that is automatically populated with the current operating system. Useful for conditionally compiling code based on the current OS.
 
 ```r
-cat("Running on: __OS__\n")
+cat("Running on: ..OS..\n")
 # becomes: cat("Running on: Linux\n")
 ```
 
-### __DATE__
+### ..DATE..
 
 A directive that is automatically populated with the current date (compile time).
 
 ```r
-cat("Running on: __DATE__\n")
+cat("Running on: ..DATE..\n")
 # becomes: cat("Running on: 2026-01-01\n")
 ```
 
-### __TIME__
+### ..TIME..
 
 A directive that is automatically populated with the current time (compile time).
 
 ```r
-cat("Running on: __TIME__\n")
+cat("Running on: ..TIME..\n")
 # becomes: cat("Running on: 12:00:00\n")
 ```
 
-### __COUNTER__
+### ..COUNTER..
 
-A directive that is automatically replaced with a unique incrementing integer, starting at 0. Each occurrence of `__COUNTER__` in the source code is replaced with the next value in the sequence. Useful for generating unique identifiers or labels.
+A directive that is automatically replaced with a unique incrementing integer, starting at 0. Each occurrence of `..COUNTER..` in the source code is replaced with the next value in the sequence. Useful for generating unique identifiers or labels.
 
 ```r
-x <- __COUNTER__  # becomes: x <- 0
-y <- __COUNTER__  # becomes: y <- 1
-z <- __COUNTER__  # becomes: z <- 2
+x <- ..COUNTER..  # becomes: x <- 0
+y <- ..COUNTER..  # becomes: y <- 1
+z <- ..COUNTER..  # becomes: z <- 2
 ```

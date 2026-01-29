@@ -107,9 +107,9 @@ These definitions are automatically available and updated during processing:
 
 | Definition | Description | Updated |
 |------------|-------------|---------|
-| `__FILE__` | Current source file path | Per file |
-| `__LINE__` | Current line number | Per line |
-| `__OS__` | Operating system name | Once at start |
-| `__DATE__` | Build date (YYYY-MM-DD) | Once at start |
-| `__TIME__` | Build time (HH:MM:SS) | Once at start |
-| `__COUNTER__` | Auto-incrementing integer | Per occurrence |
+| `..FILE..` | Current source file path | Per file |
+| `..LINE..` | Current line number | Per line |
+| `..OS..` | Operating system name | Once at start |
+| `..DATE..` | Build date (YYYY-MM-DD) | Once at start |
+| `..TIME..` | Build time (HH:MM:SS) | Once at start |
+| `..COUNTER..` | Auto-incrementing integer | Per occurrence |
