@@ -117,6 +117,30 @@ You can use `#error` to stop compilation and print an error message.
 #endif
 ```
 
+## #for
+
+Generate repetitive code by iterating over a numeric range. The loop variable is replaced using the `..variable..` syntax within the loop body.
+
+**Syntax:** `#for VARIABLE in START:END ... #endfor`
+
+```r
+#for i in 1:5
+validate_col_..i.. <- function(x) check(x$col..i..)
+#endfor
+```
+
+Expands to:
+
+```r
+validate_col_1 <- function(x) check(x$col1)
+validate_col_2 <- function(x) check(x$col2)
+validate_col_3 <- function(x) check(x$col3)
+validate_col_4 <- function(x) check(x$col4)
+validate_col_5 <- function(x) check(x$col5)
+```
+
+The range is inclusive on both ends. Multiple occurrences of `..variable..` in each line are all replaced.
+
 ## Nesting Limitation
 
 Nested conditionals are **not supported**. Each `#ifdef`/`#ifndef`/`#if` block must be independent:

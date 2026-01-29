@@ -16,6 +16,7 @@ DEBUGFLAGS = -g
 # Source files
 FILES = src/main.c \
 	src/r.c \
+	src/for.c \
 	src/parser.c \
 	src/file.c \
 	src/define.c \
