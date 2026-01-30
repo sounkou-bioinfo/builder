@@ -141,6 +141,20 @@ validate_col_5 <- function(x) check(x$col5)
 
 The range is inclusive on both ends. Multiple occurrences of `..variable..` in each line are all replaced.
 
+## #unique
+
+Define a variable that is replaced with a unique identifier. Each `#unique` declaration generates a value in the format `._unq.N` where N is an incrementing integer starting at 0. Useful for generating unique names to avoid conflicts in generated code.
+
+**Syntax:** `#unique VARIABLE`
+
+```r
+#unique ID
+#unique OTHER
+
+x <- "ID"    # becomes: x <- "._unq.0"
+y <- "OTHER" # becomes: y <- "._unq.1"
+```
+
 ## Nesting Limitation
 
 Nested conditionals are **not supported**. Each `#ifdef`/`#ifndef`/`#if` block must be independent:
