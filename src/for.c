@@ -28,10 +28,6 @@ char *replace_for(char *buffer, char *line)
   char *for_statement = buffer;
   char *for_body = delimiter + 1;
 
-  printf("FOR: %s\n", for_statement);
-  printf("BODY: %s\n", for_body);
-
-  // parse the for statement
   char token[64];
   int start;
   int end;
@@ -41,11 +37,9 @@ char *replace_for(char *buffer, char *line)
     return "";
   }
 
-  // Build the pattern: ..token..
   char pattern[70];
   snprintf(pattern, sizeof(pattern), "..%s..", token);
 
-  // Accumulate expanded iterations
   char *result = NULL;
 
   for(int i = start; i <= end; i++) {
@@ -60,19 +54,20 @@ char *replace_for(char *buffer, char *line)
 
     if(result == NULL) {
       result = iteration;
-    } else {
-      char *new_result = malloc(strlen(result) + strlen(iteration) + 2);
-      if(new_result == NULL) {
-        free(result);
-        free(iteration);
-        return NULL;
-      }
-      strcpy(new_result, result);
-      strcat(new_result, iteration);
+      continue;
+    }
+
+    char *new_result = malloc(strlen(result) + strlen(iteration) + 2);
+    if(new_result == NULL) {
       free(result);
       free(iteration);
-      result = new_result;
+      return NULL;
     }
+    strcpy(new_result, result);
+    strcat(new_result, iteration);
+    free(result);
+    free(iteration);
+    result = new_result;
   }
 
   return result;
