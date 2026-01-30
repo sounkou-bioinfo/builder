@@ -9,6 +9,7 @@
 #include "preflight.h"
 #include "sourcemap.h"
 #include "plugins.h"
+#include "unique.h"
 #include "define.h"
 #include "include.h"
 #include "fstring.h"
@@ -749,6 +750,8 @@ static int second_pass(RFile *files, Define **defs, Plugins *plugins, char *prep
       pos = new_line + 1;
 
       char *trimmed = remove_leading_spaces(line);
+
+      capture_unique_define(defs, trimmed);
 
       if(strncmp(trimmed, "#enddef", 7) == 0) {
         in_define = 0;

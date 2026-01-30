@@ -18,6 +18,7 @@ FILES = src/main.c \
 	src/r.c \
 	src/for.c \
 	src/parser.c \
+	src/unique.c \
 	src/file.c \
 	src/define.c \
 	src/include.c \
