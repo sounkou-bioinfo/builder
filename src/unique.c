@@ -12,7 +12,7 @@ void capture_unique_define(Define **defs, char *str)
 
   char *var = strstr(str, "#unique ") + strlen("#unique ");
 
-  char istr[2];
+  char istr[8];
   sprintf(istr, "%d", UNIQUE);
 
   char *value = malloc(strlen("._unq.") + strlen(istr) + 1);
