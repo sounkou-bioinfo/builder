@@ -242,7 +242,10 @@ static char *append_buffer(char *buffer, char *line)
     return strdup(line);
   }
 
-  char *new_buffer = malloc(strlen(buffer) + strlen(line) + 2);
+  size_t buf_len = strlen(buffer);
+  int add_new_line = (buf_len == 0 || buffer[buf_len - 1] != '\n') ? 1 : 0;
+
+  char *new_buffer = malloc(strlen(buffer) + strlen(line) + 1 + add_new_line);
   if(new_buffer == NULL) {
     // we're fucked down here
     // heap failed to allocate memory: run for the hills
@@ -250,7 +253,9 @@ static char *append_buffer(char *buffer, char *line)
   }
 
   strcpy(new_buffer, buffer);
-  strcat(new_buffer, "\n");
+  if(add_new_line) {
+    strcat(new_buffer, "\n");
+  }
   strcat(new_buffer, line);
   free(buffer);
 

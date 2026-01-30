@@ -68,7 +68,6 @@ char *replace_for(char *buffer, char *line)
         return NULL;
       }
       strcpy(new_result, result);
-      strcat(new_result, "\n");
       strcat(new_result, iteration);
       free(result);
       free(iteration);

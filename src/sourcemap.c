@@ -19,12 +19,13 @@ char *add_sourcemap(char *line, int line_number, char *filename)
   asprintf(&line_str, "# %s:%d", filename, line_number);
 
   size_t len = strlen(line);
-  if(len > 0 && line[len - 1] == '\n') {
-    line[len - 1] = '\0';
-  }
+  int add_new_line = (len == 0 || line[len - 1] != '\n') ? 1 : 0;
 
-  char *new_line = malloc(strlen(line) + strlen(line_str) + 3);
-  snprintf(new_line, strlen(line) + strlen(line_str) + 3, "%s %s\n", line, line_str);
+  char *new_line = malloc(strlen(line) + strlen(line_str) + 2 + add_new_line);
+  snprintf(new_line, strlen(line) + strlen(line_str) + 2 + add_new_line, "%s %s", line, line_str);
+  if(add_new_line) {
+    strcat(new_line, "\n");
+  }
   free(line);
   free(line_str);
   return new_line;
