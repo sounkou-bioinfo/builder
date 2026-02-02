@@ -44,6 +44,15 @@ Define *create_define()
     return NULL;
   }
 
+  arr->global = (int*)malloc(arr->capacity * sizeof(int));
+  if(arr->global == NULL) {
+    free(arr->name);
+    free(arr->value);
+    free(arr->type);
+    free(arr);
+    return NULL;
+  }
+
   push_builtins(arr);
 
   return arr;
@@ -69,11 +78,11 @@ void push_builtins(Define *arr)
   strftime(date, sizeof(date), "%Y-%m-%d", local);
   strftime(time_str, sizeof(time_str), "%H:%M:%S", local);
 
-  push(arr, strdup("..FILE.."), strdup(DYNAMIC_DEFINITION), DEF_VARIABLE);
-  push(arr, strdup("..LINE.."), strdup(DYNAMIC_DEFINITION), DEF_VARIABLE);
-  push(arr, strdup("..COUNTER.."), strdup("-1"), DEF_VARIABLE);
-  push(arr, strdup("..DATE.."), strdup(date), DEF_VARIABLE);
-  push(arr, strdup("..TIME.."), strdup(time_str), DEF_VARIABLE);
+  push(arr, strdup("..FILE.."), strdup(DYNAMIC_DEFINITION), DEF_VARIABLE, 0);
+  push(arr, strdup("..LINE.."), strdup(DYNAMIC_DEFINITION), DEF_VARIABLE, 0);
+  push(arr, strdup("..COUNTER.."), strdup("-1"), DEF_VARIABLE, 0);
+  push(arr, strdup("..DATE.."), strdup(date), DEF_VARIABLE, 0);
+  push(arr, strdup("..TIME.."), strdup(time_str), DEF_VARIABLE, 0);
 
   struct utsname buffer;
 
@@ -81,7 +90,7 @@ void push_builtins(Define *arr)
     return;
   }
 
-  push(arr, strdup("..OS.."), strdup(buffer.sysname), DEF_VARIABLE);
+  push(arr, strdup("..OS.."), strdup(buffer.sysname), DEF_VARIABLE, 0);
 }
 
 void increment_counter(Define **arr, char *line)
@@ -109,7 +118,7 @@ void increment_counter(Define **arr, char *line)
   return;
 }
 
-void push(Define *arr, char *name, char *value, DefineType type)
+void push(Define *arr, char *name, char *value, DefineType type, int global)
 {
   if(arr->size == arr->capacity) {
     arr->capacity += 8;
@@ -134,11 +143,19 @@ void push(Define *arr, char *name, char *value, DefineType type)
       return;
     }
     arr->type = tmp_type;
+
+    int *tmp_global = realloc(arr->global, arr->capacity * sizeof(int));
+    if(tmp_global == NULL) {
+      arr->capacity -= 8;
+      return;
+    }
+    arr->global = tmp_global;
   }
 
   arr->name[arr->size] = name;
   arr->value[arr->size] = value;
   arr->type[arr->size] = type;
+  arr->global[arr->size] = global;
   arr->size++;
 }
 
@@ -160,6 +177,7 @@ void free_array(Define *arr)
   free(arr->name);
   free(arr->value);
   free(arr->type);
+  free(arr->global);
 
   free(arr);
 }
@@ -170,61 +188,6 @@ void *define_macro_init(char **macro)
   return *macro;
 }
 
-int ingest_macro(Define **defs, FILE *src_file, size_t line_len, char *ns)
-{
-  char *macro;
-  define_macro_init(&macro);
-
-  char line[line_len];
-  char *macro_name = NULL;
-  int macro_lines = 0;
-  int found_signature = 0;
-  int max_macro_lines = 1024;
-
-  while(fgets(line, line_len, src_file) != NULL && macro_lines < max_macro_lines) {
-    macro_lines++;
-
-    if(strncmp(line, "#enddef", 7) == 0) {
-      break;
-    }
-
-    if(!found_signature) {
-      char *trimmed = line;
-      while(*trimmed == ' ' || *trimmed == '\t') trimmed++;
-      if(*trimmed != '\0' && *trimmed != '\n') {
-        char *paren = strchr(trimmed, '(');
-        if(paren) {
-          macro_name = strndup(trimmed, paren - trimmed);
-        }
-        found_signature = 1;
-      }
-    }
-
-    size_t l = strlen(macro) + strlen(line) + 1;
-    macro = realloc(macro, l);
-    strcat(macro, line);
-  }
-
-  if(macro_lines == max_macro_lines) {
-    printf("%s macro %s is too long (or failed to parse), reached %d lines\n", LOG_WARNING, macro_name ? macro_name : "<unknown>", macro_lines);
-    free(macro);
-    if(macro_name) free(macro_name);
-    return 1;
-  }
-
-  if(ns != NULL) {
-    char *ccopy = strdup(macro_name);
-    macro_name = realloc(macro_name, strlen(macro_name) + strlen(ns) + 3);
-    strcpy(macro_name, ns);
-    strcat(macro_name, "::");
-    strcat(macro_name, ccopy);
-    free(ccopy);
-  }
-
-  push((*defs), macro_name, macro, DEF_FUNCTION);
-  return 0;
-}
-
 void push_macro(Define **defs, char *macro, char *ns)
 {
   char *paren = strchr(macro, '(');
@@ -232,7 +195,25 @@ void push_macro(Define **defs, char *macro, char *ns)
     return;
   }
 
-  // Validate that argument names don't start with '.'
+  int global = 0;
+  char *p_orig = strdup(macro);
+  char *p = strstr(p_orig, "#macro ");
+  if(p != NULL) {
+    p += 7;
+    strtok(p, "\n");
+    global = strcmp(p, "global") == 0;
+  }
+
+  free(p_orig);
+
+  char *original_macro = macro;
+  macro = strchr(macro, '\n');
+  if(macro == NULL) {
+    return;
+  }
+  macro++;
+
+  // validate that argument names don't start with '.'
   int temp_nargs;
   char **temp_args = extract_macro_args(macro, &temp_nargs);
   for(int i = 0; i < temp_nargs; i++) {
@@ -240,10 +221,11 @@ void push_macro(Define **defs, char *macro, char *ns)
       printf("%s Macro argument '%s' cannot start with '.'\n", LOG_ERROR, temp_args[i]);
       for(int j = 0; j < temp_nargs; j++) free(temp_args[j]);
       free(temp_args);
-      free(macro);
+      free(original_macro);
       return;
     }
   }
+
   for(int i = 0; i < temp_nargs; i++) free(temp_args[i]);
   free(temp_args);
 
@@ -259,85 +241,37 @@ void push_macro(Define **defs, char *macro, char *ns)
     name = prefixed;
   }
 
-  push((*defs), strdup(name), macro, DEF_FUNCTION);
+  push((*defs), strdup(name), strdup(macro), DEF_FUNCTION, global);
   free(name);
+  free(original_macro);
 }
 
-int define(Define **defines, char *line, char *ns)
+void capture_define(Define **defines, char *line, char *ns)
 {
   if(strncmp(line, "#define", 7) != 0) {
-    return 0;
+    return;
   }
 
-  char *check = line + 7;
-  while(*check == ' ' || *check == '\t') check++;
-  if(*check == '\n' || *check == '\r' || *check == '\0') {
-    return 1;
-  }
-
-  char *token;
-  char *copy = strdup(line);
-  if(copy == NULL) {
-    return 0;
-  }
-
-  token = strtok(copy, " ");
-  token = strtok(NULL, " ");
-  if(token == NULL) {
-    free(copy);
-    return 0;
-  }
-
-  char *name_copy = strdup(token);
-  if(name_copy == NULL) {
-    free(copy);
-    return 0;
-  }
-
-  if(get_define_value(defines, name_copy) != NULL) {
-    printf("%s %s is already defined\n", LOG_WARNING, name_copy);
-    free(name_copy);
-    free(copy);
-    return 0;
-  }
-
-  char *value_copy = NULL;
-  char *rest = strtok(NULL, "");
-  if(rest != NULL) {
-    while(*rest == ' ' || *rest == '\t') {
-      rest++;
+  char name[256];
+  char value[256];
+  if(sscanf(line, "#define %s %[^\n]", name, value) == 2) {
+    printf("%s %s = %s\n", LOG_INFO, name, value);
+    if(ns != NULL) {
+      char *prefixed = malloc(strlen(ns) + 2 + strlen(name) + 1);
+      sprintf(prefixed, "%s::%s", ns, name);
+      strcpy(name, prefixed);  // copy back to stack buffer
+      free(prefixed);
     }
-    if(*rest != '\0') {
-      int len = strlen(rest);
-      while(len > 0 && (rest[len-1] == '\n' || rest[len-1] == '\r')) {
-        rest[len-1] = '\0';
-        len--;
-      }
 
-      if(*rest != '\0') {
-        value_copy = strdup(rest);
-        if(value_copy == NULL) {
-          free(name_copy);
-          free(copy);
-          return 0;
-        }
-      }
+    if(get_define_value(defines, name) != NULL) {
+      printf("%s %s is already defined\n", LOG_WARNING, name);
+      return;
     }
+
+    push(*defines, strdup(name), strdup(value), DEF_VARIABLE, 0);
   }
 
-  if(ns != NULL) {
-    char *ccopy = strdup(name_copy);
-    name_copy = realloc(name_copy, strlen(name_copy) + strlen(ns) + 3);
-    strcpy(name_copy, ns);
-    strcat(name_copy, "::");
-    strcat(name_copy, ccopy);
-    free(ccopy);
-  }
-
-  push(*defines, name_copy, value_copy, DEF_VARIABLE);
-  free(copy);
-
-  return 0;
+  return;
 }
 
 char* str_replace(const char *orig, const char *find, const char *replace) 
@@ -596,4 +530,9 @@ void print_defines(Define *defines)
   for(int i = 0; i < defines->size; i++) {
     printf("%s = %s\n", defines->name[i], defines->value[i]);
   }
+}
+
+int enter_macro(char *line)
+{
+  return strstr(line, "#macro") != NULL;
 }

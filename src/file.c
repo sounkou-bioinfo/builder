@@ -618,7 +618,14 @@ static int first_pass(RFile *files, Define **defs, Plugins *plugins)
       asprintf(&line_number_str, "%d", line_number);
       overwrite(defs, "..LINE..", line_number_str);
 
-      if(strncmp(line, "#enddef", 7) == 0) {
+      if(enter_macro(line)) {
+        in_macro = 1;
+        buffer = append_buffer(buffer, line);
+        free(line);
+        continue;
+      }
+
+      if(strncmp(line, "#endmacro", 9) == 0) {
         in_macro = 0;
         push_macro(defs, buffer, current->ns);
         buffer = NULL;
@@ -631,12 +638,8 @@ static int first_pass(RFile *files, Define **defs, Plugins *plugins)
         free(line);
         continue;
       }
-
-      if(define(defs, line, current->ns)) {
-        in_macro = 1;
-        free(line);
-        continue;
-      }
+      
+      capture_define(defs, line, current->ns);
 
       if(strncmp(line, "#import ", 8) == 0) {
         free(line);
@@ -714,7 +717,7 @@ static int second_pass(RFile *files, Define **defs, Plugins *plugins, char *prep
     char *line_number_str = NULL;
     int should_write = 1;
     int branch_taken = 0;
-    int in_define = 0;
+    int in_macro = 0;
     int in_for = 0;
     int err = 0;
 
@@ -750,23 +753,19 @@ static int second_pass(RFile *files, Define **defs, Plugins *plugins, char *prep
 
       char *trimmed = remove_leading_spaces(line);
 
-      if(strncmp(trimmed, "#enddef", 7) == 0) {
-        in_define = 0;
+      if(enter_macro(trimmed)) {
+        in_macro = 1;
         free(line);
         continue;
       }
 
-      if(in_define) {
+      if(strncmp(trimmed, "#endmacro", 9) == 0) {
+        in_macro = 0;
         free(line);
         continue;
       }
 
-      if(strncmp(trimmed, "#define", 7) == 0) {
-        char *after = trimmed + 7;
-        while(*after == ' ' || *after == '\t') after++;
-        if(*after == '\0' || *after == '\n' || *after == '\r') {
-          in_define = 1;
-        }
+      if(in_macro) {
         free(line);
         continue;
       }
