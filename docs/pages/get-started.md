@@ -84,7 +84,7 @@ Macros are function-like directives with parameters.
 LOG(level, msg){
   cat("[", .level, "] ", .msg, "\n", sep = "")
 }
-#enddef
+#endmacro
 
 LOG("INFO", "Started")
 ```
@@ -101,7 +101,7 @@ cat("[", "INFO", "] ", "Started", "\n", sep = "")
 - Macro signature: `NAME(arg1, arg2, ...){`
 - Use `.arg` to substitute argument values
 - Body enclosed in curly braces
-- End with `#enddef`
+- End with `#endmacro`
 
 ## Usage
 

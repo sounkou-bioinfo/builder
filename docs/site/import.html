@@ -160,7 +160,7 @@
       Files Contain?</h2>
       <p>Header files support all builder directives:</p>
       <ul>
-      <li><code>#macro</code> / <code>#enddef</code> - Macro
+      <li><code>#macro</code> / <code>#endmacro</code> - Macro
       definitions</li>
       <li><code>#preflight</code> / <code>#endflight</code> - Validation
       checks (executed during build)</li>
@@ -209,7 +209,7 @@
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="fu">LOG</span>(x){</span>
 <span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">message</span>(<span class="fu">paste0</span>(<span class="st">&quot;[v&quot;</span>, VERSION, <span class="st">&quot;] &quot;</span>, .x))</span>
 <span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">#enddef</span></span></code></pre></div>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">#endmacro</span></span></code></pre></div>
       <h2 id="preflight-in-headers">Preflight in Headers</h2>
       <p>Shared validation checks:</p>
       <div class="sourceCode" id="cb6"><pre

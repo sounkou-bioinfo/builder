@@ -163,14 +163,14 @@
       <h2 id="basic-syntax">Basic Syntax</h2>
       <p>Macros are defined using <code>#macro</code> on its own line,
       followed by the macro signature and body. The macro ends with
-      <code>#enddef</code>.</p>
+      <code>#endmacro</code>.</p>
       <p><strong>Syntax:</strong></p>
       <div class="sourceCode" id="cb1"><pre
       class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#macro</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">MACRO_NAME</span>(arg1, arg2, ...){</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  body using .arg1, .arg2, etc.</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">#enddef</span></span></code></pre></div>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">#endmacro</span></span></code></pre></div>
       <h2 id="global-vs-local-macros">Global vs Local Macros</h2>
       <p>By default, macros are <strong>global</strong> - their expanded
       code is inserted directly without wrapping.</p>
@@ -186,7 +186,7 @@
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  .name_env <span class="ot">&lt;-</span> <span class="fu">new.env</span>()</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  .name_data <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">#enddef</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">#endmacro</span></span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">SETUP_ENV</span>(app)</span></code></pre></div>
       <p><strong>Expands to:</strong></p>
@@ -201,7 +201,7 @@
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  .a <span class="ot">&lt;-</span> .b</span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  .b <span class="ot">&lt;-</span> tmp</span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">#enddef</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">#endmacro</span></span>
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="fu">SWAP</span>(x, y)</span></code></pre></div>
       <p><strong>Expands to:</strong></p>
@@ -273,7 +273,7 @@
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">&quot;Evaluating stuff</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  .expr</span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">#enddef</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">#endmacro</span></span>
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="fu">LOG_EVAL</span>(<span class="fu">sum</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>))</span></code></pre></div>
       <p><strong>Expands to:</strong></p>
@@ -288,7 +288,7 @@
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">DEBUG</span>(var){</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(..var, <span class="st">&quot;=&quot;</span>, .var, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">#enddef</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">#endmacro</span></span>
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>my_value <span class="ot">&lt;-</span> <span class="dv">42</span></span>
 <span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="fu">DEBUG</span>(my_value)</span></code></pre></div>
@@ -305,7 +305,7 @@
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">GETTER</span>(name){</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  get_.name <span class="ot">&lt;-</span> <span class="cf">function</span>() private<span class="sc">$</span>.name</span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co">#enddef</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co">#endmacro</span></span>
 <span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="fu">GETTER</span>(count)</span></code></pre></div>
       <p><strong>Expands to:</strong></p>
@@ -321,7 +321,7 @@
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  con <span class="ot">&lt;-</span> DBI<span class="sc">::</span><span class="fu">dbConnect</span>(RSQLite<span class="sc">::</span><span class="fu">SQLite</span>(), <span class="st">&quot;:memory:&quot;</span>)</span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">on.exit</span>(DBI<span class="sc">::</span><span class="fu">dbDisconnect</span>(con))</span>
 <span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="co">#enddef</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="co">#endmacro</span></span>
 <span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="fu">CONNECT</span>()</span></code></pre></div>
       <p><strong>Expands to:</strong></p>
@@ -337,7 +337,7 @@
 <span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    .action</span>
 <span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co">#enddef</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co">#endmacro</span></span>
 <span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="fu">REPEAT</span>(<span class="dv">3</span>, <span class="fu">print</span>(<span class="st">&quot;Hello&quot;</span>))</span></code></pre></div>
       <p><strong>Expands to:</strong></p>
@@ -356,7 +356,7 @@
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stop</span>(<span class="st">&quot;Value out of range: &quot;</span>, .value)</span>
 <span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="co">#enddef</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="co">#endmacro</span></span>
 <span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">15</span></span>
 <span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="fu">VALIDATE</span>(x, <span class="dv">0</span>, <span class="dv">100</span>)</span></code></pre></div>
@@ -372,7 +372,7 @@
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">LOG</span>(level, msg){</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">&quot;[&quot;</span>, .level, <span class="st">&quot;] &quot;</span>, .msg, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>)</span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="co">#enddef</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="co">#endmacro</span></span>
 <span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="fu">LOG</span>(<span class="st">&quot;INFO&quot;</span>, <span class="st">&quot;Application started&quot;</span>)</span>
 <span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="fu">LOG</span>(<span class="st">&quot;ERROR&quot;</span>, <span class="st">&quot;Something went wrong&quot;</span>)</span></code></pre></div>
@@ -390,7 +390,7 @@
 <span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(.error_msg, <span class="st">&quot;:&quot;</span>, e<span class="sc">$</span>message, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
 <span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  })</span>
 <span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="co">#enddef</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="co">#endmacro</span></span>
 <span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a><span class="fu">TRY_CATCH</span>(<span class="fu">risky_operation</span>(), <span class="st">&quot;Operation failed&quot;</span>)</span></code></pre></div>
       <p><strong>Expands to:</strong></p>
@@ -410,7 +410,7 @@
 <span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">&quot;Execution time:&quot;</span>, end <span class="sc">-</span> start, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
 <span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  result</span>
 <span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a><span class="co">#enddef</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a><span class="co">#endmacro</span></span>
 <span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a><span class="fu">TIME_IT</span>(<span class="fu">slow_computation</span>())</span></code></pre></div>
       <p><strong>Expands to:</strong></p>
@@ -427,7 +427,7 @@
       <li>The macro signature and body follow on subsequent lines</li>
       <li>Macro bodies must be enclosed in curly braces
       <code>{}</code></li>
-      <li>Macros end with <code>#enddef</code></li>
+      <li>Macros end with <code>#endmacro</code></li>
       <li>Global macros (default) expand without wrapping</li>
       <li>Local macros (<code>#macro local</code>) are wrapped in
       <code>local({...})</code> to avoid namespace pollution</li>

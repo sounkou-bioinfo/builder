@@ -14,7 +14,7 @@ Macros are function-like preprocessor directives that allow you to define reusab
 
 ## Basic Syntax
 
-Macros are defined using `#macro` on its own line, followed by the macro signature and body. The macro ends with `#enddef`.
+Macros are defined using `#macro` on its own line, followed by the macro signature and body. The macro ends with `#endmacro`.
 
 **Syntax:**
 
@@ -23,7 +23,7 @@ Macros are defined using `#macro` on its own line, followed by the macro signatu
 MACRO_NAME(arg1, arg2, ...){
   body using .arg1, .arg2, etc.
 }
-#enddef
+#endmacro
 ```
 
 ## Global vs Local Macros
@@ -40,7 +40,7 @@ SETUP_ENV(name){
   .name_env <- new.env()
   .name_data <- list()
 }
-#enddef
+#endmacro
 
 SETUP_ENV(app)
 ```
@@ -61,7 +61,7 @@ SWAP(a, b){
   .a <- .b
   .b <- tmp
 }
-#enddef
+#endmacro
 
 SWAP(x, y)
 ```
@@ -103,7 +103,7 @@ LOG_EVAL(expr){
   cat("Evaluating stuff\n")
   .expr
 }
-#enddef
+#endmacro
 
 LOG_EVAL(sum(1, 1, 1))
 ```
@@ -124,7 +124,7 @@ Use `..arg` to get the argument as a string literal:
 DEBUG(var){
   cat(..var, "=", .var, "\n")
 }
-#enddef
+#endmacro
 
 my_value <- 42
 DEBUG(my_value)
@@ -146,7 +146,7 @@ Use `.arg` within identifier names to build new identifiers:
 GETTER(name){
   get_.name <- function() private$.name
 }
-#enddef
+#endmacro
 
 GETTER(count)
 ```
@@ -169,7 +169,7 @@ CONNECT(){
   con <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
   on.exit(DBI::dbDisconnect(con))
 }
-#enddef
+#endmacro
 
 CONNECT()
 ```
@@ -192,7 +192,7 @@ REPEAT(n, action){
     .action
   }
 }
-#enddef
+#endmacro
 
 REPEAT(3, print("Hello"))
 ```
@@ -216,7 +216,7 @@ VALIDATE(value, min, max){
     stop("Value out of range: ", .value)
   }
 }
-#enddef
+#endmacro
 
 x <- 15
 VALIDATE(x, 0, 100)
@@ -238,7 +238,7 @@ if (x < 0 || x > 100) {
 LOG(level, msg){
   cat("[", .level, "] ", .msg, "\n", sep = "")
 }
-#enddef
+#endmacro
 
 LOG("INFO", "Application started")
 LOG("ERROR", "Something went wrong")
@@ -262,7 +262,7 @@ TRY_CATCH(code, error_msg){
     cat(.error_msg, ":", e$message, "\n")
   })
 }
-#enddef
+#endmacro
 
 TRY_CATCH(risky_operation(), "Operation failed")
 ```
@@ -288,7 +288,7 @@ TIME_IT(expr){
   cat("Execution time:", end - start, "\n")
   result
 }
-#enddef
+#endmacro
 
 TIME_IT(slow_computation())
 ```
@@ -308,7 +308,7 @@ result
 - Macros start with `#macro` (or `#macro local`) alone on a line
 - The macro signature and body follow on subsequent lines
 - Macro bodies must be enclosed in curly braces `{}`
-- Macros end with `#enddef`
+- Macros end with `#endmacro`
 - Global macros (default) expand without wrapping
 - Local macros (`#macro local`) are wrapped in `local({...})` to avoid namespace pollution
 - Macros support multiline definitions and can span many lines (up to 1024 lines)

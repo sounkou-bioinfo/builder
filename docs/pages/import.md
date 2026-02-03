@@ -24,7 +24,7 @@ builder -import macros.rh more-macros.rh -input srcr -output R
 
 Header files support all builder directives:
 
-- `#macro` / `#enddef` - Macro definitions
+- `#macro` / `#endmacro` - Macro definitions
 - `#preflight` / `#endflight` - Validation checks (executed during build)
 - `#ifdef` / `#ifndef` / `#endif` - Conditional compilation
 - `#import` - Nested imports
@@ -77,7 +77,7 @@ Header files can import other headers:
 LOG(x){
   message(paste0("[v", VERSION, "] ", .x))
 }
-#enddef
+#endmacro
 ```
 
 ## Preflight in Headers
