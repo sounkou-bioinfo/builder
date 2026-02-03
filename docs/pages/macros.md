@@ -56,23 +56,19 @@ app_data <- list()
 
 ```r
 #macro local
-SWAP(a, b){
-  tmp <- .a
-  .a <- .b
-  .b <- tmp
+._LOG_INFO(msg){
+  cat("[INFO] ", msg, "\n", sep = "")
 }
 #endmacro
 
-SWAP(x, y)
+._LOG_INFO("Application started")
 ```
 
 **Expands to:**
 
 ```r
 local({
-  tmp <- x
-  x <- y
-  y <- tmp
+  cat("[INFO] ", "Application started", "\n", sep = "")
 })
 ```
 
