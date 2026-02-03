@@ -195,13 +195,13 @@ void push_macro(Define **defs, char *macro, char *ns)
     return;
   }
 
-  int global = 0;
+  int local = 0;
   char *p_orig = strdup(macro);
   char *p = strstr(p_orig, "#macro ");
   if(p != NULL) {
     p += 7;
     strtok(p, "\n");
-    global = strcmp(p, "global") == 0;
+    local = strcmp(p, "local") == 0;
   }
 
   free(p_orig);
@@ -241,7 +241,7 @@ void push_macro(Define **defs, char *macro, char *ns)
     name = prefixed;
   }
 
-  push((*defs), strdup(name), strdup(macro), DEF_FUNCTION, global);
+  push((*defs), strdup(name), strdup(macro), DEF_FUNCTION, !local);
   free(name);
   free(original_macro);
 }
@@ -381,9 +381,6 @@ static char *define_replace_once(Define **defines, char *line)
       continue;
     }
 
-    // if not a var it's a function call
-    // or is it?
-    // could be used in #include:MACRO
     char *call = malloc(strlen(name) + 2);  // +1 for '(', +1 for '\0'
     strcpy(call, name);
     strcat(call, "(");
@@ -391,7 +388,6 @@ static char *define_replace_once(Define **defines, char *line)
       free(call);
       continue;
     }
-
     free(call);
 
     // we cleanup the function name
@@ -425,7 +421,7 @@ static char *define_replace_once(Define **defines, char *line)
     for(int i = 0; i < nargs; i++) {
       char *old_body;
       
-      // 1. Replace ..argname -> "value" (stringify) - MUST be first
+      // 1. replace ..argname -> "value" (stringify) - MUST be first
       char *dblpat = NULL;
       asprintf(&dblpat, "..%s", args_macro[i]);
       char *quoted = NULL;
@@ -436,7 +432,7 @@ static char *define_replace_once(Define **defines, char *line)
       free(dblpat);
       free(quoted);
       
-      // 2. Replace .argname -> value (second)
+      // 2. replace .argname -> value (second)
       char *dotpat = NULL;
       asprintf(&dotpat, ".%s", args_macro[i]);
       old_body = body_macro;
@@ -445,22 +441,32 @@ static char *define_replace_once(Define **defines, char *line)
       free(dotpat);
     }
 
-    // Free args_macro array and individual strings
     for(int i = 0; i < nargs_macro; i++) {
       free(args_macro[i]);
     }
     free(args_macro);
 
-    // Free args array and individual strings
     for(int i = 0; i < nargs; i++) {
       free(args[i]);
     }
     free(args);
 
-    // Free current since we're returning body_macro instead
     free(current);
 
-    return body_macro;
+    int global = (*defines)->global[i];
+    if(global) {
+      return body_macro;
+    }
+
+    int extra = strlen("local({\n})");
+
+    char *wrapped = malloc(strlen(body_macro) + extra + 1);
+    strcpy(wrapped, "local({");
+    strcat(wrapped, body_macro);
+    strcat(wrapped, "\n})");
+    free(body_macro);
+
+    return wrapped;
   }
 
   return current;

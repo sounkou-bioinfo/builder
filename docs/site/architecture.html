@@ -156,8 +156,8 @@
 │                       FIRST PASS                            │
 │  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐  │
 │  │  Collect    │  │    Run      │  │  Plugin             │  │
-│  │  #define    │──│  #preflight │──│  preprocess hook    │  │
-│  │  macros     │  │  blocks     │  │                     │  │
+│  │  #define &amp;  │──│  #preflight │──│  preprocess hook    │  │
+│  │  #macro     │  │  blocks     │  │                     │  │
 │  └─────────────┘  └─────────────┘  └─────────────────────┘  │
 └─────────────────────────────────────────────────────────────┘
                             │
@@ -188,7 +188,7 @@
       <h3 id="what-happens">What happens:</h3>
       <ol type="1">
       <li><strong>Macro Collection</strong> - All <code>#define</code>
-      directives are parsed and stored</li>
+      and <code>#macro</code> directives are parsed and stored</li>
       <li><strong>Preflight Execution</strong> - <code>#preflight</code>
       / <code>#endflight</code> blocks are evaluated</li>
       <li><strong>Import Processing</strong> - <code>#import</code>

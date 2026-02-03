@@ -20,7 +20,7 @@ Note: Command-line definitions override file-based `#define` directives.
 
 ## #define
 
-Define macros or constants that will be replaced throughout your code. All occurrences of the defined name will be replaced with the specified value.
+Define constants that will be replaced throughout your code. All occurrences of the defined name will be replaced with the specified value.
 
 **Syntax:** `#define NAME value`
 
@@ -31,6 +31,8 @@ Define macros or constants that will be replaced throughout your code. All occur
 x <- PI  # becomes: x <- 3.14159
 print(STRING)  # becomes: print("hello world!")
 ```
+
+**Note:** For function-like macros with parameters, use `#macro` instead. See [Macros](/macros) for details.
 
 ## #ifdef
 
@@ -140,20 +142,6 @@ validate_col_5 <- function(x) check(x$col5)
 ```
 
 The range is inclusive on both ends. Multiple occurrences of `..variable..` in each line are all replaced.
-
-## #unique
-
-Define a variable that is replaced with a unique identifier. Each `#unique` declaration generates a value in the format `._unq.N` where N is an incrementing integer starting at 0. Useful for generating unique names to avoid conflicts in generated code.
-
-**Syntax:** `#unique VARIABLE`
-
-```r
-#unique ID
-#unique OTHER
-
-x <- "ID"    # becomes: x <- "._unq.0"
-y <- "OTHER" # becomes: y <- "._unq.1"
-```
 
 ## Nesting Limitation
 

@@ -17,8 +17,8 @@ Understanding this architecture helps you write more predictable preprocessing d
 │                       FIRST PASS                            │
 │  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐  │
 │  │  Collect    │  │    Run      │  │  Plugin             │  │
-│  │  #define    │──│  #preflight │──│  preprocess hook    │  │
-│  │  macros     │  │  blocks     │  │                     │  │
+│  │  #define &  │──│  #preflight │──│  preprocess hook    │  │
+│  │  #macro     │  │  blocks     │  │                     │  │
 │  └─────────────┘  └─────────────┘  └─────────────────────┘  │
 └─────────────────────────────────────────────────────────────┘
                             │
@@ -51,7 +51,7 @@ The first pass scans all source files to collect definitions and run preflight c
 
 ### What happens:
 
-1. **Macro Collection** - All `#define` directives are parsed and stored
+1. **Macro Collection** - All `#define` and `#macro` directives are parsed and stored
 2. **Preflight Execution** - `#preflight` / `#endflight` blocks are evaluated
 3. **Import Processing** - `#import` directives are noted (for namespace prefixing)
 4. **Plugin Hook** - The `preprocess` plugin hook is called on each file's content

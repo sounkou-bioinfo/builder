@@ -157,7 +157,7 @@ See [Plugins](/plugins) for more details.
 
 The `#include` directive is processed in the second pass, after macro definitions are collected but before macro expansion.
 
-1. First pass: All `#define` macros are collected
+1. First pass: All `#define` constants and `#macro` definitions are collected
 2. Second pass: `#include` directives are processed, then macros are expanded
 3. The result is pure R code with all preprocessing directives removed
 
