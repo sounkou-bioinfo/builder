@@ -80,9 +80,9 @@ Command-line definitions override file-based `#define` directives.
 Macros are function-like directives with parameters.
 
 ```r
-#define
+#macro
 LOG(level, msg){
-  cat("[", level, "] ", msg, "\n", sep = "")
+  cat("[", .level, "] ", .msg, "\n", sep = "")
 }
 #enddef
 
@@ -97,8 +97,9 @@ cat("[", "INFO", "] ", "Started", "\n", sep = "")
 
 ### Syntax
 
-- Start with `#define` alone on a line
+- Start with `#macro` alone on a line (or `#macro local` for local scope)
 - Macro signature: `NAME(arg1, arg2, ...){`
+- Use `.arg` to substitute argument values
 - Body enclosed in curly braces
 - End with `#enddef`
 

@@ -161,7 +161,7 @@ void get_definitions(Define *arr, int argc, char *argv[])
           free(value);
           return;
         }
-        push(arr, name, value, DEF_VARIABLE);
+        push(arr, name, value, DEF_VARIABLE, 0);
         i++;
         continue;
       }
@@ -173,7 +173,7 @@ void get_definitions(Define *arr, int argc, char *argv[])
         free(undefined);
         return;
       }
-      push(arr, name, undefined, DEF_VARIABLE);
+      push(arr, name, undefined, DEF_VARIABLE, 0);
     }
   }
 }

@@ -156,10 +156,14 @@ static void walk_function_def(SEXP expr, Environment *env, int pass, int line, c
     Binding *b = func_env->bindings;
     while (b != NULL) {
       if (!b->is_used && !is_excluded_name(b->name)) {
-        printf("%s Unused %s '%s' in function (line %d) %s\n", 
-               LOG_WARNING,
-               b->is_function ? "function" : "variable",
-               b->name, b->line, b->file ? b->file : "");
+        printf(
+          "%s Unused %s '%s' in function %s:%d\n", 
+          LOG_WARNING,
+          b->is_function ? "function" : "variable",
+          b->name,
+          b->file ? b->file : "",
+          b->line
+        );
       }
       b = b->next;
     }

@@ -20,7 +20,7 @@ Headers are meant for **preprocessor directives only**:
 | Directive | Purpose |
 |-----------|---------|
 | `#define NAME value` | Constants |
-| `#define` / `#enddef` | Macro definitions |
+| `#macro` / `#enddef` | Macro definitions |
 | `#preflight` / `#endflight` | Build-time validation |
 | `#ifdef` / `#ifndef` / `#if` / `#endif` / `#elif` | Conditional compilation |
 | `#import` | Nested header imports |
@@ -74,15 +74,15 @@ if (getRversion() < "4.0.0") {
 #endflight
 
 # Utility macros
-#define
+#macro
 LOG(msg){
-  message(paste0("[", Sys.time(), "] ", msg))
+  message(paste0("[", Sys.time(), "] ", .msg))
 }
 #enddef
 
-#define
+#macro
 ASSERT(cond, msg){
-  if (!cond) stop(msg)
+  if (!.cond) stop(.msg)
 }
 #enddef
 ```

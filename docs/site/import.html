@@ -160,7 +160,7 @@
       Files Contain?</h2>
       <p>Header files support all builder directives:</p>
       <ul>
-      <li><code>#define</code> / <code>#enddef</code> - Macro
+      <li><code>#macro</code> / <code>#enddef</code> - Macro
       definitions</li>
       <li><code>#preflight</code> / <code>#endflight</code> - Validation
       checks (executed during build)</li>
@@ -204,7 +204,12 @@
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="sc">/</span><span class="er">/</span> utils.rh</span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#import base.rh</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">#define LOG(x) message(paste0(&quot;[v&quot;, VERSION, &quot;] &quot;, x))</span></span></code></pre></div>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#macro</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="fu">LOG</span>(x){</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">message</span>(<span class="fu">paste0</span>(<span class="st">&quot;[v&quot;</span>, VERSION, <span class="st">&quot;] &quot;</span>, .x))</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">#enddef</span></span></code></pre></div>
       <h2 id="preflight-in-headers">Preflight in Headers</h2>
       <p>Shared validation checks:</p>
       <div class="sourceCode" id="cb6"><pre

@@ -346,7 +346,8 @@
       pass, after macro definitions are collected but before macro
       expansion.</p>
       <ol type="1">
-      <li>First pass: All <code>#define</code> macros are collected</li>
+      <li>First pass: All <code>#define</code> constants and
+      <code>#macro</code> definitions are collected</li>
       <li>Second pass: <code>#include</code> directives are processed,
       then macros are expanded</li>
       <li>The result is pure R code with all preprocessing directives
