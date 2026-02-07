@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Constants</title>
+    <title>Syntax Highlighting</title>
     <style>
       code{white-space: pre-wrap;}
       span.smallcaps{font-variant: small-caps;}
@@ -146,58 +146,33 @@
           </div>
         </div>
       </nav>
-      <h1 id="constants">Constants</h1>
-      <p>Builder provides a special syntax for creating constant
-      (immutable) bindings using the <code>-&lt;</code> operator. Once
-      assigned, constant values cannot be changed, providing safety
-      against accidental modification.</p>
-      <h2 id="basic-syntax">Basic Syntax</h2>
-      <p>Use <code>-&lt;</code> instead of <code>&lt;-</code> to create
-      a constant binding.</p>
+      <h1 id="syntax-highlighting">Syntax Highlighting</h1>
+      <p>Builder directives start with <code>#&gt;</code> which editors
+      treat as comments by default. Here’s how to add custom
+      highlighting for directives in popular editors.</p>
+      <h2 id="neovim-treesitter">Neovim (TreeSitter)</h2>
+      <p>Create a query file to extend R syntax highlighting:</p>
+      <p><strong><code>~/.config/nvim/queries/r/highlights.scm</code></strong></p>
       <div class="sourceCode" id="cb1"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>PI <span class="sc">-</span><span class="er">&lt;</span> <span class="fl">3.14159</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>MAX_SIZE <span class="sc">-</span><span class="er">&lt;</span> <span class="dv">100</span></span></code></pre></div>
-      <p><strong>Expands to:</strong></p>
+      class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">;extends</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>((comment) @keyword.directive</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  (#lua-match? @keyword.directive <span class="st">&quot;^#&gt;&quot;</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  (#<span class="kw">set!</span> priority <span class="dv">101</span>))</span></code></pre></div>
+      <p>Then add a custom highlight in your config:</p>
+      <p><strong><code>init.lua</code></strong></p>
       <div class="sourceCode" id="cb2"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>PI <span class="ot">&lt;-</span> <span class="fl">3.14159</span>;<span class="fu">lockBinding</span>(<span class="st">&quot;PI&quot;</span>, <span class="fu">environment</span>());</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>MAX_SIZE <span class="ot">&lt;-</span> <span class="dv">100</span>;<span class="fu">lockBinding</span>(<span class="st">&quot;MAX_SIZE&quot;</span>, <span class="fu">environment</span>());</span></code></pre></div>
-      <h2 id="how-it-works">How It Works</h2>
-      <p>The <code>-&lt;</code> operator is transformed during
-      preprocessing into a regular assignment followed by a
-      <code>lockBinding()</code> call. This prevents the variable from
-      being reassigned later in the code.</p>
-      <h2 id="usage-examples">Usage Examples</h2>
-      <h3 id="defining-configuration-constants">Defining Configuration
-      Constants</h3>
-      <div class="sourceCode" id="cb3"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>API_URL <span class="sc">-</span><span class="er">&lt;</span> <span class="st">&quot;https://api.example.com&quot;</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>TIMEOUT <span class="sc">-</span><span class="er">&lt;</span> <span class="dv">30</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>DEBUG <span class="sc">-</span><span class="er">&lt;</span> <span class="cn">TRUE</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Later attempts to modify will fail</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># API_URL &lt;- &quot;different-url&quot;  # Error: cannot change value of locked binding</span></span></code></pre></div>
-      <h2 id="benefits">Benefits</h2>
-      <ul>
-      <li><strong>Safety:</strong> Prevents accidental modification of
-      critical values</li>
-      <li><strong>Clarity:</strong> Makes it clear which values are
-      meant to be immutable</li>
-      <li><strong>Protection:</strong> Using <code>lockBinding()</code>
-      provides R-level protection against reassignment</li>
-      <li><strong>Convention:</strong> Provides a clean syntax for
-      constant declarations</li>
-      </ul>
-      <h2 id="important-notes">Important Notes</h2>
-      <ul>
-      <li>Once a binding is locked, attempting to reassign it will
-      result in an error</li>
-      <li>The <code>-&lt;</code> syntax can be used with any R value:
-      numbers, strings, vectors, lists, functions, etc.</li>
-      <li>Whitespace around the <code>-&lt;</code> operator is
-      automatically handled during preprocessing</li>
-      <li>This is a compile-time transformation, so the locking happens
-      when your code runs</li>
-      </ul>
+      class="sourceCode lua"><code class="sourceCode lua"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="va">vim</span><span class="op">.</span><span class="va">api</span><span class="op">.</span>nvim_set_hl<span class="op">(</span><span class="dv">0</span><span class="op">,</span> <span class="st">&quot;@keyword.directive.r&quot;</span><span class="op">,</span> <span class="op">{</span> <span class="va">fg</span> <span class="op">=</span> <span class="st">&quot;#c792ea&quot;</span><span class="op">,</span> <span class="va">bold</span> <span class="op">=</span> <span class="kw">true</span> <span class="op">})</span></span></code></pre></div>
+      <h2 id="vim-legacy-syntax">Vim (Legacy Syntax)</h2>
+      <p>Add to <code>~/.vim/after/syntax/r.vim</code>:</p>
+      <pre class="vim"><code>syn match rBuilderDirective &quot;^#&gt; .*$&quot;
+hi def link rBuilderDirective PreProc</code></pre>
+      <h2 id="emacs-ess">Emacs (ESS)</h2>
+      <p>Add to your <code>init.el</code>:</p>
+      <pre class="elisp"><code>(add-hook &#39;ess-r-mode-hook
+  (lambda ()
+    (font-lock-add-keywords nil
+      &#39;((&quot;^#&gt; .*$&quot; . font-lock-preprocessor-face)))))</code></pre>
     </main>
   </body>
 </html>
