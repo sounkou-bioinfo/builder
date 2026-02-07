@@ -17,7 +17,7 @@ Use `#> import` in your `.R` or `.rh` file:
 Or use the `-import` CLI flag:
 
 ```bash
-builder -import macros.rh more-macros.rh -input srcr -output R
+builder -import macros.rh pkg::macros.rh -input srcr -output R
 ```
 
 ## What Can `.rh` Files Contain?
