@@ -12,6 +12,7 @@ typedef struct {
   char *output;
   Value *imports;
   Value *plugins_str;
+  Value *depends;
   char *prepend;
   char *append;
   int deadcode;

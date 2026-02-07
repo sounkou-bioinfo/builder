@@ -31,6 +31,7 @@ FILES = src/main.c \
 	src/error.c \
 	src/sourcemap.c \
 	src/watch.c \
+	src/depends.c \
 	src/config.c
 
 # Development commands

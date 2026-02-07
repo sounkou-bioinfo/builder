@@ -258,7 +258,6 @@ void capture_define(Define **defines, char *line, char *ns)
   char name[256];
   char value[256];
   if(sscanf(line, "#> define %s %[^\n]", name, value) == 2) {
-    printf("%s %s = %s\n", LOG_INFO, name, value);
     if(ns != NULL) {
       char *prefixed = malloc(strlen(ns) + 2 + strlen(name) + 1);
       sprintf(prefixed, "%s::%s", ns, name);

@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "include.h"
+#include "depends.h"
 #include "define.h"
 #include "parser.h"
 #include "plugins.h"
@@ -33,6 +34,14 @@ static int build(BuildContext *ctx)
 
   if (!resolve_imports(&files, ctx->imports)) {
     printf("%s Failed to resolve imports\n", LOG_ERROR);
+    free_rfile(files);
+    free_array(defines);
+    return 1;
+  }
+
+  int ok = process_depends(ctx->depends);
+  if (ok) {
+    printf("%s Failed to process depends\n", LOG_ERROR);
     free_rfile(files);
     free_array(defines);
     return 1;
@@ -166,6 +175,15 @@ int main(int argc, char *argv[])
     }
   }
 
+  Value *depends = get_arg_values(argc, argv, "-depends");
+  if (depends == NULL && cfg != NULL && cfg->depends != NULL) {
+    Value *current = cfg->depends;
+    while (current != NULL) {
+      depends = push_value(depends, strdup(current->name));
+      current = current->next;
+    }
+  }
+
   if (plugins_str != NULL) {
     printf("%s Using plugins:", LOG_INFO);
     Value *current = plugins_str;
@@ -185,6 +203,8 @@ int main(int argc, char *argv[])
     free_config(cfg);
     free(input);
     free(output);
+    free_value(depends);
+    free_value(imports);
     return 1;
   }
 
@@ -250,7 +270,8 @@ int main(int argc, char *argv[])
     .must_clean = must_clean,
     .watch = watch_mode,
     .plugins = plugins,
-    .registry = registry
+    .registry = registry,
+    .depends = depends
   };
 
   int result = 0;
@@ -284,6 +305,7 @@ int main(int argc, char *argv[])
   free(prepend);
   free(append);
   free_value(imports);
+  free_value(depends);
   free(input);
   free(output);
 

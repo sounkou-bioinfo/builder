@@ -136,6 +136,7 @@
             <a href="const.html">Const</a>
             <a href="deconstruct.html">Deconstruct</a>
             <a href="preflight.html">Preflight</a>
+            <a href="depends.html">Depends</a>
             <a href="plugins.html">Plugins</a>
             <a href="tests.html">Tests</a>
             <a href="prepend-append.html">Prepend</a>
@@ -237,6 +238,12 @@
       <td>Space-separated imports</td>
       </tr>
       <tr class="odd">
+      <td><code>depends</code></td>
+      <td>list</td>
+      <td>-</td>
+      <td>Space-separated dev dependencies to check</td>
+      </tr>
+      <tr class="even">
       <td><code>reader</code></td>
       <td>string</td>
       <td>-</td>
@@ -265,9 +272,12 @@
 <span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="dt">plugin: mypkg::minify mypkg::lint</span></span>
 <span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="dt">import: inst/types.rh inst/utils.rh</span></span>
 <span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Custom file readers (one per line)</span></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="dt">reader: tsv \(x) read.delim(x, sep</span><span class="ot">=</span><span class="st">&quot;\t&quot;, header=FALSE)</span></span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="dt">reader: myformat mypackage::read_myformat</span></span></code></pre></div>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Dev dependencies (space-separated R packages)</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="dt">depends: testthat devtools roxygen2</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Custom file readers (one per line)</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="dt">reader: tsv \(x) read.delim(x, sep</span><span class="ot">=</span><span class="st">&quot;\t&quot;, header=FALSE)</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="dt">reader: myformat mypackage::read_myformat</span></span></code></pre></div>
       <h2 id="overriding-with-cli">Overriding with CLI</h2>
       <p>Config values are defaults. CLI arguments take precedence:</p>
       <div class="sourceCode" id="cb4"><pre
