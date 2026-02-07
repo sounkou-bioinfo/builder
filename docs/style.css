@@ -131,6 +131,31 @@ main {
   float: right;
 }
 
+.dropdown summary {
+  cursor: pointer;
+  color: #83a598;
+}
+
+.dropdown summary:hover {
+  color: #8ec07c;
+}
+
+.dropdown summary::marker {
+  content: "";
+}
+
+.dropdown summary::-webkit-details-marker {
+  display: none;
+}
+
+.dropdown summary::after {
+  content: " ▾";
+}
+
+.dropdown[open] summary::after {
+  content: " ▴";
+}
+
 .dropdown-content {
   display: none;
   position: absolute;
@@ -143,14 +168,9 @@ main {
   padding: 0.2rem 1rem;
 }
 
-.dropdown:hover .dropdown-content {
+.dropdown[open] .dropdown-content {
   display: block;
   z-index: 1;
-}
-
-#menu-icon {
-  width: 1rem;
-  height: 1rem;
 }
 
 nav > a {
