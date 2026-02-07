@@ -112,7 +112,7 @@ Header files can import other headers:
 #> import base.rh
 
 #> macro
-LOG(x){
+LOG <- function(x) {
   message(paste0("[v", VERSION, "] ", .x))
 }
 #> endmacro

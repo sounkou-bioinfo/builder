@@ -80,7 +80,7 @@ Macros are function-like directives with parameters.
 
 ```r
 #> macro
-LOG(level, msg){
+LOG <- function(level, msg) {
   cat("[", .level, "] ", .msg, "\n", sep = "")
 }
 #> endmacro
@@ -97,9 +97,8 @@ cat("[", "INFO", "] ", "Started", "\n", sep = "")
 ### Syntax
 
 - Start with `#> macro` alone on a line (or `#> macro local` for local scope)
-- Macro signature: `NAME(arg1, arg2, ...){`
+- Use standard R function syntax: `NAME <- function(arg1, arg2, ...) { ... }`
 - Use `.arg` to substitute argument values
-- Body enclosed in curly braces
 - End with `#> endmacro`
 
 ## Usage

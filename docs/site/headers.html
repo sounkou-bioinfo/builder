@@ -247,13 +247,13 @@
 <span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Utility macros</span></span>
 <span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; macro</span></span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="fu">LOG</span>(msg){</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>LOG <span class="ot">&lt;-</span> <span class="cf">function</span>(msg) {</span>
 <span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">message</span>(<span class="fu">paste0</span>(<span class="st">&quot;[&quot;</span>, <span class="fu">Sys.time</span>(), <span class="st">&quot;] &quot;</span>, .msg))</span>
 <span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endmacro</span></span>
 <span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; macro</span></span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a><span class="fu">ASSERT</span>(cond, msg){</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>ASSERT <span class="ot">&lt;-</span> <span class="cf">function</span>(cond, msg) {</span>
 <span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span>.cond) <span class="fu">stop</span>(.msg)</span>
 <span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endmacro</span></span></code></pre></div>

@@ -14,13 +14,13 @@ Macros are function-like preprocessor directives that allow you to define reusab
 
 ## Basic Syntax
 
-Macros are defined using `#> macro` on its own line, followed by the macro signature and body. The macro ends with `#> endmacro`.
+Macros are defined using `#> macro` on its own line, followed by a function definition. The macro ends with `#> endmacro`.
 
 **Syntax:**
 
 ```r
 #> macro
-MACRO_NAME(arg1, arg2, ...){
+MACRO_NAME <- function(arg1, arg2, ...) {
   body using .arg1, .arg2, etc.
 }
 #> endmacro
@@ -36,7 +36,7 @@ Use `#> macro local` to create a **local** macro that is wrapped in `local({...}
 
 ```r
 #> macro
-SETUP_ENV(name){
+SETUP_ENV <- function(name) {
   .name_env <- new.env()
   .name_data <- list()
 }
@@ -56,7 +56,7 @@ app_data <- list()
 
 ```r
 #> macro local
-._LOG_INFO(msg){
+._LOG_INFO <- function(msg) {
   cat("[INFO] ", msg, "\n", sep = "")
 }
 #> endmacro
@@ -95,7 +95,7 @@ Macro arguments use explicit markers for replacement:
 
 ```r
 #> macro
-LOG_EVAL(expr){
+LOG_EVAL <- function(expr) {
   cat("Evaluating stuff\n")
   .expr
 }
@@ -117,7 +117,7 @@ Use `..arg` to get the argument as a string literal:
 
 ```r
 #> macro
-DEBUG(var){
+DEBUG <- function(var) {
   cat(..var, "=", .var, "\n")
 }
 #> endmacro
@@ -139,7 +139,7 @@ Use `.arg` within identifier names to build new identifiers:
 
 ```r
 #> macro
-GETTER(name){
+GETTER <- function(name) {
   get_.name <- function() private$.name
 }
 #> endmacro
@@ -161,7 +161,7 @@ Ensure you close your database connections when you're done.
 
 ```r
 #> macro
-CONNECT(){
+CONNECT <- function() {
   con <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
   on.exit(DBI::dbDisconnect(con))
 }
@@ -183,7 +183,7 @@ Macro to easily repeat a block of code.
 
 ```r
 #> macro
-REPEAT(n, action){
+REPEAT <- function(n, action) {
   for (i in 1:.n) {
     .action
   }
@@ -207,7 +207,7 @@ Macros can accept multiple arguments, which are separated by commas in both the 
 
 ```r
 #> macro
-VALIDATE(value, min, max){
+VALIDATE <- function(value, min, max) {
   if (.value < .min || .value > .max) {
     stop("Value out of range: ", .value)
   }
@@ -231,7 +231,7 @@ if (x < 0 || x > 100) {
 
 ```r
 #> macro
-LOG(level, msg){
+LOG <- function(level, msg) {
   cat("[", .level, "] ", .msg, "\n", sep = "")
 }
 #> endmacro
@@ -251,7 +251,7 @@ cat("[", "ERROR", "] ", "Something went wrong", "\n", sep = "")
 
 ```r
 #> macro
-TRY_CATCH(code, error_msg){
+TRY_CATCH <- function(code, error_msg) {
   tryCatch({
     .code
   }, error = function(e) {
@@ -277,7 +277,7 @@ tryCatch({
 
 ```r
 #> macro
-TIME_IT(expr){
+TIME_IT <- function(expr) {
   start <- Sys.time()
   result <- .expr
   end <- Sys.time()
@@ -302,8 +302,7 @@ result
 ## Important Notes
 
 - Macros start with `#> macro` (or `#> macro local`) alone on a line
-- The macro signature and body follow on subsequent lines
-- Macro bodies must be enclosed in curly braces `{}`
+- Macro definition uses standard R function syntax: `NAME <- function(...) { ... }`
 - Macros end with `#> endmacro`
 - Global macros (default) expand without wrapping
 - Local macros (`#> macro local`) are wrapped in `local({...})` to avoid namespace pollution

@@ -190,11 +190,6 @@ void *define_macro_init(char **macro)
 
 void push_macro(Define **defs, char *macro, char *ns)
 {
-  char *paren = strchr(macro, '(');
-  if(paren == NULL) {
-    return;
-  }
-
   int local = 0;
   char *p_orig = strdup(macro);
   char *p = strstr(p_orig, "#> macro ");
@@ -213,7 +208,12 @@ void push_macro(Define **defs, char *macro, char *ns)
   }
   macro++;
 
-  // validate that argument names don't start with '.'
+  char *arrow = strstr(macro, "<-");
+  if(arrow == NULL) {
+    free(original_macro);
+    return;
+  }
+
   int temp_nargs;
   char **temp_args = extract_macro_args(macro, &temp_nargs);
   for(int i = 0; i < temp_nargs; i++) {
@@ -229,7 +229,10 @@ void push_macro(Define **defs, char *macro, char *ns)
   for(int i = 0; i < temp_nargs; i++) free(temp_args[i]);
   free(temp_args);
 
-  size_t len = paren - macro;
+  size_t len = arrow - macro;
+  while(len > 0 && (macro[len - 1] == ' ' || macro[len - 1] == '\t')) {
+    len--;
+  }
   char* name = malloc(len + 1);
   strncpy(name, macro, len);
   name[len] = '\0';

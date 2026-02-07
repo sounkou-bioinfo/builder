@@ -75,13 +75,13 @@ if (getRversion() < "4.0.0") {
 
 # Utility macros
 #> macro
-LOG(msg){
+LOG <- function(msg) {
   message(paste0("[", Sys.time(), "] ", .msg))
 }
 #> endmacro
 
 #> macro
-ASSERT(cond, msg){
+ASSERT <- function(cond, msg) {
   if (!.cond) stop(.msg)
 }
 #> endmacro
