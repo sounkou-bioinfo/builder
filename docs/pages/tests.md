@@ -4,32 +4,32 @@ title: Tests
 
 # Tests
 
-Builder automatically generates testthat test files from inline `#test` blocks in your R source code. This allows you to keep tests close to the code they're testing while maintaining a clean separation in the output.
+Builder automatically generates testthat test files from inline `#> test` blocks in your R source code. This allows you to keep tests close to the code they're testing while maintaining a clean separation in the output.
 
 ## How It Works
 
 When Builder processes your source files, it:
 
-- Detects `#test` blocks in your source code
+- Detects `#> test` blocks in your source code
 - Extracts the test description and test expressions
 - Generates testthat test files in `tests/testthat/`
 - Automatically creates the directory structure if needed
 
 ## Syntax
 
-Test blocks are defined using `#test` and `#endtest` directives:
+Test blocks are defined using `#> test` and `#> endtest` directives:
 
 ```r
-#test Description of what you're testing
+#> test Description of what you're testing
 expect_equal(my_function(), expected_value)
 expect_true(some_condition)
-#endtest
+#> endtest
 ```
 
 **Important notes:**
 
-- The description comes on the same line as `#test`
-- Test expressions are written as normal R code (no `#` prefix needed)
+- The description comes on the same line as `#> test`
+- Test expressions are written as normal R code (no `#> ` prefix needed)
 - Empty test blocks (no expressions) are skipped with a warning
 
 ## File Naming Convention
@@ -56,10 +56,10 @@ foo <- function() {
   return(1)
 }
 
-#test That it returns one!
+#> test That it returns one!
 expect_equal(foo(), 1)
 expect_type(foo(), "double")
-#endtest
+#> endtest
 ```
 
 **Command:**
@@ -86,19 +86,19 @@ add <- function(a, b) {
   return(a + b)
 }
 
-#test Addition works correctly
+#> test Addition works correctly
 expect_equal(add(2, 3), 5)
 expect_equal(add(-1, 1), 0)
-#endtest
+#> endtest
 
 multiply <- function(a, b) {
   return(a * b)
 }
 
-#test Multiplication works correctly
+#> test Multiplication works correctly
 expect_equal(multiply(2, 3), 6)
 expect_equal(multiply(0, 5), 0)
-#endtest
+#> endtest
 ```
 
 All tests from the same source file are collected into a single test file with multiple `test_that()` blocks.

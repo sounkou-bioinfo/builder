@@ -8,31 +8,31 @@ Import `.rh` header files to share definitions, macros, and preflight checks acr
 
 ## Two Ways to Import
 
-Use `#import` in your `.R` or `.rh` file:
+Use `#> import` in your `.R` or `.rh` file:
 
 ```r
-#import macros.rh
+#> import macros.rh
 ```
 
 Or use the `-import` CLI flag:
 
 ```bash
-builder -import macros.rh more-macros.rh -input srcr -output R
+builder -import macros.rh pkg::macros.rh -input srcr -output R
 ```
 
 ## What Can `.rh` Files Contain?
 
 Header files support all builder directives:
 
-- `#macro` / `#endmacro` - Macro definitions
-- `#preflight` / `#endflight` - Validation checks (executed during build)
-- `#ifdef` / `#ifndef` / `#endif` - Conditional compilation
-- `#import` - Nested imports
+- `#> macro` / `#> endmacro` - Macro definitions
+- `#> preflight` / `#> endflight` - Validation checks (executed during build)
+- `#> ifdef` / `#> ifndef` / `#> endif` - Conditional compilation
+- `#> import` - Nested imports
 
 ## Processing Order
 
 1. CLI imports are processed first (in order specified)
-2. Inline `#import` directives are processed as encountered
+2. Inline `#> import` directives are processed as encountered
 3. Duplicate imports are automatically skipped
 4. All imports are processed before source files
 
@@ -41,7 +41,7 @@ Header files support all builder directives:
 Import a local `.rh` file:
 
 ```r
-#import utils.rh
+#> import utils.rh
 
 foo <- function() {
   LOG("hello")
@@ -54,7 +54,7 @@ Import from an installed R package using `pkg::path` syntax. Package imports **m
 The file must be in the package's `inst` directory.
 
 ```r
-#import mypkg::macros/utils.rh
+#> import mypkg::macros/utils.rh
 
 foo <- function() {
   mypkg::LOG("hello")
@@ -68,16 +68,16 @@ Header files can import other headers:
 
 ```r
 // base.rh
-#define VERSION 1.0.0
+#> define VERSION 1.0.0
 
 // utils.rh
-#import base.rh
+#> import base.rh
 
-#macro
+#> macro
 LOG(x){
   message(paste0("[v", VERSION, "] ", .x))
 }
-#endmacro
+#> endmacro
 ```
 
 ## Preflight in Headers
@@ -86,11 +86,11 @@ Shared validation checks:
 
 ```r
 // checks.rh
-#preflight
+#> preflight
 if(!requireNamespace("rlang", quietly = TRUE)) {
   stop("rlang is required")
 }
-#endflight
+#> endflight
 ```
 
 ## Summary

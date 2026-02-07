@@ -147,32 +147,33 @@
       </nav>
       <h1 id="tests">Tests</h1>
       <p>Builder automatically generates testthat test files from inline
-      <code>#test</code> blocks in your R source code. This allows you
-      to keep tests close to the code they’re testing while maintaining
-      a clean separation in the output.</p>
+      <code>#&gt; test</code> blocks in your R source code. This allows
+      you to keep tests close to the code they’re testing while
+      maintaining a clean separation in the output.</p>
       <h2 id="how-it-works">How It Works</h2>
       <p>When Builder processes your source files, it:</p>
       <ul>
-      <li>Detects <code>#test</code> blocks in your source code</li>
+      <li>Detects <code>#&gt; test</code> blocks in your source
+      code</li>
       <li>Extracts the test description and test expressions</li>
       <li>Generates testthat test files in
       <code>tests/testthat/</code></li>
       <li>Automatically creates the directory structure if needed</li>
       </ul>
       <h2 id="syntax">Syntax</h2>
-      <p>Test blocks are defined using <code>#test</code> and
-      <code>#endtest</code> directives:</p>
+      <p>Test blocks are defined using <code>#&gt; test</code> and
+      <code>#&gt; endtest</code> directives:</p>
       <div class="sourceCode" id="cb1"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#test Description of what you&#39;re testing</span></span>
+      class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; test Description of what you&#39;re testing</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">expect_equal</span>(<span class="fu">my_function</span>(), expected_value)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">expect_true</span>(some_condition)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">#endtest</span></span></code></pre></div>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endtest</span></span></code></pre></div>
       <p><strong>Important notes:</strong></p>
       <ul>
       <li>The description comes on the same line as
-      <code>#test</code></li>
+      <code>#&gt; test</code></li>
       <li>Test expressions are written as normal R code (no
-      <code>#</code> prefix needed)</li>
+      <code>#&gt;</code> prefix needed)</li>
       <li>Empty test blocks (no expressions) are skipped with a
       warning</li>
       </ul>
@@ -195,10 +196,10 @@
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="dv">1</span>)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">#test That it returns one!</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; test That it returns one!</span></span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">expect_equal</span>(<span class="fu">foo</span>(), <span class="dv">1</span>)</span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">expect_type</span>(<span class="fu">foo</span>(), <span class="st">&quot;double&quot;</span>)</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">#endtest</span></span></code></pre></div>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endtest</span></span></code></pre></div>
       <p><strong>Command:</strong></p>
       <div class="sourceCode" id="cb4"><pre
       class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">./builder</span> <span class="at">-input</span> srcr <span class="at">-output</span> R</span></code></pre></div>
@@ -216,19 +217,19 @@
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(a <span class="sc">+</span> b)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">#test Addition works correctly</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; test Addition works correctly</span></span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="fu">expect_equal</span>(<span class="fu">add</span>(<span class="dv">2</span>, <span class="dv">3</span>), <span class="dv">5</span>)</span>
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="fu">expect_equal</span>(<span class="fu">add</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>), <span class="dv">0</span>)</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">#endtest</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endtest</span></span>
 <span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>multiply <span class="ot">&lt;-</span> <span class="cf">function</span>(a, b) {</span>
 <span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(a <span class="sc">*</span> b)</span>
 <span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="co">#test Multiplication works correctly</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; test Multiplication works correctly</span></span>
 <span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="fu">expect_equal</span>(<span class="fu">multiply</span>(<span class="dv">2</span>, <span class="dv">3</span>), <span class="dv">6</span>)</span>
 <span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="fu">expect_equal</span>(<span class="fu">multiply</span>(<span class="dv">0</span>, <span class="dv">5</span>), <span class="dv">0</span>)</span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="co">#endtest</span></span></code></pre></div>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endtest</span></span></code></pre></div>
       <p>All tests from the same source file are collected into a single
       test file with multiple <code>test_that()</code> blocks.</p>
       <h2 id="cleaning-test-files">Cleaning Test Files</h2>

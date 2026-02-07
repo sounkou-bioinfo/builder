@@ -17,8 +17,8 @@ Understanding this architecture helps you write more predictable preprocessing d
 │                       FIRST PASS                            │
 │  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐  │
 │  │  Collect    │  │    Run      │  │  Plugin             │  │
-│  │  #define &  │──│  #preflight │──│  preprocess hook    │  │
-│  │  #macro     │  │  blocks     │  │                     │  │
+│  │  #> define &│──│ #> preflight│──│  preprocess hook    │  │
+│  │  #> macro   │  │  blocks     │  │                     │  │
 │  └─────────────┘  └─────────────┘  └─────────────────────┘  │
 └─────────────────────────────────────────────────────────────┘
                             │
@@ -27,14 +27,14 @@ Understanding this architecture helps you write more predictable preprocessing d
 │                      SECOND PASS                            │
 │  For each line:                                             │
 │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌────────────┐   │
-│  │ F-string │─▶│ #include │─▶│  Macro   │─▶│Deconstruct │   │
+│  │ F-string │─▶│#> include│─▶│  Macro   │─▶│Deconstruct │   │
 │  │ replace  │  │ replace  │  │ replace  │  │  replace   │   │
 │  └──────────┘  └──────────┘  └──────────┘  └────────────┘   │
 │                                                   │         │
 │       ┌───────────────────────────────────────────┘         │
 │       ▼                                                     │
 │  ┌──────────┐  ┌──────────┐  ┌────────────┐  ┌───────────┐  │
-│  │  Const   │─▶│  #test   │─▶│ Directive  │─▶│Conditional│  │
+│  │  Const   │─▶│ #> test  │─▶│ Directive  │─▶│Conditional│  │
 │  │ replace  │  │ collect  │  │   filter   │  │   check   │  │
 │  └──────────┘  └──────────┘  └────────────┘  └───────────┘  │
 │                                                   │         │
@@ -51,9 +51,9 @@ The first pass scans all source files to collect definitions and run preflight c
 
 ### What happens:
 
-1. **Macro Collection** - All `#define` and `#macro` directives are parsed and stored
-2. **Preflight Execution** - `#preflight` / `#endflight` blocks are evaluated
-3. **Import Processing** - `#import` directives are noted (for namespace prefixing)
+1. **Macro Collection** - All `#> define` and `#> macro` directives are parsed and stored
+2. **Preflight Execution** - `#> preflight` / `#> endflight` blocks are evaluated
+3. **Import Processing** - `#> import` directives are noted (for namespace prefixing)
 4. **Plugin Hook** - The `preprocess` plugin hook is called on each file's content
 
 ## Second Pass
@@ -67,16 +67,16 @@ Each line is processed through these transformations in order:
 | Order | Transformation | Example |
 |-------|---------------|---------|
 | 1 | F-strings | `f'{x}'` → `sprintf('%s', x)` |
-| 2 | #include: | `#include:READ file.sql q` → `q <- c(...)` |
+| 2 | #> include: | `#> include:READ file.sql q` → `q <- c(...)` |
 | 3 | Macro expansion | `MY_MACRO(x)` → expanded code |
 | 4 | Deconstruction | `.[a, b] <- fn()` → indexed assignments |
 | 5 | Constants | `x -< 1` → `x <- 1;lockBinding(...)` |
 
 After replacements, the line goes through:
 
-- **Conditional compilation** - `#ifdef`, `#ifndef`, `#if`, `#elif`, `#else`, `#endif`
-- **Test collection** - `#test` blocks are extracted
-- **Error checking** - `#error` directives halt compilation
+- **Conditional compilation** - `#> ifdef`, `#> ifndef`, `#> if`, `#> elif`, `#> else`, `#> endif`
+- **Test collection** - `#> test` blocks are extracted
+- **Error checking** - `#> error` directives halt compilation
 
 ## Why Order Matters
 
@@ -87,7 +87,7 @@ The replacement order has important implications:
 F-strings are processed before macros, so you can use macro-defined values inside f-strings:
 
 ```r
-#define VERSION 2.0.0
+#> define VERSION 2.0.0
 
 print(f'Version: {VERSION}')  # VERSION expanded after f-string processing
 ```
@@ -97,7 +97,7 @@ print(f'Version: {VERSION}')  # VERSION expanded after f-string processing
 The constant operator `-<` is processed after all other transformations, ensuring the final value is locked:
 
 ```r
-#define DEFAULT 42
+#> define DEFAULT 42
 x -< DEFAULT  # First: DEFAULT → 42, Then: x <- 42;lockBinding("x", environment())
 ```
 

@@ -57,7 +57,7 @@ void free_test(Tests *test)
 int enter_test(char *line)
 {
   char *trimmed = remove_leading_spaces(line);
-  return strncmp(trimmed, "#test ", 6) == 0;
+  return strncmp(trimmed, "#> test ", 8) == 0;
 }
 
 int collect_test_line(TestCollector *collector, char *line)
@@ -65,8 +65,8 @@ int collect_test_line(TestCollector *collector, char *line)
   char *trimmed = remove_leading_spaces(line);
 
   // Check for test start
-  if(strncmp(trimmed, "#test ", 6) == 0) {
-    collector->description = strdup(trimmed + 6);
+  if(strncmp(trimmed, "#> test ", 8) == 0) {
+    collector->description = strdup(trimmed + 8);
     size_t len = strlen(collector->description);
     if(len > 0 && collector->description[len - 1] == '\n') {
       collector->description[len - 1] = '\0';
@@ -81,7 +81,7 @@ int collect_test_line(TestCollector *collector, char *line)
   }
 
   // Check for test end
-  if(strncmp(trimmed, "#endtest", 8) == 0) {
+  if(strncmp(trimmed, "#> endtest", 10) == 0) {
     Tests *new_test = create_test(collector->description, collector->expressions);
     push_test(&collector->tests, new_test);
     free(collector->description);

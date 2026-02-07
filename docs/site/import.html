@@ -149,29 +149,29 @@
       <p>Import <code>.rh</code> header files to share definitions,
       macros, and preflight checks across your project.</p>
       <h2 id="two-ways-to-import">Two Ways to Import</h2>
-      <p>Use <code>#import</code> in your <code>.R</code> or
+      <p>Use <code>#&gt; import</code> in your <code>.R</code> or
       <code>.rh</code> file:</p>
       <div class="sourceCode" id="cb1"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#import macros.rh</span></span></code></pre></div>
+      class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; import macros.rh</span></span></code></pre></div>
       <p>Or use the <code>-import</code> CLI flag:</p>
       <div class="sourceCode" id="cb2"><pre
-      class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-import</span> macros.rh more-macros.rh <span class="at">-input</span> srcr <span class="at">-output</span> R</span></code></pre></div>
+      class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">builder</span> <span class="at">-import</span> macros.rh pkg::macros.rh <span class="at">-input</span> srcr <span class="at">-output</span> R</span></code></pre></div>
       <h2 id="what-can-.rh-files-contain">What Can <code>.rh</code>
       Files Contain?</h2>
       <p>Header files support all builder directives:</p>
       <ul>
-      <li><code>#macro</code> / <code>#endmacro</code> - Macro
+      <li><code>#&gt; macro</code> / <code>#&gt; endmacro</code> - Macro
       definitions</li>
-      <li><code>#preflight</code> / <code>#endflight</code> - Validation
-      checks (executed during build)</li>
-      <li><code>#ifdef</code> / <code>#ifndef</code> /
-      <code>#endif</code> - Conditional compilation</li>
-      <li><code>#import</code> - Nested imports</li>
+      <li><code>#&gt; preflight</code> / <code>#&gt; endflight</code> -
+      Validation checks (executed during build)</li>
+      <li><code>#&gt; ifdef</code> / <code>#&gt; ifndef</code> /
+      <code>#&gt; endif</code> - Conditional compilation</li>
+      <li><code>#&gt; import</code> - Nested imports</li>
       </ul>
       <h2 id="processing-order">Processing Order</h2>
       <ol type="1">
       <li>CLI imports are processed first (in order specified)</li>
-      <li>Inline <code>#import</code> directives are processed as
+      <li>Inline <code>#&gt; import</code> directives are processed as
       encountered</li>
       <li>Duplicate imports are automatically skipped</li>
       <li>All imports are processed before source files</li>
@@ -179,7 +179,7 @@
       <h2 id="local-import">Local Import</h2>
       <p>Import a local <code>.rh</code> file:</p>
       <div class="sourceCode" id="cb3"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#import utils.rh</span></span>
+      class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; import utils.rh</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>foo <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">LOG</span>(<span class="st">&quot;hello&quot;</span>)</span>
@@ -190,7 +190,7 @@
       used. The file must be in the package’s <code>inst</code>
       directory.</p>
       <div class="sourceCode" id="cb4"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#import mypkg::macros/utils.rh</span></span>
+      class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; import mypkg::macros/utils.rh</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>foo <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  mypkg<span class="sc">::</span><span class="fu">LOG</span>(<span class="st">&quot;hello&quot;</span>)</span>
@@ -200,25 +200,25 @@
       <p>Header files can import other headers:</p>
       <div class="sourceCode" id="cb5"><pre
       class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="sc">/</span><span class="er">/</span> base.rh</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">#define VERSION 1.0.0</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; define VERSION 1.0.0</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="sc">/</span><span class="er">/</span> utils.rh</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#import base.rh</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; import base.rh</span></span>
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#macro</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; macro</span></span>
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="fu">LOG</span>(x){</span>
 <span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">message</span>(<span class="fu">paste0</span>(<span class="st">&quot;[v&quot;</span>, VERSION, <span class="st">&quot;] &quot;</span>, .x))</span>
 <span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">#endmacro</span></span></code></pre></div>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endmacro</span></span></code></pre></div>
       <h2 id="preflight-in-headers">Preflight in Headers</h2>
       <p>Shared validation checks:</p>
       <div class="sourceCode" id="cb6"><pre
       class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="sc">/</span><span class="er">/</span> checks.rh</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#preflight</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; preflight</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">requireNamespace</span>(<span class="st">&quot;rlang&quot;</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>)) {</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stop</span>(<span class="st">&quot;rlang is required&quot;</span>)</span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">#endflight</span></span></code></pre></div>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endflight</span></span></code></pre></div>
       <h2 id="summary">Summary</h2>
       <ul>
       <li><code>.rh</code> files support all directives (not just

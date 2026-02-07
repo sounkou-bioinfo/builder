@@ -6,13 +6,13 @@
 
 int catch_error(char* line)
 {
-  if(strstr(line, "#error") == NULL) return 0;
+  if(strstr(line, "#> error") == NULL) return 0;
 
   while(line[0] == ' ' || line[0] == '\t') line++;
 
-  char *match = strstr(line, "#error ");
+  char *match = strstr(line, "#> error ");
 
-  char *msg = match + strlen("#error ");
+  char *msg = match + strlen("#> error ");
 
   printf("%s Error: %s\n", LOG_ERROR, msg);
 

@@ -156,8 +156,8 @@
 │                       FIRST PASS                            │
 │  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐  │
 │  │  Collect    │  │    Run      │  │  Plugin             │  │
-│  │  #define &amp;  │──│  #preflight │──│  preprocess hook    │  │
-│  │  #macro     │  │  blocks     │  │                     │  │
+│  │  #&gt; define &amp;│──│ #&gt; preflight│──│  preprocess hook    │  │
+│  │  #&gt; macro   │  │  blocks     │  │                     │  │
 │  └─────────────┘  └─────────────┘  └─────────────────────┘  │
 └─────────────────────────────────────────────────────────────┘
                             │
@@ -166,14 +166,14 @@
 │                      SECOND PASS                            │
 │  For each line:                                             │
 │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌────────────┐   │
-│  │ F-string │─▶│ #include │─▶│  Macro   │─▶│Deconstruct │   │
+│  │ F-string │─▶│#&gt; include│─▶│  Macro   │─▶│Deconstruct │   │
 │  │ replace  │  │ replace  │  │ replace  │  │  replace   │   │
 │  └──────────┘  └──────────┘  └──────────┘  └────────────┘   │
 │                                                   │         │
 │       ┌───────────────────────────────────────────┘         │
 │       ▼                                                     │
 │  ┌──────────┐  ┌──────────┐  ┌────────────┐  ┌───────────┐  │
-│  │  Const   │─▶│  #test   │─▶│ Directive  │─▶│Conditional│  │
+│  │  Const   │─▶│ #&gt; test  │─▶│ Directive  │─▶│Conditional│  │
 │  │ replace  │  │ collect  │  │   filter   │  │   check   │  │
 │  └──────────┘  └──────────┘  └────────────┘  └───────────┘  │
 │                                                   │         │
@@ -187,11 +187,13 @@
       pass.</p>
       <h3 id="what-happens">What happens:</h3>
       <ol type="1">
-      <li><strong>Macro Collection</strong> - All <code>#define</code>
-      and <code>#macro</code> directives are parsed and stored</li>
-      <li><strong>Preflight Execution</strong> - <code>#preflight</code>
-      / <code>#endflight</code> blocks are evaluated</li>
-      <li><strong>Import Processing</strong> - <code>#import</code>
+      <li><strong>Macro Collection</strong> - All
+      <code>#&gt; define</code> and <code>#&gt; macro</code> directives
+      are parsed and stored</li>
+      <li><strong>Preflight Execution</strong> -
+      <code>#&gt; preflight</code> / <code>#&gt; endflight</code> blocks
+      are evaluated</li>
+      <li><strong>Import Processing</strong> - <code>#&gt; import</code>
       directives are noted (for namespace prefixing)</li>
       <li><strong>Plugin Hook</strong> - The <code>preprocess</code>
       plugin hook is called on each file’s content</li>
@@ -218,8 +220,8 @@
       </tr>
       <tr class="even">
       <td>2</td>
-      <td>#include:</td>
-      <td><code>#include:READ file.sql q</code> →
+      <td>#&gt; include:</td>
+      <td><code>#&gt; include:READ file.sql q</code> →
       <code>q &lt;- c(...)</code></td>
       </tr>
       <tr class="odd">
@@ -243,11 +245,12 @@
       <p>After replacements, the line goes through:</p>
       <ul>
       <li><strong>Conditional compilation</strong> -
-      <code>#ifdef</code>, <code>#ifndef</code>, <code>#if</code>,
-      <code>#elif</code>, <code>#else</code>, <code>#endif</code></li>
-      <li><strong>Test collection</strong> - <code>#test</code> blocks
-      are extracted</li>
-      <li><strong>Error checking</strong> - <code>#error</code>
+      <code>#&gt; ifdef</code>, <code>#&gt; ifndef</code>,
+      <code>#&gt; if</code>, <code>#&gt; elif</code>,
+      <code>#&gt; else</code>, <code>#&gt; endif</code></li>
+      <li><strong>Test collection</strong> - <code>#&gt; test</code>
+      blocks are extracted</li>
+      <li><strong>Error checking</strong> - <code>#&gt; error</code>
       directives halt compilation</li>
       </ul>
       <h2 id="why-order-matters">Why Order Matters</h2>
@@ -256,14 +259,14 @@
       <p>F-strings are processed before macros, so you can use
       macro-defined values inside f-strings:</p>
       <div class="sourceCode" id="cb2"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#define VERSION 2.0.0</span></span>
+      class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; define VERSION 2.0.0</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(f<span class="st">&#39;Version: {VERSION}&#39;</span>)  <span class="co"># VERSION expanded after f-string processing</span></span></code></pre></div>
       <h3 id="constants-last">Constants Last</h3>
       <p>The constant operator <code>-&lt;</code> is processed after all
       other transformations, ensuring the final value is locked:</p>
       <div class="sourceCode" id="cb3"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#define DEFAULT 42</span></span>
+      class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; define DEFAULT 42</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>x <span class="sc">-</span><span class="er">&lt;</span> DEFAULT  <span class="co"># First: DEFAULT → 42, Then: x &lt;- 42;lockBinding(&quot;x&quot;, environment())</span></span></code></pre></div>
       <h2 id="built-in-definitions">Built-in Definitions</h2>
       <p>These definitions are automatically available and updated
