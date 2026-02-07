@@ -72,17 +72,17 @@ static void free_include(Include *include)
 
 static int has_include(char *line)
 {
-  return strstr(line, "#include:") != NULL;
+  return strstr(line, "#> include:") != NULL;
 }
 
 static Include parse_include(char *line)
 {
   Include result = {NULL, NULL, NULL};
 
-  const char *start = strstr(line, "#include:");
+  const char *start = strstr(line, "#> include:");
   if(start == NULL) return result;
 
-  start += strlen("#include:");
+  start += strlen("#> include:");
 
   char *work = strdup(start);
   if(work == NULL) return result;

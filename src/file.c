@@ -127,69 +127,69 @@ static int should_write_line(int state, int *branch_taken, char line[1024], Defi
 {
   char *trimmed = remove_leading_spaces(line);
 
-  if(trimmed[0] != '#') {
+  if(strncmp(trimmed, "#> ", 3) != 0) {
     return state;
   }
 
-  if(strncmp(trimmed, "#test", 5) == 0) {
+  if(strncmp(trimmed, "#> test", 7) == 0) {
     return 0;
   }
 
-  if(strncmp(trimmed, "#endtest", 8) == 0) {
+  if(strncmp(trimmed, "#> endtest", 10) == 0) {
     return 1;
   }
 
-  if(strncmp(trimmed, "#preflight", 10) == 0) {
+  if(strncmp(trimmed, "#> preflight", 12) == 0) {
     return 0;
   }
 
-  if(strncmp(trimmed, "#endflight", 10) == 0) {
+  if(strncmp(trimmed, "#> endflight", 12) == 0) {
     return 1;
   }
 
-  if(strncmp(trimmed, "#endpreflight", 13) == 0) {
+  if(strncmp(trimmed, "#> endpreflight", 15) == 0) {
     return 1;
   }
 
-  if(strncmp(trimmed, "#ifdef", 6) == 0) {
-    char *keyword = remove_keyword(trimmed);
+  if(strncmp(trimmed, "#> ifdef", 8) == 0) {
+    char *keyword = remove_keyword(trimmed + 3);
     int result = get_define_value(defs, keyword) != NULL;
     free(keyword);
     *branch_taken = result;
     return result;
   }
 
-  if(strncmp(trimmed, "#ifndef", 7) == 0) {
-    char *keyword = remove_keyword(trimmed);
+  if(strncmp(trimmed, "#> ifndef", 9) == 0) {
+    char *keyword = remove_keyword(trimmed + 3);
     int result = get_define_value(defs, keyword) == NULL;
     free(keyword);
     *branch_taken = result;
     return result;
   }
 
-  if(strncmp(trimmed, "#elif", 5) == 0) {
+  if(strncmp(trimmed, "#> elif", 7) == 0) {
     if(*branch_taken) {
       return 0;
     }
-    char *keyword = remove_keyword(trimmed);
+    char *keyword = remove_keyword(trimmed + 3);
     int result = get_define_value(defs, keyword) != NULL;
     free(keyword);
     if(result) *branch_taken = 1;
     return result;
   }
 
-  if(strncmp(trimmed, "#else", 5) == 0) {
+  if(strncmp(trimmed, "#> else", 7) == 0) {
     if(*branch_taken) return 0;
     return 1;
   }
 
-  if(strncmp(trimmed, "#endif", 6) == 0) {
+  if(strncmp(trimmed, "#> endif", 8) == 0) {
     *branch_taken = 0;
     return 1;
   }
 
-  if(strncmp(trimmed, "#if", 3) == 0) {
-    int result = evaluate_if(trimmed + 4);
+  if(strncmp(trimmed, "#> if", 5) == 0) {
+    int result = evaluate_if(trimmed + 6);
     *branch_taken = result;
     return result;
   }
@@ -418,8 +418,8 @@ static Value *scan_for_imports(char *content)
     char *line_end = strchr(pos, '\n');
     if(!line_end) break;
 
-    if(strncmp(pos, "#import ", 8) == 0) {
-      char *import_start = pos + 8;
+    if(strncmp(pos, "#> import ", 10) == 0) {
+      char *import_start = pos + 10;
       size_t len = line_end - import_start;
       char *import_path = malloc(len + 1);
       strncpy(import_path, import_start, len);
@@ -625,7 +625,7 @@ static int first_pass(RFile *files, Define **defs, Plugins *plugins)
         continue;
       }
 
-      if(strncmp(line, "#endmacro", 9) == 0) {
+      if(strncmp(line, "#> endmacro", 11) == 0) {
         in_macro = 0;
         push_macro(defs, buffer, current->ns);
         buffer = NULL;
@@ -641,25 +641,25 @@ static int first_pass(RFile *files, Define **defs, Plugins *plugins)
       
       capture_define(defs, line, current->ns);
 
-      if(strncmp(line, "#import ", 8) == 0) {
+      if(strncmp(line, "#> import ", 10) == 0) {
         free(line);
         continue;
       }
 
-      if(strncmp(line, "#preflight", 10) == 0) {
+      if(strncmp(line, "#> preflight", 12) == 0) {
         in_preflight = 1;
         buffer = append_buffer(buffer, line);
         free(line);
         continue;
       }
 
-      if(strncmp(line, "#endpreflight", 13) == 0) {
+      if(strncmp(line, "#> endpreflight", 15) == 0) {
         in_preflight = 0;
         free(line);
         continue;
       }
 
-      if(strncmp(line, "#endflight", 10) == 0) {
+      if(strncmp(line, "#> endflight", 12) == 0) {
         in_preflight = 0;
         printf("%s Running preflight checks\n", LOG_INFO);
         SEXP result = evaluate(buffer);
@@ -760,7 +760,7 @@ static int second_pass(RFile *files, Define **defs, Plugins *plugins, char *prep
         continue;
       }
 
-      if(strncmp(trimmed, "#endmacro", 9) == 0) {
+      if(strncmp(trimmed, "#> endmacro", 11) == 0) {
         in_macro = 0;
         free(line);
         continue;
@@ -771,7 +771,7 @@ static int second_pass(RFile *files, Define **defs, Plugins *plugins, char *prep
         continue;
       }
 
-      if(strncmp(trimmed, "#import ", 8) == 0) {
+      if(strncmp(trimmed, "#> import ", 10) == 0) {
         free(line);
         continue;
       }
@@ -823,15 +823,9 @@ static int second_pass(RFile *files, Define **defs, Plugins *plugins, char *prep
       }
 
       // Check for preprocessor directives
-      // Lines starting with # that aren't comments (#' or # ) are directives - always skip
+      // Lines starting with #> are directives - always skip
       char *directive_check = remove_leading_spaces(cnst);
-      if(
-        directive_check[0] == '#' &&
-        directive_check[1] != '\'' && 
-        directive_check[1] != ' ' && 
-        directive_check[1] != '\0' && 
-        directive_check[1] != '\n'
-      ) {
+      if(strncmp(directive_check, "#> ", 3) == 0) {
         should_write = should_write_line(should_write, &branch_taken, cnst, defs);
         free(cnst);
         continue;

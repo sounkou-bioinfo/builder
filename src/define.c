@@ -197,9 +197,9 @@ void push_macro(Define **defs, char *macro, char *ns)
 
   int local = 0;
   char *p_orig = strdup(macro);
-  char *p = strstr(p_orig, "#macro ");
+  char *p = strstr(p_orig, "#> macro ");
   if(p != NULL) {
-    p += 7;
+    p += 9;
     strtok(p, "\n");
     local = strcmp(p, "local") == 0;
   }
@@ -248,13 +248,13 @@ void push_macro(Define **defs, char *macro, char *ns)
 
 void capture_define(Define **defines, char *line, char *ns)
 {
-  if(strncmp(line, "#define", 7) != 0) {
+  if(strncmp(line, "#> define", 9) != 0) {
     return;
   }
 
   char name[256];
   char value[256];
-  if(sscanf(line, "#define %s %[^\n]", name, value) == 2) {
+  if(sscanf(line, "#> define %s %[^\n]", name, value) == 2) {
     printf("%s %s = %s\n", LOG_INFO, name, value);
     if(ns != NULL) {
       char *prefixed = malloc(strlen(ns) + 2 + strlen(name) + 1);
@@ -348,7 +348,7 @@ static char* extract_first_line(const char *str, char *buffer, size_t buffer_siz
 static char *define_replace_once(Define **defines, char *line)
 {
   // we define, nothing to do
-  if(strncmp(line, "#define", 7) == 0) {
+  if(strncmp(line, "#> define", 9) == 0) {
     return strdup(line);
   }
 
@@ -540,5 +540,5 @@ void print_defines(Define *defines)
 
 int enter_macro(char *line)
 {
-  return strstr(line, "#macro") != NULL;
+  return strstr(line, "#> macro") != NULL;
 }

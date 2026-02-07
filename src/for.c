@@ -7,12 +7,12 @@
 
 int enter_for(char *line)
 {
-  return strstr(line, "#for") != NULL;
+  return strstr(line, "#> for") != NULL;
 }
 
 int exit_for(char *line)
 {
-  return strstr(line, "#endfor") != NULL;
+  return strstr(line, "#> endfor") != NULL;
 }
 
 char *replace_for(char *buffer, char *line)
@@ -20,7 +20,7 @@ char *replace_for(char *buffer, char *line)
   char *delimiter = strchr(buffer, '\n');
 
   if(delimiter == NULL) {
-    printf("%s Error: single line #for loop\n", LOG_ERROR);
+    printf("%s Error: single line #> for loop\n", LOG_ERROR);
     return "";
   }
 
@@ -32,8 +32,8 @@ char *replace_for(char *buffer, char *line)
   int start;
   int end;
 
-  if(sscanf(for_statement, "#for %63s in %d:%d", token, &start, &end) != 3) {
-    printf("%s Error: invalid #for statement\n", LOG_ERROR);
+  if(sscanf(for_statement, "#> for %63s in %d:%d", token, &start, &end) != 3) {
+    printf("%s Error: invalid #> for statement\n", LOG_ERROR);
     return "";
   }
 
