@@ -713,6 +713,7 @@ static int second_pass(RFile *files, Define **defs, Plugins *plugins, char *prep
 
     // state
     char *buffer = NULL;
+    char *for_buffer = NULL;
     int line_number = 0;
     char *line_number_str = NULL;
     int should_write = 1;
@@ -777,22 +778,20 @@ static int second_pass(RFile *files, Define **defs, Plugins *plugins, char *prep
 
       if(enter_for(trimmed)) {
         in_for = 1;
-        free(buffer);
-        buffer = strdup(line);
+        for_buffer = strdup(line);
         free(line);
         continue;
       }
 
       if(in_for && !exit_for(trimmed)) {
-        buffer = append_buffer(buffer, line);
+        for_buffer = append_buffer(for_buffer, line);
         free(line);
         continue;
       }
 
       if(exit_for(trimmed)) {
-        char *expanded = replace_for(buffer, line);
-        free(buffer);
-        buffer = NULL;
+        char *expanded = replace_for(for_buffer, line);
+        free(for_buffer);
         free(line);
         line = expanded;
         in_for = 0;
