@@ -37,15 +37,14 @@ Subdirectory paths are flattened with hyphens.
 
 Builder supports C-like preprocessor directives.
 
-> **Note:** Lines starting with `#` are treated as directives and removed from output.
-> R comments (`# comment`) and roxygen (`#' @export`) are preserved because they have
-> a space or `'` after the `#`. If you want a comment like `#TODO`, write `# TODO` instead.
+> **Note:** Lines starting with `#> ` are treated as directives and removed from output.
+> R comments (`# comment`) and roxygen (`#' @export`) are preserved as normal.
 
 ### Define Constants
 
 ```r
-#define DEBUG TRUE
-#define VERSION 2
+#> define DEBUG TRUE
+#> define VERSION 2
 
 x <- DEBUG
 cat("Version:", VERSION)
@@ -54,15 +53,15 @@ cat("Version:", VERSION)
 ### Conditional Compilation
 
 ```r
-#ifdef DEBUG
+#> ifdef DEBUG
 cat("Debug mode\n")
-#endif
+#> endif
 
-#if VERSION > 1
+#> if VERSION > 1
 cat("New version\n")
-#else
+#> else
 cat("Old version\n")
-#endif
+#> endif
 ```
 
 ### Command Line Definitions
@@ -73,18 +72,18 @@ Pass definitions at build time:
 ./builder -input srcr -output R -DDEBUG -DVERSION 3
 ```
 
-Command-line definitions override file-based `#define` directives.
+Command-line definitions override file-based `#> define` directives.
 
 ## Macros
 
 Macros are function-like directives with parameters.
 
 ```r
-#macro
+#> macro
 LOG(level, msg){
   cat("[", .level, "] ", .msg, "\n", sep = "")
 }
-#endmacro
+#> endmacro
 
 LOG("INFO", "Started")
 ```
@@ -97,11 +96,11 @@ cat("[", "INFO", "] ", "Started", "\n", sep = "")
 
 ### Syntax
 
-- Start with `#macro` alone on a line (or `#macro local` for local scope)
+- Start with `#> macro` alone on a line (or `#> macro local` for local scope)
 - Macro signature: `NAME(arg1, arg2, ...){`
 - Use `.arg` to substitute argument values
 - Body enclosed in curly braces
-- End with `#endmacro`
+- End with `#> endmacro`
 
 ## Usage
 

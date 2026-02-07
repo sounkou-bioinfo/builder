@@ -158,104 +158,105 @@
       <div class="sourceCode" id="cb1"><pre
       class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">./builder</span> <span class="at">-input</span> srcr <span class="at">-output</span> R <span class="at">-DDEBUG</span> <span class="at">-DTEST</span> <span class="st">&#39;&quot;a string&quot;&#39;</span> <span class="at">-DXXX</span> 42</span></code></pre></div>
       <p>Note: Command-line definitions override file-based
-      <code>#define</code> directives.</p>
-      <h2 id="define">#define</h2>
+      <code>#&gt; define</code> directives.</p>
+      <h2 id="define">#&gt; define</h2>
       <p>Define constants that will be replaced throughout your code.
       All occurrences of the defined name will be replaced with the
       specified value.</p>
-      <p><strong>Syntax:</strong> <code>#define NAME value</code></p>
+      <p><strong>Syntax:</strong>
+      <code>#&gt; define NAME value</code></p>
       <div class="sourceCode" id="cb2"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#define PI 3.14159</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">#define STRING &quot;hello world!&quot;</span></span>
+      class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; define PI 3.14159</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; define STRING &quot;hello world!&quot;</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> PI  <span class="co"># becomes: x &lt;- 3.14159</span></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(STRING)  <span class="co"># becomes: print(&quot;hello world!&quot;)</span></span></code></pre></div>
       <p><strong>Note:</strong> For function-like macros with
-      parameters, use <code>#macro</code> instead. See <a
+      parameters, use <code>#&gt; macro</code> instead. See <a
       href="/macros">Macros</a> for details.</p>
-      <h2 id="ifdef">#ifdef</h2>
+      <h2 id="ifdef">#&gt; ifdef</h2>
       <p>Include a code block only if the specified name is defined
-      (either via <code>#define</code> or command-line <code>-D</code>
-      flag).</p>
+      (either via <code>#&gt; define</code> or command-line
+      <code>-D</code> flag).</p>
       <p><strong>Syntax:</strong>
-      <code>#ifdef NAME ... #endif</code></p>
+      <code>#&gt; ifdef NAME ... #&gt; endif</code></p>
       <div class="sourceCode" id="cb3"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#ifdef DEBUG</span></span>
+      class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ifdef DEBUG</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;debugging!</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">#endif</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endif</span></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># With #else for alternative path</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">#ifdef DEBUG</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># With #&gt; else for alternative path</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ifdef DEBUG</span></span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;debug!&quot;</span>)</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">#else</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; else</span></span>
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;world!&quot;</span>)</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">#endif</span></span></code></pre></div>
-      <h2 id="ifndef">#ifndef</h2>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endif</span></span></code></pre></div>
+      <h2 id="ifndef">#&gt; ifndef</h2>
       <p>Include a code block only if the specified name is NOT defined.
-      This is the opposite of <code>#ifdef</code>.</p>
+      This is the opposite of <code>#&gt; ifdef</code>.</p>
       <p><strong>Syntax:</strong>
-      <code>#ifndef NAME ... #endif</code></p>
+      <code>#&gt; ifndef NAME ... #&gt; endif</code></p>
       <div class="sourceCode" id="cb4"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#ifndef PROD</span></span>
+      class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ifndef PROD</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Not in production mode&quot;</span>)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#endif</span></span></code></pre></div>
-      <h2 id="if">#if</h2>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endif</span></span></code></pre></div>
+      <h2 id="if">#&gt; if</h2>
       <p>Evaluate an R expression and include the code block if the
       result is TRUE. The expression is evaluated using the embedded R
       interpreter and supports any valid R expression that returns a
       logical value.</p>
       <p><strong>Syntax:</strong>
-      <code>#if R_EXPRESSION ... #endif</code></p>
+      <code>#&gt; if R_EXPRESSION ... #&gt; endif</code></p>
       <div class="sourceCode" id="cb5"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#define VERSION 3</span></span>
+      class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; define VERSION 3</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#if VERSION &gt; 2</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; if VERSION &gt; 2</span></span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Using new API</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#endif</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endif</span></span>
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#if XXX &gt; 1</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; if XXX &gt; 1</span></span>
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;it&#39;s 1!</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">#endif</span></span></code></pre></div>
-      <h2 id="elif">#elif</h2>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endif</span></span></code></pre></div>
+      <h2 id="elif">#&gt; elif</h2>
       <p>Chain multiple conditions together. Only the first matching
       branch is included.</p>
       <p><strong>Syntax:</strong>
-      <code>#ifdef|#ifndef|#if ... #elif NAME ... #else ... #endif</code></p>
+      <code>#&gt; ifdef|#&gt; ifndef|#&gt; if ... #&gt; elif NAME ... #&gt; else ... #&gt; endif</code></p>
       <div class="sourceCode" id="cb6"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#ifdef BACKEND_POSTGRES</span></span>
+      class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ifdef BACKEND_POSTGRES</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>db <span class="ot">&lt;-</span> <span class="fu">connect_postgres</span>()</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#elif BACKEND_SQLITE</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; elif BACKEND_SQLITE</span></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>db <span class="ot">&lt;-</span> <span class="fu">connect_sqlite</span>()</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">#else</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; else</span></span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>db <span class="ot">&lt;-</span> <span class="fu">connect_default</span>()</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#endif</span></span></code></pre></div>
-      <h2 id="else">#else</h2>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endif</span></span></code></pre></div>
+      <h2 id="else">#&gt; else</h2>
       <p>Provide an alternative code path for conditional blocks. Used
-      with <code>#ifdef</code>, <code>#ifndef</code>, or
-      <code>#if</code> to specify code that should be included when the
-      condition is false.</p>
-      <p>See the <code>#ifdef</code> example above for usage.</p>
-      <h2 id="endif">#endif</h2>
+      with <code>#&gt; ifdef</code>, <code>#&gt; ifndef</code>, or
+      <code>#&gt; if</code> to specify code that should be included when
+      the condition is false.</p>
+      <p>See the <code>#&gt; ifdef</code> example above for usage.</p>
+      <h2 id="endif">#&gt; endif</h2>
       <p>Close a conditional compilation block. Required for all
-      conditional directives (<code>#ifdef</code>, <code>#ifndef</code>,
-      <code>#if</code>).</p>
-      <h2 id="error">#error</h2>
-      <p>You can use <code>#error</code> to stop compilation and print
-      an error message.</p>
+      conditional directives (<code>#&gt; ifdef</code>,
+      <code>#&gt; ifndef</code>, <code>#&gt; if</code>).</p>
+      <h2 id="error">#&gt; error</h2>
+      <p>You can use <code>#&gt; error</code> to stop compilation and
+      print an error message.</p>
       <div class="sourceCode" id="cb7"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#ifdef DEBUG</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">#error &quot;DEBUG mode is not supported&quot;</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">#endif</span></span></code></pre></div>
-      <h2 id="for">#for</h2>
+      class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ifdef DEBUG</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; error &quot;DEBUG mode is not supported&quot;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endif</span></span></code></pre></div>
+      <h2 id="for">#&gt; for</h2>
       <p>Generate repetitive code by iterating over a numeric range. The
       loop variable is replaced using the <code>..variable..</code>
       syntax within the loop body.</p>
       <p><strong>Syntax:</strong>
-      <code>#for VARIABLE in START:END ... #endfor</code></p>
+      <code>#&gt; for VARIABLE in START:END ... #&gt; endfor</code></p>
       <div class="sourceCode" id="cb8"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#for i in 1:5</span></span>
+      class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; for i in 1:5</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>validate_col_..i.. <span class="ot">&lt;-</span> <span class="cf">function</span>(x) <span class="fu">check</span>(x<span class="sc">$</span>col..i..)</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">#endfor</span></span></code></pre></div>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endfor</span></span></code></pre></div>
       <p>Expands to:</p>
       <div class="sourceCode" id="cb9"><pre
       class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>validate_col_1 <span class="ot">&lt;-</span> <span class="cf">function</span>(x) <span class="fu">check</span>(x<span class="sc">$</span>col1)</span>
@@ -267,20 +268,20 @@
       <code>..variable..</code> in each line are all replaced.</p>
       <h2 id="nesting-limitation">Nesting Limitation</h2>
       <p>Nested conditionals are <strong>not supported</strong>. Each
-      <code>#ifdef</code>/<code>#ifndef</code>/<code>#if</code> block
-      must be independent:</p>
+      <code>#&gt; ifdef</code>/<code>#&gt; ifndef</code>/<code>#&gt; if</code>
+      block must be independent:</p>
       <div class="sourceCode" id="cb10"><pre
       class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># NOT supported</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co">#ifdef A</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="co">#ifdef B</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ifdef A</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="co">#&gt; ifdef B</span></span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    code</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="co">#endif</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co">#endif</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="co">#&gt; endif</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endif</span></span>
 <span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Use combined conditions instead</span></span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co">#if A &amp;&amp; B</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; if A &amp;&amp; B</span></span>
 <span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  code</span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="co">#endif</span></span></code></pre></div>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endif</span></span></code></pre></div>
       <h2 id="built-in-directives">Built-in directives</h2>
       <h3 id="file..">..FILE..</h3>
       <p>A directive that is automatically replaced with the current

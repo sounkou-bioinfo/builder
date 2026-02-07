@@ -4,7 +4,7 @@ title: Include
 
 # Include
 
-The `#include` directive allows you to read external files at build time and embed their contents directly into your R code as variables. This enables you to keep SQL queries, data files, templates, and other content in separate files while embedding them at build time.
+The `#> include` directive allows you to read external files at build time and embed their contents directly into your R code as variables. This enables you to keep SQL queries, data files, templates, and other content in separate files while embedding them at build time.
 
 ## Advantages
 
@@ -16,7 +16,7 @@ The `#include` directive allows you to read external files at build time and emb
 ## Syntax
 
 ```
-#include:TYPE file_path variable_name
+#> include:TYPE file_path variable_name
 ```
 
 The directive consists of three space-separated parts:
@@ -49,7 +49,7 @@ Builder includes readers for common file types:
 ### Reading SQL Files
 
 ```r
-#include:sql queries/users.sql user_query
+#> include:sql queries/users.sql user_query
 ```
 
 **Expands to:**
@@ -63,7 +63,7 @@ user_query <- c("SELECT * FROM users", "WHERE active = 1")
 Embed small lookup tables or static data directly in your code:
 
 ```r
-#include:csv data/lookup_table.csv lookup_data
+#> include:csv data/lookup_table.csv lookup_data
 ```
 
 **Expands to:**
@@ -75,7 +75,7 @@ lookup_data <- structure(list(id = 1:3, name = c("a", "b", "c")), class = "data.
 ### Reading JSON Configuration
 
 ```r
-#include:json config/settings.json app_config
+#> include:json config/settings.json app_config
 ```
 
 ## Custom Readers
@@ -111,7 +111,7 @@ When you override a built-in reader, a warning is displayed:
 
 ## How It Works
 
-When the preprocessor encounters an `#include` directive:
+When the preprocessor encounters an `#> include` directive:
 
 1. It parses the file type, file path, and variable name
 2. It looks up the reader function for that file type
@@ -123,7 +123,7 @@ This happens at build time, so the final R code contains no file reading operati
 
 ## Extending via Plugins
 
-For more complex include handling, you can use a [plugin](/plugins) that implements the `include` hook. This allows you to intercept and transform `#include` directives with custom logic.
+For more complex include handling, you can use a [plugin](/plugins) that implements the `include` hook. This allows you to intercept and transform `#> include` directives with custom logic.
 
 ```r
 plugin <- function(input, output) {
@@ -155,10 +155,10 @@ See [Plugins](/plugins) for more details.
 
 ## Processing Pipeline
 
-The `#include` directive is processed in the second pass, after macro definitions are collected but before macro expansion.
+The `#> include` directive is processed in the second pass, after macro definitions are collected but before macro expansion.
 
-1. First pass: All `#define` constants and `#macro` definitions are collected
-2. Second pass: `#include` directives are processed, then macros are expanded
+1. First pass: All `#> define` constants and `#> macro` definitions are collected
+2. Second pass: `#> include` directives are processed, then macros are expanded
 3. The result is pure R code with all preprocessing directives removed
 
 See [Architecture](/architecture) for the complete processing pipeline.

@@ -72,7 +72,7 @@ Called on each file's content **after** Builder processes it. Receives the file 
 
 #### include(type, path, object, file)
 
-Called for each `#include` directive with parsed components:
+Called for each `#> include` directive with parsed components:
 
 - `type` - The file type (e.g., `"csv"`, `"json"`)
 - `path` - The file path to include
@@ -107,11 +107,11 @@ plugin <- function() {
      # Modify content after processing
      str
    },
-   include = function(type, path, object, file, ...) {
-     # Handle #include directives
-     # Return NULL to use default processing
-     NULL
-   },
+    include = function(type, path, object, file, ...) {
+      # Handle #> include directives
+      # Return NULL to use default processing
+      NULL
+    },
    end = function(...) {
      # Cleanup or final operations
    }

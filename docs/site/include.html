@@ -146,11 +146,11 @@
         </div>
       </nav>
       <h1 id="include">Include</h1>
-      <p>The <code>#include</code> directive allows you to read external
-      files at build time and embed their contents directly into your R
-      code as variables. This enables you to keep SQL queries, data
-      files, templates, and other content in separate files while
-      embedding them at build time.</p>
+      <p>The <code>#&gt; include</code> directive allows you to read
+      external files at build time and embed their contents directly
+      into your R code as variables. This enables you to keep SQL
+      queries, data files, templates, and other content in separate
+      files while embedding them at build time.</p>
       <h2 id="advantages">Advantages</h2>
       <ul>
       <li><strong>Separation of concerns:</strong> Keep SQL queries,
@@ -165,7 +165,7 @@
       supported out of the box with no configuration needed.</li>
       </ul>
       <h2 id="syntax">Syntax</h2>
-      <pre><code>#include:TYPE file_path variable_name</code></pre>
+      <pre><code>#&gt; include:TYPE file_path variable_name</code></pre>
       <p>The directive consists of three space-separated parts:</p>
       <ul>
       <li><code>TYPE</code> - The file type (e.g., <code>txt</code>,
@@ -251,7 +251,7 @@
       <h2 id="basic-examples">Basic Examples</h2>
       <h3 id="reading-sql-files">Reading SQL Files</h3>
       <div class="sourceCode" id="cb2"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#include:sql queries/users.sql user_query</span></span></code></pre></div>
+      class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; include:sql queries/users.sql user_query</span></span></code></pre></div>
       <p><strong>Expands to:</strong></p>
       <div class="sourceCode" id="cb3"><pre
       class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>user_query <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;SELECT * FROM users&quot;</span>, <span class="st">&quot;WHERE active = 1&quot;</span>)</span></code></pre></div>
@@ -259,14 +259,14 @@
       <p>Embed small lookup tables or static data directly in your
       code:</p>
       <div class="sourceCode" id="cb4"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#include:csv data/lookup_table.csv lookup_data</span></span></code></pre></div>
+      class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; include:csv data/lookup_table.csv lookup_data</span></span></code></pre></div>
       <p><strong>Expands to:</strong></p>
       <div class="sourceCode" id="cb5"><pre
       class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>lookup_data <span class="ot">&lt;-</span> <span class="fu">structure</span>(<span class="fu">list</span>(<span class="at">id =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">name =</span> <span class="fu">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;b&quot;</span>, <span class="st">&quot;c&quot;</span>)), <span class="at">class =</span> <span class="st">&quot;data.frame&quot;</span>, <span class="at">row.names =</span> <span class="fu">c</span>(<span class="cn">NA</span>, <span class="sc">-</span><span class="dv">3</span><span class="dt">L</span>))</span></code></pre></div>
       <h3 id="reading-json-configuration">Reading JSON
       Configuration</h3>
       <div class="sourceCode" id="cb6"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#include:json config/settings.json app_config</span></span></code></pre></div>
+      class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; include:json config/settings.json app_config</span></span></code></pre></div>
       <h2 id="custom-readers">Custom Readers</h2>
       <p>You can define custom readers for new file types or override
       the defaults using the <code>-reader</code> CLI argument or
@@ -292,7 +292,7 @@
       displayed:</p>
       <pre><code>[WARNING] Overriding reader for &#39;tsv&#39;</code></pre>
       <h2 id="how-it-works">How It Works</h2>
-      <p>When the preprocessor encounters an <code>#include</code>
+      <p>When the preprocessor encounters an <code>#&gt; include</code>
       directive:</p>
       <ol type="1">
       <li>It parses the file type, file path, and variable name</li>
@@ -310,7 +310,8 @@
       <p>For more complex include handling, you can use a <a
       href="/plugins">plugin</a> that implements the
       <code>include</code> hook. This allows you to intercept and
-      transform <code>#include</code> directives with custom logic.</p>
+      transform <code>#&gt; include</code> directives with custom
+      logic.</p>
       <div class="sourceCode" id="cb10"><pre
       class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>plugin <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output) {</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(</span>
@@ -342,14 +343,14 @@
       <li>Variable names should follow R naming conventions</li>
       </ul>
       <h2 id="processing-pipeline">Processing Pipeline</h2>
-      <p>The <code>#include</code> directive is processed in the second
-      pass, after macro definitions are collected but before macro
-      expansion.</p>
+      <p>The <code>#&gt; include</code> directive is processed in the
+      second pass, after macro definitions are collected but before
+      macro expansion.</p>
       <ol type="1">
-      <li>First pass: All <code>#define</code> constants and
-      <code>#macro</code> definitions are collected</li>
-      <li>Second pass: <code>#include</code> directives are processed,
-      then macros are expanded</li>
+      <li>First pass: All <code>#&gt; define</code> constants and
+      <code>#&gt; macro</code> definitions are collected</li>
+      <li>Second pass: <code>#&gt; include</code> directives are
+      processed, then macros are expanded</li>
       <li>The result is pure R code with all preprocessing directives
       removed</li>
       </ol>

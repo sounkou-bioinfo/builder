@@ -170,45 +170,43 @@
       <h2 id="directives">Directives</h2>
       <p>Builder supports C-like preprocessor directives.</p>
       <blockquote>
-      <p><strong>Note:</strong> Lines starting with <code>#</code> are
-      treated as directives and removed from output. R comments
+      <p><strong>Note:</strong> Lines starting with <code>#&gt;</code>
+      are treated as directives and removed from output. R comments
       (<code># comment</code>) and roxygen (<code>#' @export</code>) are
-      preserved because they have a space or <code>'</code> after the
-      <code>#</code>. If you want a comment like <code>#TODO</code>,
-      write <code># TODO</code> instead.</p>
+      preserved as normal.</p>
       </blockquote>
       <h3 id="define-constants">Define Constants</h3>
       <div class="sourceCode" id="cb4"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#define DEBUG TRUE</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#define VERSION 2</span></span>
+      class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; define DEBUG TRUE</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; define VERSION 2</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> DEBUG</span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Version:&quot;</span>, VERSION)</span></code></pre></div>
       <h3 id="conditional-compilation">Conditional Compilation</h3>
       <div class="sourceCode" id="cb5"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#ifdef DEBUG</span></span>
+      class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ifdef DEBUG</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Debug mode</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#endif</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endif</span></span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#if VERSION &gt; 1</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; if VERSION &gt; 1</span></span>
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;New version</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#else</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; else</span></span>
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Old version</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">#endif</span></span></code></pre></div>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endif</span></span></code></pre></div>
       <h3 id="command-line-definitions">Command Line Definitions</h3>
       <p>Pass definitions at build time:</p>
       <div class="sourceCode" id="cb6"><pre
       class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">./builder</span> <span class="at">-input</span> srcr <span class="at">-output</span> R <span class="at">-DDEBUG</span> <span class="at">-DVERSION</span> 3</span></code></pre></div>
       <p>Command-line definitions override file-based
-      <code>#define</code> directives.</p>
+      <code>#&gt; define</code> directives.</p>
       <h2 id="macros">Macros</h2>
       <p>Macros are function-like directives with parameters.</p>
       <div class="sourceCode" id="cb7"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#macro</span></span>
+      class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; macro</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">LOG</span>(level, msg){</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">&quot;[&quot;</span>, .level, <span class="st">&quot;] &quot;</span>, .msg, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>)</span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">#endmacro</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endmacro</span></span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="fu">LOG</span>(<span class="st">&quot;INFO&quot;</span>, <span class="st">&quot;Started&quot;</span>)</span></code></pre></div>
       <p>Expands to:</p>
@@ -216,12 +214,12 @@
       class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;[&quot;</span>, <span class="st">&quot;INFO&quot;</span>, <span class="st">&quot;] &quot;</span>, <span class="st">&quot;Started&quot;</span>, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>)</span></code></pre></div>
       <h3 id="syntax">Syntax</h3>
       <ul>
-      <li>Start with <code>#macro</code> alone on a line (or
-      <code>#macro local</code> for local scope)</li>
+      <li>Start with <code>#&gt; macro</code> alone on a line (or
+      <code>#&gt; macro local</code> for local scope)</li>
       <li>Macro signature: <code>NAME(arg1, arg2, ...){</code></li>
       <li>Use <code>.arg</code> to substitute argument values</li>
       <li>Body enclosed in curly braces</li>
-      <li>End with <code>#endmacro</code></li>
+      <li>End with <code>#&gt; endmacro</code></li>
       </ul>
       <h2 id="usage">Usage</h2>
       <p>You can configure builder in two ways:</p>

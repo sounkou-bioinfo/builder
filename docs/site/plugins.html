@@ -195,8 +195,8 @@
       return the modified content.</p>
       <h4 id="includetype-path-object-file">include(type, path, object,
       file)</h4>
-      <p>Called for each <code>#include</code> directive with parsed
-      components:</p>
+      <p>Called for each <code>#&gt; include</code> directive with
+      parsed components:</p>
       <ul>
       <li><code>type</code> - The file type (e.g., <code>"csv"</code>,
       <code>"json"</code>)</li>
@@ -230,11 +230,11 @@
 <span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>     <span class="co"># Modify content after processing</span></span>
 <span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>     str</span>
 <span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>   },</span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>   <span class="at">include =</span> <span class="cf">function</span>(type, path, object, file, ...) {</span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>     <span class="co"># Handle #include directives</span></span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>     <span class="co"># Return NULL to use default processing</span></span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>     <span class="cn">NULL</span></span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>   },</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">include =</span> <span class="cf">function</span>(type, path, object, file, ...) {</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Handle #&gt; include directives</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Return NULL to use default processing</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>      <span class="cn">NULL</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    },</span>
 <span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>   <span class="at">end =</span> <span class="cf">function</span>(...) {</span>
 <span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>     <span class="co"># Cleanup or final operations</span></span>
 <span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>   }</span>

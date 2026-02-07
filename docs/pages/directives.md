@@ -16,119 +16,119 @@ You can pass definitions via the command line using `-D` flags. This is useful f
 ./builder -input srcr -output R -DDEBUG -DTEST '"a string"' -DXXX 42
 ```
 
-Note: Command-line definitions override file-based `#define` directives.
+Note: Command-line definitions override file-based `#> define` directives.
 
-## #define
+## #> define
 
 Define constants that will be replaced throughout your code. All occurrences of the defined name will be replaced with the specified value.
 
-**Syntax:** `#define NAME value`
+**Syntax:** `#> define NAME value`
 
 ```r
-#define PI 3.14159
-#define STRING "hello world!"
+#> define PI 3.14159
+#> define STRING "hello world!"
 
 x <- PI  # becomes: x <- 3.14159
 print(STRING)  # becomes: print("hello world!")
 ```
 
-**Note:** For function-like macros with parameters, use `#macro` instead. See [Macros](/macros) for details.
+**Note:** For function-like macros with parameters, use `#> macro` instead. See [Macros](/macros) for details.
 
-## #ifdef
+## #> ifdef
 
-Include a code block only if the specified name is defined (either via `#define` or command-line `-D` flag).
+Include a code block only if the specified name is defined (either via `#> define` or command-line `-D` flag).
 
-**Syntax:** `#ifdef NAME ... #endif`
+**Syntax:** `#> ifdef NAME ... #> endif`
 
 ```r
-#ifdef DEBUG
+#> ifdef DEBUG
 cat("debugging!\n")
-#endif
+#> endif
 
-# With #else for alternative path
-#ifdef DEBUG
+# With #> else for alternative path
+#> ifdef DEBUG
 cat("debug!")
-#else
+#> else
 cat("world!")
-#endif
+#> endif
 ```
 
-## #ifndef
+## #> ifndef
 
-Include a code block only if the specified name is NOT defined. This is the opposite of `#ifdef`.
+Include a code block only if the specified name is NOT defined. This is the opposite of `#> ifdef`.
 
-**Syntax:** `#ifndef NAME ... #endif`
+**Syntax:** `#> ifndef NAME ... #> endif`
 
 ```r
-#ifndef PROD
+#> ifndef PROD
 cat("Not in production mode")
-#endif
+#> endif
 ```
 
-## #if
+## #> if
 
 Evaluate an R expression and include the code block if the result is TRUE. The expression is evaluated using the embedded R interpreter and supports any valid R expression that returns a logical value.
 
-**Syntax:** `#if R_EXPRESSION ... #endif`
+**Syntax:** `#> if R_EXPRESSION ... #> endif`
 
 ```r
-#define VERSION 3
+#> define VERSION 3
 
-#if VERSION > 2
+#> if VERSION > 2
 cat("Using new API\n")
-#endif
+#> endif
 
-#if XXX > 1
+#> if XXX > 1
 cat("it's 1!\n")
-#endif
+#> endif
 ```
 
-## #elif
+## #> elif
 
 Chain multiple conditions together. Only the first matching branch is included.
 
-**Syntax:** `#ifdef|#ifndef|#if ... #elif NAME ... #else ... #endif`
+**Syntax:** `#> ifdef|#> ifndef|#> if ... #> elif NAME ... #> else ... #> endif`
 
 ```r
-#ifdef BACKEND_POSTGRES
+#> ifdef BACKEND_POSTGRES
 db <- connect_postgres()
-#elif BACKEND_SQLITE
+#> elif BACKEND_SQLITE
 db <- connect_sqlite()
-#else
+#> else
 db <- connect_default()
-#endif
+#> endif
 ```
 
-## #else
+## #> else
 
-Provide an alternative code path for conditional blocks. Used with `#ifdef`, `#ifndef`, or `#if` to specify code that should be included when the condition is false.
+Provide an alternative code path for conditional blocks. Used with `#> ifdef`, `#> ifndef`, or `#> if` to specify code that should be included when the condition is false.
 
-See the `#ifdef` example above for usage.
+See the `#> ifdef` example above for usage.
 
-## #endif
+## #> endif
 
-Close a conditional compilation block. Required for all conditional directives (`#ifdef`, `#ifndef`, `#if`).
+Close a conditional compilation block. Required for all conditional directives (`#> ifdef`, `#> ifndef`, `#> if`).
 
-## #error
+## #> error
 
-You can use `#error` to stop compilation and print an error message.
+You can use `#> error` to stop compilation and print an error message.
 
 ```r
-#ifdef DEBUG
-#error "DEBUG mode is not supported"
-#endif
+#> ifdef DEBUG
+#> error "DEBUG mode is not supported"
+#> endif
 ```
 
-## #for
+## #> for
 
 Generate repetitive code by iterating over a numeric range. The loop variable is replaced using the `..variable..` syntax within the loop body.
 
-**Syntax:** `#for VARIABLE in START:END ... #endfor`
+**Syntax:** `#> for VARIABLE in START:END ... #> endfor`
 
 ```r
-#for i in 1:5
+#> for i in 1:5
 validate_col_..i.. <- function(x) check(x$col..i..)
-#endfor
+#> endfor
 ```
 
 Expands to:
@@ -145,20 +145,20 @@ The range is inclusive on both ends. Multiple occurrences of `..variable..` in e
 
 ## Nesting Limitation
 
-Nested conditionals are **not supported**. Each `#ifdef`/`#ifndef`/`#if` block must be independent:
+Nested conditionals are **not supported**. Each `#> ifdef`/`#> ifndef`/`#> if` block must be independent:
 
 ```r
 # NOT supported
-#ifdef A
-  #ifdef B
+#> ifdef A
+  #> ifdef B
     code
-  #endif
-#endif
+  #> endif
+#> endif
 
 # Use combined conditions instead
-#if A && B
+#> if A && B
   code
-#endif
+#> endif
 ```
 
 ## Built-in directives

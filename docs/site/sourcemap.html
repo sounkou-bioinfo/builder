@@ -159,13 +159,13 @@
       <h2 id="example">Example</h2>
       <p><strong>Input (srcr/utils.R):</strong></p>
       <div class="sourceCode" id="cb2"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#define API_URL &quot;https://api.example.com&quot;</span></span>
+      class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; define API_URL &quot;https://api.example.com&quot;</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">#ifdef DEBUG</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ifdef DEBUG</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>log_debug <span class="ot">&lt;-</span> <span class="cf">function</span>(msg) {</span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(msg, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">#endif</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endif</span></span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>fetch_data <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  url <span class="ot">&lt;-</span> API_URL</span>
@@ -183,9 +183,9 @@
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>} <span class="co"># line: 12</span></span></code></pre></div>
       <p>Notice how:</p>
       <ul>
-      <li>The <code>#define</code> and
-      <code>#ifdef</code>/<code>#endif</code> directives are removed
-      from output</li>
+      <li>The <code>#&gt; define</code> and
+      <code>#&gt; ifdef</code>/<code>#&gt; endif</code> directives are
+      removed from output</li>
       <li>Output has only 8 lines, but annotations reference the
       original source lines (4-6, 9-12)</li>
       <li>If R reports an error on “line 5 of R/utils.R”, you know to

@@ -152,11 +152,11 @@
       early-exit conditions that should halt the build if requirements
       aren’t met.</p>
       <h2 id="how-it-works">How It Works</h2>
-      <p>When Builder encounters a <code>#preflight</code> block during
-      processing, it:</p>
+      <p>When Builder encounters a <code>#&gt; preflight</code> block
+      during processing, it:</p>
       <ul>
-      <li>Extracts all R code between <code>#preflight</code> and the
-      end marker</li>
+      <li>Extracts all R code between <code>#&gt; preflight</code> and
+      the end marker</li>
       <li>Immediately evaluates the R code</li>
       <li>If the code fails (throws an error), the build stops</li>
       <li>If successful, preprocessing continues normally</li>
@@ -165,25 +165,25 @@
       <strong>not</strong> subject to preprocessor directives or macro
       expansion.</p>
       <h2 id="syntax">Syntax</h2>
-      <p>Preflight blocks are defined using <code>#preflight</code> and
-      closed with either <code>#endpreflight</code> or the shorthand
-      <code>#endflight</code>:</p>
+      <p>Preflight blocks are defined using <code>#&gt; preflight</code>
+      and closed with either <code>#&gt; endpreflight</code> or the
+      shorthand <code>#&gt; endflight</code>:</p>
       <div class="sourceCode" id="cb1"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#preflight</span></span>
+      class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; preflight</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Your R validation code here</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span>condition) <span class="fu">stop</span>(<span class="st">&quot;Requirement not met&quot;</span>)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">#endflight</span></span></code></pre></div>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endflight</span></span></code></pre></div>
       <h2 id="example-version-check">Example: Version Check</h2>
       <p>A common use case is verifying the R version meets minimum
       requirements:</p>
       <div class="sourceCode" id="cb2"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#preflight</span></span>
+      class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; preflight</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>rver <span class="ot">&lt;-</span> version<span class="sc">$</span>major <span class="sc">|&gt;</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.integer</span>()</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(rver <span class="sc">&lt;</span> <span class="dv">4</span>)</span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stop</span>(<span class="st">&quot;We need R version 4.x.x at least&quot;</span>)</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">#endflight</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endflight</span></span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Rest of your code continues here...</span></span>
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>foo <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
@@ -196,29 +196,29 @@
       <p>You can verify required packages are available before
       building:</p>
       <div class="sourceCode" id="cb3"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#preflight</span></span>
+      class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; preflight</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>required <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;dplyr&quot;</span>, <span class="st">&quot;ggplot2&quot;</span>, <span class="st">&quot;tidyr&quot;</span>)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>missing <span class="ot">&lt;-</span> required[<span class="sc">!</span><span class="fu">sapply</span>(required, requireNamespace, <span class="at">quietly =</span> <span class="cn">TRUE</span>)]</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="fu">length</span>(missing) <span class="sc">&gt;</span> <span class="dv">0</span>)</span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stop</span>(<span class="st">&quot;Missing required packages: &quot;</span>, <span class="fu">paste</span>(missing, <span class="at">collapse =</span> <span class="st">&quot;, &quot;</span>))</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">#endpreflight</span></span></code></pre></div>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endpreflight</span></span></code></pre></div>
       <h2 id="example-environment-check">Example: Environment Check</h2>
       <p>Validate environment variables or system requirements:</p>
       <div class="sourceCode" id="cb4"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#preflight</span></span>
+      class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; preflight</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>api_key <span class="ot">&lt;-</span> <span class="fu">Sys.getenv</span>(<span class="st">&quot;API_KEY&quot;</span>)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="fu">nchar</span>(api_key) <span class="sc">==</span> <span class="dv">0</span>)</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stop</span>(<span class="st">&quot;API_KEY environment variable must be set&quot;</span>)</span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(.Platform<span class="sc">$</span>OS.type <span class="sc">!=</span> <span class="st">&quot;unix&quot;</span>)</span>
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">warning</span>(<span class="st">&quot;This package is optimized for Unix systems&quot;</span>)</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">#endflight</span></span></code></pre></div>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endflight</span></span></code></pre></div>
       <h2 id="end-markers">End Markers</h2>
       <p>Two end markers are supported:</p>
       <ul>
-      <li><code>#endpreflight</code> - The formal closing tag</li>
-      <li><code>#endflight</code> - A convenient shorthand</li>
+      <li><code>#&gt; endpreflight</code> - The formal closing tag</li>
+      <li><code>#&gt; endflight</code> - A convenient shorthand</li>
       </ul>
       <p>Both are functionally equivalent.</p>
       <h2 id="behavior-on-failure">Behavior on Failure</h2>
@@ -238,7 +238,7 @@
       <h2 id="limitations">Limitations</h2>
       <ul>
       <li>Preflight code is not preprocessed (no macros, no
-      <code>#define</code> substitution)</li>
+      <code>#&gt; define</code> substitution)</li>
       <li>The code block must be valid R syntax on its own</li>
       <li>Output from preflight code is not captured in any output
       files</li>
