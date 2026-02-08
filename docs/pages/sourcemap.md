@@ -14,7 +14,7 @@ builder -input srcr -output R -sourcemap
 
 ## How It Works
 
-When enabled, Builder appends a `# line: N` comment to the end of each line, indicating the original line number from the source file.
+When enabled, Builder appends a `# filename:N` comment to the end of each line, indicating the source file and original line number.
 
 ## Example
 
@@ -38,21 +38,21 @@ fetch_data <- function() {
 **Output (R/utils.R):**
 
 ```r
-log_debug <- function(msg) { # line: 4
-  cat(msg, "\n") # line: 5
-} # line: 6
+log_debug <- function(msg) { # srcr/utils.R:4
+  cat(msg, "\n") # srcr/utils.R:5
+} # srcr/utils.R:6
 
-fetch_data <- function() { # line: 9
-  url <- "https://api.example.com" # line: 10
-  httr::GET(url) # line: 11
-} # line: 12
+fetch_data <- function() { # srcr/utils.R:9
+  url <- "https://api.example.com" # srcr/utils.R:10
+  httr::GET(url) # srcr/utils.R:11
+} # srcr/utils.R:12
 ```
 
 Notice how:
 
 - The `#> define` and `#> ifdef`/`#> endif` directives are removed from output
 - Output has only 8 lines, but annotations reference the original source lines (4-6, 9-12)
-- If R reports an error on "line 5 of R/utils.R", you know to check **line 5 of srcr/utils.R**
+- Each comment shows the source file and line number (e.g., `# srcr/utils.R:5`)
 
 ## Skipped Lines
 
