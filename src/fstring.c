@@ -45,11 +45,11 @@ static void free_fstring(Fstring *f)
   Fstring *next = f->next;
   free(f->value);
   free(f);
-  free_fstring(next);  // Recursively free the rest
+  free_fstring(next);
 }
 
-// Find the closing quote, handling escaped quotes (\') and escaped backslashes (\\)
-static char* find_closing_quote(const char *str)
+// find closing quote, handling escaped quotes and backslashes
+static char* find_closing_quote(const char *str, char quote_char)
 {
   const char *p = str;
   int escaped = 0;
@@ -67,7 +67,7 @@ static char* find_closing_quote(const char *str)
       continue;
     }
 
-    if(*p == '\'') {
+    if(*p == quote_char) {
       return (char*)p;
     }
 
@@ -84,39 +84,30 @@ char *fstring_replace(char *str, int n)
     return str;
   }
 
-  if(strstr(str, "f'") == NULL) {
+  char *fmt_pos = strstr(str, "..FMT(");
+  if(fmt_pos == NULL) {
     return str;
   }
 
-  char *ptr = str;
-  char *fstring_start = NULL;
+  // position after ..FMT(
+  char *after_paren = fmt_pos + 6;
 
-  int was_f = 0;
-  for(int i = 0; i < strlen(str); i++) {
-    if(str[i] == 'f') {
-      was_f = 1;
-      continue;
-    }
-
-    if(was_f && (str[i] == '\'')) {
-      was_f = 0;
-      fstring_start = str + i - 1;  // Store position of 'f'
-      ptr = str + i + 1;
-      break;
-    }
-
-    if(was_f) {
-      was_f = 0;
-    }
+  // check for quote character
+  char quote_char = *after_paren;
+  if(quote_char != '"' && quote_char != '\'') {
+    return str;
   }
 
-  // Find the closing quote to extract only the f-string content
-  char *ptr_quote_end = find_closing_quote(ptr);
+  char *fstring_start = fmt_pos;
+  char *ptr = after_paren + 1;
+
+  // find closing quote
+  char *ptr_quote_end = find_closing_quote(ptr, quote_char);
   if(ptr_quote_end == NULL) {
-    return str;  // Malformed, no closing quote
+    return str;
   }
 
-  // Extract content between f' and closing '
+  // extract content between quotes
   int content_len = ptr_quote_end - ptr;
   char *content = (char*)malloc(content_len + 1);
   if(content == NULL) {
@@ -127,7 +118,7 @@ char *fstring_replace(char *str, int n)
 
   Fstring *f = NULL;
 
-  // Extract variables from {} braces in the content
+  // extract variables from {} braces
   char buffer[256];
   int buffer_len = 0;
   int curly_braces = 0;
@@ -154,10 +145,10 @@ char *fstring_replace(char *str, int n)
     }
   }
 
-  // Build format string (conditional on whether variables exist)
+  // build format string
   char *format_string;
   if(f != NULL) {
-    // Replace {var} with %s in content
+    // replace {var} with %s
     char *replacement = (char*)malloc(strlen(f->value) + 3);
     sprintf(replacement, "{%s}", f->value);
     char *newstr = str_replace(content, replacement, "%s");
@@ -175,12 +166,11 @@ char *fstring_replace(char *str, int n)
     free(replacement);
     format_string = newstr;
   } else {
-    // No variables, use content as-is
     format_string = content;
-    content = NULL;  // Prevent double-free later
+    content = NULL;
   }
 
-  // Build argument list (conditional on whether variables exist)
+  // build argument list
   char args_list[1024] = "";
   if(f != NULL) {
     Fstring *arg_curr = f;
@@ -191,7 +181,7 @@ char *fstring_replace(char *str, int n)
     }
   }
 
-  // Build sprintf call (unified for both cases)
+  // build sprintf call
   int sprintf_len = strlen("sprintf('") + strlen(format_string) + strlen("')") + strlen(args_list) + 1;
   char *sprintf_call = (char*)malloc(sprintf_len);
   if(sprintf_call == NULL) {
@@ -202,9 +192,9 @@ char *fstring_replace(char *str, int n)
   }
   sprintf(sprintf_call, "sprintf('%s'%s)", format_string, args_list);
 
-  // Replace f-string with sprintf in original string (unified)
+  // replace fstring with sprintf in original string
   int prefix_len = fstring_start - str;
-  int suffix_start = (ptr_quote_end - str) + 1;
+  int suffix_start = (ptr_quote_end - str) + 2; // +2 to skip quote and closing paren
   char *result = (char*)malloc(prefix_len + strlen(sprintf_call) + strlen(str + suffix_start) + 1);
   if(result == NULL) {
     free(sprintf_call);
@@ -218,13 +208,12 @@ char *fstring_replace(char *str, int n)
   strcat(result, sprintf_call);
   strcat(result, str + suffix_start);
 
-  // Cleanup (unified)
   free(sprintf_call);
   if(f != NULL) free(format_string);
   free(content);
   free_fstring(f);
 
-  // Recursively process any remaining f-strings (unified)
+  // recursively process remaining fstrings
   char *final_result = fstring_replace(result, n + 1);
   if(final_result != result) {
     free(result);

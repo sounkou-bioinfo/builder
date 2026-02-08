@@ -1,19 +1,17 @@
 ---
-title: F-strings
+title: Format Strings
 ---
 
-# F-strings
+# Format Strings
 
-Builder supports Python-style f-strings for string interpolation.
-
-**Important:** Only single quotes are supported (`f'...'`), not double quotes.
+Builder supports format strings for string interpolation using the `..FMT()` syntax.
 
 ## Basic Syntax
 
 ```r
 x <- 1
 y <- 2
-print(f'{x} + {y} = {x + y}')
+print(..FMT("{x} + {y} = {x + y}"))
 ```
 
 **Expands to:**
@@ -31,7 +29,7 @@ print(sprintf('%s + %s = %s', x, y, x + y))
 ```r
 name <- "Alice"
 age <- 30
-print(f'Hello {name}, you are {age} years old')
+print(..FMT("Hello {name}, you are {age} years old"))
 ```
 
 ### Expression Evaluation
@@ -40,18 +38,26 @@ Expressions inside `{}` are evaluated:
 
 ```r
 x <- 10
-print(f'Double: {x * 2}, Square: {x ^ 2}')
+print(..FMT("Double: {x * 2}, Square: {x ^ 2}"))
 ```
 
 ### Function Calls
 
 ```r
 values <- c(1, 2, 3)
-print(f'Sum is {sum(values)}')
+print(..FMT("Sum is {sum(values)}"))
+```
+
+### Quote Styles
+
+Both single and double quotes are supported:
+
+```r
+..FMT("hello {name}")
+..FMT('hello {name}')
 ```
 
 ## Limitations
 
-- Only single quotes (`f'...'`) are supported
 - All values are formatted using `%s` (string conversion)
 - No format specifiers (like Python's `{x:.2f}`)
