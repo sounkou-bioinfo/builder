@@ -91,6 +91,7 @@ int main(int argc, char *argv[])
     printf("  -prepend              Path to file to prepend to every output file (e.g.: license)\n");
     printf("  -append               Path to file to append to every output file\n");
     printf("  -deadcode             Enable dead variable/function detection\n");
+    printf("  -depends              Space separated list of packages, e.g.: -depends pkg1 pkg2\n");
     printf("  -sourcemap            Enable source map generation\n");
     printf("  -reader <t> <fn>      Define file type reader, e.g.: -reader tsv read.delim\n");
     printf("  -init                 Create builder.ini file\n");
