@@ -38,15 +38,13 @@ Subdirectory paths are flattened with hyphens.
 Builder supports C-like preprocessor directives.
 
 > **Note:** Lines starting with `#> ` are treated as directives and removed from output.
-> R comments (`# comment`) and roxygen (`#' @export`) are preserved as normal.
+> R comments (`# comment`) are preserved.
 
 ### Define Constants
 
 ```r
-#> define DEBUG TRUE
 #> define VERSION 2
 
-x <- DEBUG
 cat("Version:", VERSION)
 ```
 
@@ -56,13 +54,9 @@ cat("Version:", VERSION)
 #> ifdef DEBUG
 cat("Debug mode\n")
 #> endif
-
-#> if VERSION > 1
-cat("New version\n")
-#> else
-cat("Old version\n")
-#> endif
 ```
+
+Which you can build with `builder -DDEBUG`
 
 ### Command Line Definitions
 
