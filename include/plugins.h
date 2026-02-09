@@ -6,9 +6,9 @@
 
 struct Plugins_t {
   char *name;
-  int setup;
   SEXP obj;
   struct Plugins_t *next;
+  int setup;
 };
 
 typedef struct Plugins_t Plugins;

@@ -11,9 +11,9 @@ typedef struct Tests_t Tests;
 
 typedef struct {
     Tests *tests;
-    int in_test;
     char *description;
     char *expressions;
+    int in_test;
 } TestCollector;
 
 int enter_test(char *line);

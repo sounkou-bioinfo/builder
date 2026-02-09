@@ -6,11 +6,11 @@
 
 typedef struct Binding {
     char *name;
+    char *file;
+    struct Binding *next;
     int is_function;
     int is_used;
     int line;
-    char *file;
-    struct Binding *next;
 } Binding;
 
 typedef struct Environment {

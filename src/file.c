@@ -723,7 +723,7 @@ static int second_pass(RFile *files, Define **defs, Plugins *plugins, char *prep
     int err = 0;
 
     // Test collector
-    TestCollector tc = {NULL, 0, NULL, NULL};
+    TestCollector tc = {NULL, NULL, NULL, 0};
 
     // line
     char *pos = current->content;

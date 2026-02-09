@@ -6,7 +6,6 @@
 #include "include.h"
 
 typedef struct {
-  int argc;
   char **argv;
   char *input;
   char *output;
@@ -15,12 +14,13 @@ typedef struct {
   Value *depends;
   char *prepend;
   char *append;
+  Plugins *plugins;
+  Registry *registry;
+  int argc;
   int deadcode;
   int must_clean;
   int sourcemap;
   int watch;
-  Plugins *plugins;
-  Registry *registry;
 } BuildContext;
 
 int has_config();
