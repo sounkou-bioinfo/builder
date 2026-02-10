@@ -150,6 +150,22 @@
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="ex">└──</span> sub-main.R</span></code></pre></div>
       <p>Note that the file order is preserved, though it’s unlikely to
       matter in an R package.</p>
+      <h2 id="creating-a-package">Creating a Package</h2>
+      <p>Use <code>-create</code> to scaffold a new R package with
+      builder support:</p>
+      <div class="sourceCode" id="cb4"><pre
+      class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">./builder</span> <span class="at">-create</span> mypackage</span></code></pre></div>
+      <p>This creates:</p>
+      <div class="sourceCode" id="cb5"><pre
+      class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">mypackage</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> DESCRIPTION</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> .Rbuildignore</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> builder.ini</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> R/</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="ex">└──</span> srcr/</span></code></pre></div>
+      <p>Then navigate to the package and start building:</p>
+      <div class="sourceCode" id="cb6"><pre
+      class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> mypackage <span class="kw">&amp;&amp;</span> <span class="ex">builder</span></span></code></pre></div>
     </main>
   </body>
 </html>

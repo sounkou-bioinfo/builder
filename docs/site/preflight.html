@@ -178,28 +178,17 @@
       <p>If the R version is less than 4, the build will halt
       immediately with the error message. Otherwise, preprocessing
       continues normally.</p>
-      <h2 id="example-package-check">Example: Package Check</h2>
-      <p>You can verify required packages are available before
-      building:</p>
-      <div class="sourceCode" id="cb3"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; preflight</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>required <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;dplyr&quot;</span>, <span class="st">&quot;ggplot2&quot;</span>, <span class="st">&quot;tidyr&quot;</span>)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>missing <span class="ot">&lt;-</span> required[<span class="sc">!</span><span class="fu">sapply</span>(required, requireNamespace, <span class="at">quietly =</span> <span class="cn">TRUE</span>)]</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="fu">length</span>(missing) <span class="sc">&gt;</span> <span class="dv">0</span>)</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stop</span>(<span class="st">&quot;Missing required packages: &quot;</span>, <span class="fu">paste</span>(missing, <span class="at">collapse =</span> <span class="st">&quot;, &quot;</span>))</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endpreflight</span></span></code></pre></div>
       <h2 id="example-environment-check">Example: Environment Check</h2>
       <p>Validate environment variables or system requirements:</p>
-      <div class="sourceCode" id="cb4"><pre
-      class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; preflight</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>api_key <span class="ot">&lt;-</span> <span class="fu">Sys.getenv</span>(<span class="st">&quot;API_KEY&quot;</span>)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="fu">nchar</span>(api_key) <span class="sc">==</span> <span class="dv">0</span>)</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stop</span>(<span class="st">&quot;API_KEY environment variable must be set&quot;</span>)</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(.Platform<span class="sc">$</span>OS.type <span class="sc">!=</span> <span class="st">&quot;unix&quot;</span>)</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">warning</span>(<span class="st">&quot;This package is optimized for Unix systems&quot;</span>)</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endflight</span></span></code></pre></div>
+      <div class="sourceCode" id="cb3"><pre
+      class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; preflight</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>api_key <span class="ot">&lt;-</span> <span class="fu">Sys.getenv</span>(<span class="st">&quot;API_KEY&quot;</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="fu">nchar</span>(api_key) <span class="sc">==</span> <span class="dv">0</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stop</span>(<span class="st">&quot;API_KEY environment variable must be set&quot;</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(.Platform<span class="sc">$</span>OS.type <span class="sc">!=</span> <span class="st">&quot;unix&quot;</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">warning</span>(<span class="st">&quot;This package is optimized for Unix systems&quot;</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; endflight</span></span></code></pre></div>
       <h2 id="end-markers">End Markers</h2>
       <p>Two end markers are supported:</p>
       <ul>

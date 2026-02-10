@@ -28,3 +28,28 @@ R
 ```
 
 Note that the file order is preserved, though it's unlikely to matter in an R package.
+
+## Creating a Package
+
+Use `-create` to scaffold a new R package with builder support:
+
+```bash
+./builder -create mypackage
+```
+
+This creates:
+
+```bash
+mypackage
+├── DESCRIPTION
+├── .Rbuildignore
+├── builder.ini
+├── R/
+└── srcr/
+```
+
+Then navigate to the package and start building:
+
+```bash
+cd mypackage && builder
+```

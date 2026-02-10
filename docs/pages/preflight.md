@@ -49,20 +49,6 @@ foo <- function() {
 
 If the R version is less than 4, the build will halt immediately with the error message. Otherwise, preprocessing continues normally.
 
-## Example: Package Check
-
-You can verify required packages are available before building:
-
-```r
-#> preflight
-required <- c("dplyr", "ggplot2", "tidyr")
-missing <- required[!sapply(required, requireNamespace, quietly = TRUE)]
-
-if(length(missing) > 0)
-  stop("Missing required packages: ", paste(missing, collapse = ", "))
-#> endpreflight
-```
-
 ## Example: Environment Check
 
 Validate environment variables or system requirements:
