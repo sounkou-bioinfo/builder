@@ -14,6 +14,8 @@
 #include "log.h"
 #include "r.h"
 
+#define VERSION "0.0.1"
+
 static int build(BuildContext *ctx)
 {
   Define *defines = create_define();
@@ -75,6 +77,11 @@ static int build(BuildContext *ctx)
 
 int main(int argc, char *argv[])
 {
+  if(has_arg(argc, argv, "-version")) {
+    printf("Builder v%s\n", VERSION);
+    return 0;
+  }
+
   if (has_arg(argc, argv, "-init")) {
     char *path = (char *)malloc(2);
     strcpy(path, ".");
@@ -90,27 +97,52 @@ int main(int argc, char *argv[])
 
 
   if (has_arg(argc, argv, "-help")) {
+    printf("builder - R package preprocessor with macro support\n\n");
     printf("Usage: builder [OPTIONS]\n\n");
-    printf("Options:\n");
-    printf("  -input <path>         Input directory (default: srcr/)\n");
-    printf("  -output <path>        Output directory (default: R/)\n");
-    printf("  -noclean              Skip cleaning output directory before processing\n");
-    printf("  -watch                Watch input directory and rebuild on changes\n");
-    printf("  -D<NAME> <value>      Define directives, e.g.: -DDEBUG -DVALUE 42\n");
-    printf("  -plugin               Use plugins, e.g.: -plugin pkg::plugin pkg::plugin2\n");
-    printf("  -import               Import .rh files, e.g.: -import inst/main.rh pkg::main.rh\n");
-    printf("  -prepend              Path to file to prepend to every output file (e.g.: -prepend license)\n");
-    printf("  -append               Path to file to append to every output file, e.g.: -append license\n");
-    printf("  -deadcode             Enable dead variable/function detection\n");
-    printf("  -depends              Space separated list of packages, e.g.: -depends pkg1 pkg2\n");
-    printf("  -sourcemap            Enable source map generation\n");
-    printf("  -reader <t> <fn>      Define file type reader, e.g.: -reader tsv read.delim\n");
-    printf("  -init                 Create builder.ini file\n");
-    printf("  -create               Create package skeleton e.g.: -create pkg\n");
-    printf("  -help                 Show this help message\n");
+
+    printf("Input/Output:\n");
+    printf("  -input <path>           Input directory (default: srcr/)\n");
+    printf("  -output <path>          Output directory (default: R/)\n");
+    printf("  -noclean                Skip cleaning output directory before build\n");
     printf("\n");
-    printf("Example:\n");
+
+    printf("Build Options:\n");
+    printf("  -watch                  Watch input directory and rebuild on changes\n");
+    printf("  -deadcode               Enable dead variable/function detection\n");
+    printf("  -sourcemap              Enable source map generation\n");
+    printf("\n");
+
+    printf("Preprocessing:\n");
+    printf("  -D<NAME> [value]        Define a macro, e.g., -DDEBUG or -DVALUE 42\n");
+    printf("  -import <file> ...      Import .rh header files, e.g., -import inst/main.rh\n");
+    printf("  -reader <type> <fn>     Define file type reader, e.g., -reader tsv read.delim\n");
+    printf("\n");
+
+    printf("File Injection:\n");
+    printf("  -prepend <path>         Prepend file contents to every output file\n");
+    printf("  -append <path>          Append file contents to every output file\n");
+    printf("\n");
+
+    printf("Plugins & Dependencies:\n");
+    printf("  -plugin <pkg::fn> ...   Use plugins, e.g., -plugin pkg::minify\n");
+    printf("  -depends <pkg> ...      Declare package dependencies, e.g., -depends rlang\n");
+    printf("\n");
+
+    printf("Project Setup:\n");
+    printf("  -init                   Create a builder.ini config file\n");
+    printf("  -create <name>          Create a new package skeleton\n");
+    printf("\n");
+
+    printf("Info:\n");
+    printf("  -version                Show version number\n");
+    printf("  -help                   Show this help message\n");
+    printf("\n");
+
+    printf("Examples:\n");
     printf("  builder -input srcr/ -output R/ -DDEBUG\n");
+    printf("  builder -watch -deadcode\n");
+    printf("  builder -plugin pkg::minify -depends rlang dplyr\n");
+    printf("  builder -init\n");
     return 0;
   }
 
