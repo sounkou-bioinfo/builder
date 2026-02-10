@@ -32,6 +32,7 @@ FILES = src/main.c \
 	src/sourcemap.c \
 	src/watch.c \
 	src/depends.c \
+	src/create.c \
 	src/config.c
 
 # Development commands

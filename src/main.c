@@ -8,6 +8,7 @@
 #include "parser.h"
 #include "plugins.h"
 #include "config.h"
+#include "create.h"
 #include "watch.h"
 #include "file.h"
 #include "log.h"
@@ -68,15 +69,25 @@ static int build(BuildContext *ctx)
     return 1;
   }
 
+  printf("%s All built!\n", LOG_SUCCESS);
   return 0;
 }
 
 int main(int argc, char *argv[])
 {
   if (has_arg(argc, argv, "-init")) {
-    create_config();
+    char *path = (char *)malloc(2);
+    strcpy(path, ".");
+    create_config(path);
     return 0;
   }
+
+  char *create = get_arg_value(argc, argv, "-create");
+  if (create != NULL) {
+    create_package(create);
+    return 0;
+  }
+
 
   if (has_arg(argc, argv, "-help")) {
     printf("Usage: builder [OPTIONS]\n\n");
@@ -88,13 +99,14 @@ int main(int argc, char *argv[])
     printf("  -D<NAME> <value>      Define directives, e.g.: -DDEBUG -DVALUE 42\n");
     printf("  -plugin               Use plugins, e.g.: -plugin pkg::plugin pkg::plugin2\n");
     printf("  -import               Import .rh files, e.g.: -import inst/main.rh pkg::main.rh\n");
-    printf("  -prepend              Path to file to prepend to every output file (e.g.: license)\n");
-    printf("  -append               Path to file to append to every output file\n");
+    printf("  -prepend              Path to file to prepend to every output file (e.g.: -prepend license)\n");
+    printf("  -append               Path to file to append to every output file, e.g.: -append license\n");
     printf("  -deadcode             Enable dead variable/function detection\n");
     printf("  -depends              Space separated list of packages, e.g.: -depends pkg1 pkg2\n");
     printf("  -sourcemap            Enable source map generation\n");
     printf("  -reader <t> <fn>      Define file type reader, e.g.: -reader tsv read.delim\n");
     printf("  -init                 Create builder.ini file\n");
+    printf("  -create               Create package skeleton e.g.: -create pkg\n");
     printf("  -help                 Show this help message\n");
     printf("\n");
     printf("Example:\n");

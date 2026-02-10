@@ -26,6 +26,6 @@ typedef struct {
 int has_config();
 BuildContext *get_config(Registry **registry);
 void free_config(BuildContext *ctx);
-void create_config();
+void create_config(char *root);
 
 #endif
