@@ -4,6 +4,7 @@
 
 #include "config.h"
 #include "parser.h"
+#include "file.h"
 #include "log.h"
 
 #define MAX_LINE 1024
@@ -217,20 +218,34 @@ void free_config(BuildContext *ctx)
   free(ctx);
 }
 
-void create_config()
+void create_config(char *root)
 {
-  FILE *check = fopen("builder.ini", "r");
-  fclose(check);
-  if (check != NULL) {
-    printf("%s builder.ini already exists\n", LOG_INFO);
+  if(root == NULL) {
+    printf("%s Failed to create config: root is NULL\n", LOG_ERROR);
     return;
   }
 
-  FILE *fp = fopen("builder.ini", "w");
-  if (fp == NULL) {
-    printf("%s builder.ini cannot be create\n", LOG_INFO);
+  char *dir = ensure_dir(root);
+  char *path = (char *)malloc(strlen(dir) + strlen("/builder.ini") + 1);
+  strcpy(path, dir);
+  strcat(path, "/builder.ini");
+
+  FILE *check = fopen(path, "r");
+  if (check != NULL) {
+    printf("%s builder.ini already exists\n", LOG_INFO);
+    free(path);
+    fclose(check);
     return;
   }
+
+  FILE *fp = fopen(path, "w");
+  if (fp == NULL) {
+    printf("%s builder.ini cannot be created at %s\n", LOG_INFO, path);
+    free(path);
+    return;
+  }
+
+  free(path);
 
   fprintf(fp, "input: srcr/\n");
   fprintf(fp, "output: R/\n");
