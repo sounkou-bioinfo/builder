@@ -3,21 +3,7 @@
   <a href="https://builder.opifex.org">docs</a>
 </div>
 
-```
-       __________________
-      /                  \
-     /                    \
-    /                      \
-   /                        \
-  /       B U I L D E R      \
-  \                          /
-   \                        /
-    \                      /
-     \                    /
-      \__________________/
-```
-
-A simple preprocessor for R: use macros, directives, and conditionals to generate your code.
+A simple preprocessor for R: use macros, directives, conditionals, and more to generate your code.
 
 Only works on POSIX systems.
 
