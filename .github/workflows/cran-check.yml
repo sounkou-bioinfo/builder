@@ -53,8 +53,8 @@ jobs:
           needs: check
           working-directory: Rpkg
 
-      - name: Bootstrap builder sources
-        run: Rscript Rpkg/bootstrap.R ${{ github.workspace }}
+    #  - name: Bootstrap builder sources
+     #   run: Rscript Rpkg/bootstrap.R ${{ github.workspace }}
 
       - uses: r-lib/actions/check-r-package@v2
         with:
