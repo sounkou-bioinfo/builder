@@ -61,7 +61,10 @@ jobs:
 
       - name: Smoke test
         shell: bash
-        run: ./builder${{ matrix.ext }} -version
+        run: |
+          export LD_LIBRARY_PATH="$(R RHOME)/lib:${LD_LIBRARY_PATH:-}"
+          export DYLD_LIBRARY_PATH="$(R RHOME)/lib:${DYLD_LIBRARY_PATH:-}"
+          ./builder${{ matrix.ext }} -version
 
       - name: Package binary
         shell: bash
