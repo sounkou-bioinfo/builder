@@ -224,3 +224,8 @@ builder(c("-input", "srcr", "-output", "R", "-DDEBUG", "-deadcode"))
 ## License
 
 GPL-2
+
+## LLM Usage Disclose
+
+Github copilot tools were use in helping write the files for
+boostrapping this package. We read, edited and validated the changes.
