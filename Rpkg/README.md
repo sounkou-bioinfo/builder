@@ -24,8 +24,8 @@ remotes::install_github("devOpifex/builder", subdir = "Rpkg")
 
 Pre-built binaries for Linux (amd64, arm64), macOS (arm64), and Windows
 (amd64) are available from the
-[r-pkg-release-binaries](../releases/tag/r-pkg-release-binaries) release
-page. Binaries are built against specific R versions (e.g.,
+[r-pkg-release-binaries](https://github.com/devOpifex/builder/releases/tag/r-pkg-release-binaries)
+release page. Binaries are built against specific R versions (e.g.,
 `builder-linux-amd64-R4.5.2.tar.gz`) — pick the one matching your
 installed R for ABI compatibility.
 

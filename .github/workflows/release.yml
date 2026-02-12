@@ -72,8 +72,19 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libpcre2-dev libzstd-dev liblzma-dev libbz2-dev zlib1g-dev libtirpc-dev
 
-      - name: Build binary (Unix)
-        if: runner.os != 'Windows'
+      - name: Build binary (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          CC=$(R CMD config CC)
+          CPPFLAGS=$(R CMD config --cppflags)
+          LDFLAGS=$(R CMD config --ldflags)
+          EXTRA="-Wall -Wno-unused-result -Iinclude -O2"
+          $CC $EXTRA $CPPFLAGS src/*.c -o builder $LDFLAGS
+          strip builder 2>/dev/null || true
+          chmod 755 builder
+
+      - name: Build binary (macOS)
+        if: runner.os == 'macOS'
         run: |
           CC=$(R CMD config CC)
           CPPFLAGS=$(R CMD config --cppflags)
@@ -90,9 +101,8 @@ jobs:
         run: |
           CC=$(R CMD config CC)
           CPPFLAGS=$(R CMD config --cppflags)
-          R_HOME=$(R RHOME)
-          LDFLAGS="-L${R_HOME}/bin -lR"
-          EXTRA="-Wall -Wno-unused-result -Wno-nonportable-include-path -Iinclude -O2"
+          LDFLAGS=$(R CMD config --ldflags)
+          EXTRA="-Wall -Wno-unused-result -Iinclude -O2"
           $CC $EXTRA $CPPFLAGS src/*.c -o builder.exe $LDFLAGS
           strip builder.exe 2>/dev/null || true
 
