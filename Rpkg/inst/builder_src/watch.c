@@ -1,15 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "watch.h"
+#include "log.h"
+
+#ifdef __linux__
+
 #include <unistd.h>
 #include <signal.h>
 #include <errno.h>
 #include <sys/inotify.h>
 #include <dirent.h>
 #include <limits.h>
-
-#include "watch.h"
-#include "log.h"
 
 static const size_t EVENT_SIZE = sizeof(struct inotify_event);
 static const size_t BUF_LEN = 1024 * (EVENT_SIZE + 16);
@@ -93,3 +96,25 @@ void watch_close(int fd)
 {
 		close(fd);
 }
+
+#else /* not __linux__ */
+
+int watch_init(const char *path)
+{
+		(void)path;
+		printf("%s Watch mode is only supported on Linux\n", LOG_WARNING);
+		return -1;
+}
+
+int watch_wait(int fd)
+{
+		(void)fd;
+		return 0;
+}
+
+void watch_close(int fd)
+{
+		(void)fd;
+}
+
+#endif /* __linux__ */

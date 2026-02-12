@@ -9,7 +9,7 @@ NAME = builder
 CC = $(shell R CMD config CC)
 CFLAGS = $(shell R CMD config --cppflags)
 LDFLAGS = $(shell R CMD config --ldflags)
-EXTRAFLAGS = -Wall -Wno-unused-result -Iinclude
+EXTRAFLAGS = -Wall -Wno-unused-result -Wno-nonportable-include-path -Iinclude
 RELEASEFLAGS = -s
 DEBUGFLAGS = -g
 
@@ -57,10 +57,10 @@ CMD_DEBUG = ./bin/$(NAME)-debug \
 all: build
 
 build: $(FILES) | bin
-	$(CC) $(CFLAGS) $(EXTRAFLAGS) $(RELEASEFLAGS) $^ -o bin/$(NAME) $(LDFLAGS)
+	$(CC) $(EXTRAFLAGS) $(CFLAGS) $(RELEASEFLAGS) $^ -o bin/$(NAME) $(LDFLAGS)
 
 build-debug: $(FILES) | bin
-	$(CC) $(CFLAGS) $(EXTRAFLAGS) $(DEBUGFLAGS) $^ -o bin/$(NAME)-debug $(LDFLAGS)
+	$(CC) $(EXTRAFLAGS) $(CFLAGS) $(DEBUGFLAGS) $^ -o bin/$(NAME)-debug $(LDFLAGS)
 
 bin:
 	mkdir -p bin

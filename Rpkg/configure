@@ -26,7 +26,7 @@ fi
 CC=$("${R_HOME}/bin/R" CMD config CC)
 CFLAGS=$("${R_HOME}/bin/R" CMD config --cppflags)
 LDFLAGS=$("${R_HOME}/bin/R" CMD config --ldflags)
-EXTRA_CFLAGS="-Wall -Wno-unused-result -I${SRC_DIR}/include"
+EXTRA_CFLAGS="-Wall -Wno-unused-result -Wno-nonportable-include-path -I${SRC_DIR}/include"
 
 # Release flags
 RELEASE_FLAGS="-s -O2"
@@ -45,8 +45,9 @@ echo "  CC=${CC}"
 echo "  Sources: ${SRC_DIR}/*.c"
 echo "  Output: ${BIN_DIR}/builder"
 
+# Builder's include must come BEFORE R's cppflags so r.h resolves correctly on macOS
 # shellcheck disable=SC2086
-${CC} ${CFLAGS} ${EXTRA_CFLAGS} ${RELEASE_FLAGS} ${C_FILES} -o "${BIN_DIR}/builder" ${LDFLAGS}
+${CC} ${EXTRA_CFLAGS} ${CFLAGS} ${RELEASE_FLAGS} ${C_FILES} -o "${BIN_DIR}/builder" ${LDFLAGS}
 
 if [ $? -eq 0 ]; then
   chmod 755 "${BIN_DIR}/builder"
