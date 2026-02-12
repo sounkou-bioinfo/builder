@@ -18,7 +18,6 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        r: ['release', 'oldrel-1']
         include:
           - os: ubuntu-latest
             artifact: builder-linux-amd64
