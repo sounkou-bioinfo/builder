@@ -12,7 +12,7 @@
 builder_path <- function() {
     bin <- system.file("bin", "builder", package = "builder", mustWork = FALSE)
     if(.Platform$OS.type == "windows") {
-        bin <- paste0("bin", ".exe")
+        bin <- paste0(bin, ".exe")
     }
 
     if (!nzchar(bin) || !file.exists(bin)) {
