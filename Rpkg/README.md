@@ -13,10 +13,20 @@ expands them into plain R before your package is built.
 
 ## Installation
 
+### R package
+
 ``` r
 # install.packages("remotes")
 remotes::install_github("devOpifex/builder", subdir = "Rpkg")
 ```
+
+### Standalone binaries
+
+Pre-built binaries for Linux (amd64), macOS (arm64), and Windows (amd64)
+are available from [GitHub
+Releases](https://github.com/devOpifex/builder/releases). Download the
+archive for your platform, extract, and place the `builder` binary on
+your `PATH`.
 
 ## Quick start
 
