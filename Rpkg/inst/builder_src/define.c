@@ -1,8 +1,13 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h> 
-#include <time.h> 
+#include <time.h>
+
+#include "compat.h"
+
+#ifndef BUILDER_NO_UTSNAME
 #include <sys/utsname.h>
+#endif
 
 #include "define.h"
 #include "parser.h"
@@ -84,6 +89,9 @@ void push_builtins(Define *arr)
   push(arr, strdup("..DATE.."), strdup(date), DEF_VARIABLE, 0);
   push(arr, strdup("..TIME.."), strdup(time_str), DEF_VARIABLE, 0);
 
+#ifdef BUILDER_NO_UTSNAME
+  push(arr, strdup("..OS.."), strdup("Windows"), DEF_VARIABLE, 0);
+#else
   struct utsname buffer;
 
   if(uname(&buffer) == -1) {
@@ -91,6 +99,7 @@ void push_builtins(Define *arr)
   }
 
   push(arr, strdup("..OS.."), strdup(buffer.sysname), DEF_VARIABLE, 0);
+#endif
 }
 
 void increment_counter(Define **arr, char *line)

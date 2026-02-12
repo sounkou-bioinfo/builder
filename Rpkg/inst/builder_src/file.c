@@ -5,6 +5,7 @@
 #include <limits.h>
 #include <regex.h>
 
+#include "compat.h"
 #include "deconstruct.h"
 #include "preflight.h"
 #include "sourcemap.h"
@@ -282,7 +283,7 @@ int walk(char *src_dir, char *dst_dir, Callback func, Define **defs, Plugins *pl
     snprintf(path, PATH_MAX, "%s/%s", src_dir, entry->d_name);
 
     // it's a directory, recurse
-    if (entry->d_type == DT_DIR) {
+    if (builder_is_dir(path)) {
       walk(path, dst_dir, func, defs, plugins);
     } else {
       char *ext = strrchr(path, '.');
@@ -561,7 +562,7 @@ int collect_files(RFile **files, char *src_dir, char *dst_dir)
     snprintf(path, PATH_MAX, "%s/%s", src_dir, entry->d_name);
 
     // it's a directory, recurse
-    if (entry->d_type == DT_DIR) {
+    if (builder_is_dir(path)) {
       collect_files(files, path, dst_dir);
     } else {
       char *ext = strrchr(path, '.');

@@ -3,13 +3,14 @@
 #include <string.h>
 #include <Rinternals.h>
 #include <R_ext/Parse.h>
+#include "compat.h"
 #include "log.h"
 
 void set_R_home()
 {
   if(getenv("R_HOME") != NULL) return;
 
-  FILE *fp = popen("R RHOME", "r");
+  FILE *fp = builder_popen("R RHOME", "r");
   if(fp == NULL) {
     printf("%s Failed to run R RHOME and R_HOME environment variables are not set\n", LOG_ERROR);
     return;
@@ -18,13 +19,13 @@ void set_R_home()
   char path[512];
   if(fgets(path, sizeof(path), fp) != NULL) {
     path[strcspn(path, "\n")] = 0;
-    setenv("R_HOME", path, 1);
+    builder_setenv("R_HOME", path, 1);
     printf("%s Setting R_HOME environment variable to `%s` (R RHOME)\n", LOG_WARNING, path);
   } else {
     printf("%s Failed to run R RHOME and R_HOME environment variables are not set\n", LOG_ERROR);
   }
 
-  pclose(fp);
+  builder_pclose(fp);
 }
 
 static char *remove_trailing_newline(char *line)

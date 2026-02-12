@@ -5,6 +5,7 @@
 #include <sys/types.h>
 #include <errno.h>
 
+#include "compat.h"
 #include "log.h"
 #include "test.h"
 #include "file.h"
@@ -107,13 +108,13 @@ int collect_test_line(TestCollector *collector, char *line)
 static int create_test_directory(const char *path)
 {
   // Create tests/ directory
-  if(mkdir("tests", 0755) == -1 && errno != EEXIST) {
+  if(builder_mkdir("tests", 0755) == -1 && errno != EEXIST) {
     printf("%s Failed to create tests/ directory: %s\n", LOG_ERROR, strerror(errno));
     return 1;
   }
 
   // Create tests/testthat/ directory
-  if(mkdir("tests/testthat", 0755) == -1 && errno != EEXIST) {
+  if(builder_mkdir("tests/testthat", 0755) == -1 && errno != EEXIST) {
     printf("%s Failed to create tests/testthat/ directory: %s\n", LOG_ERROR, strerror(errno));
     return 1;
   }

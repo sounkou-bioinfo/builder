@@ -2,16 +2,16 @@
 #include <stdlib.h>
 #include <string.h>
 #include <fcntl.h>
-#include <unistd.h>
 #include <sys/stat.h>
 
+#include "compat.h"
 #include "config.h"
 #include "file.h"
 #include "log.h"
 
 void create_package(char *name)
 {
-  int package = mkdir(name, 0755);
+  int package = builder_mkdir(name, 0755);
   if(package != 0) {
     printf("%s Failed to create package: %s\n", LOG_ERROR, name);
     return;
@@ -21,7 +21,7 @@ void create_package(char *name)
   char *r = (char *)malloc(strlen(name) + strlen("/R") + 1);
   strcpy(r, name);
   strcat(r, "/R");
-  mkdir(r, 0755);
+  builder_mkdir(r, 0755);
   printf("%s Created R directory: %s\n", LOG_INFO, r);
   free(r);
 
@@ -29,7 +29,7 @@ void create_package(char *name)
   char *srcr = (char *)malloc(strlen(name) + strlen("/srcr") + 1);
   strcpy(srcr, name);
   strcat(srcr, "/srcr");
-  mkdir(srcr, 0755);
+  builder_mkdir(srcr, 0755);
   printf("%s Created srcr directory: %s\n", LOG_INFO, srcr);
   free(srcr);
 

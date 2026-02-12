@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "compat.h"
+
 char *add_sourcemap(char *line, int line_number, char *filename)
 {
   // there's a special comment in the R code that we don't want to touch

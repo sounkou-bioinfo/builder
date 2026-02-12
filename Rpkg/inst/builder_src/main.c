@@ -77,12 +77,12 @@ static int build(BuildContext *ctx)
 
 int main(int argc, char *argv[])
 {
-  if(has_arg(argc, argv, "-version")) {
+  if(has_arg(argc, argv, "-version") || has_arg(argc, argv, "--version")) {
     printf("Builder v%s\n", VERSION);
     return 0;
   }
 
-  if (has_arg(argc, argv, "-init")) {
+  if (has_arg(argc, argv, "-init") || has_arg(argc, argv, "--init")) {
     char *path = (char *)malloc(2);
     strcpy(path, ".");
     create_config(path);
@@ -90,13 +90,14 @@ int main(int argc, char *argv[])
   }
 
   char *create = get_arg_value(argc, argv, "-create");
+  if (create == NULL) create = get_arg_value(argc, argv, "--create");
   if (create != NULL) {
     create_package(create);
     return 0;
   }
 
 
-  if (has_arg(argc, argv, "-help")) {
+  if (has_arg(argc, argv, "-help") || has_arg(argc, argv, "--help")) {
     printf("builder - R package preprocessor with macro support\n\n");
     printf("Usage: builder [OPTIONS]\n\n");
 
