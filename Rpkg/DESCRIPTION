@@ -1,0 +1,31 @@
+Package: builder
+Title: 'R' Package Preprocessor with Macro Support
+Version: 0.0.1
+Authors@R: c(
+        person(given = "John",
+               family = "Coene",
+               role = c("aut", "cre"),
+               email = "jcoenep@gmail.com"),
+        person(given = "Sounkou Mahamane",
+               family = "Toure",
+               role = "ctb",
+               email = "sounkoutoure@gmail.com")
+    )
+Description: Bundles and builds the 'builder' preprocessor binary from vendored
+    'C' sources. 'builder' expands macros, directives, conditionals, and more in
+    'R' source files. Provides 'R' wrapper functions around the compiled binary
+    for use as a build-time tool in other 'R' packages.
+License: GPL-2
+Encoding: UTF-8
+NeedsCompilation: no
+SystemRequirements: GNU make, C compiler, R development headers and
+    libraries (libR, libpcre2, libzstd, liblzma, libbz2, libz)
+Depends:
+    R (>= 4.1.0)
+Imports:
+    utils
+Suggests:
+    tinytest
+RoxygenNote: 7.3.3
+URL: https://github.com/devOpifex/builder
+BugReports: https://github.com/devOpifex/builder/issues

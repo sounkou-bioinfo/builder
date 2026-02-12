@@ -1,0 +1,9 @@
+inst/bin
+src/Makevars
+src/Makevars.win
+*.o
+*.so
+*.dll
+*.Rcheck
+*.tar.gz
+.Rproj.user

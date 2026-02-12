@@ -1,0 +1,10 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^\.git$
+^\.github$
+^bootstrap\.R$
+^LICENSE\.md$
+^README\.Rmd$
+^README\.html$
+^.*\.Rcheck$
+^.*\.tar\.gz$

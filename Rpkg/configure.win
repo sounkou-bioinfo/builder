@@ -1,0 +1,55 @@
+#!/bin/sh
+# configure.win script for builder R package (Windows / Rtools)
+# Compiles the builder binary from vendored C sources.
+
+set -eu
+
+THIS_DIR=$(dirname "$0")
+THIS_DIR=$(cd "$THIS_DIR" && pwd)
+
+SRC_DIR="${THIS_DIR}/inst/builder_src"
+BIN_DIR="${THIS_DIR}/inst/bin"
+
+if [ ! -d "${SRC_DIR}" ]; then
+  echo "ERROR: builder sources not found in inst/builder_src/"
+  echo "Package may not be built properly. Run bootstrap.R first."
+  exit 1
+fi
+
+if [ ! -f "${SRC_DIR}/main.c" ]; then
+  echo "ERROR: main.c not found in ${SRC_DIR}"
+  exit 1
+fi
+
+# Get R compiler settings
+CC=$("${R_HOME}/bin/R" CMD config CC)
+CFLAGS=$("${R_HOME}/bin/R" CMD config --cppflags)
+LDFLAGS=$("${R_HOME}/bin/R" CMD config --ldflags)
+EXTRA_CFLAGS="-Wall -Wno-unused-result -I${SRC_DIR}/include"
+
+RELEASE_FLAGS="-s -O2"
+
+# Collect all C source files
+C_FILES=""
+for f in "${SRC_DIR}"/*.c; do
+  C_FILES="${C_FILES} ${f}"
+done
+
+# Create output directory
+mkdir -p "${BIN_DIR}"
+
+echo "Compiling builder binary..."
+
+# shellcheck disable=SC2086
+${CC} ${CFLAGS} ${EXTRA_CFLAGS} ${RELEASE_FLAGS} ${C_FILES} -o "${BIN_DIR}/builder.exe" ${LDFLAGS}
+
+if [ $? -eq 0 ]; then
+  echo "builder binary compiled successfully."
+else
+  echo "ERROR: Failed to compile builder binary."
+  exit 1
+fi
+
+
+
+echo "Configuration complete."

@@ -9,7 +9,7 @@ NAME = builder
 CC = $(shell R CMD config CC)
 CFLAGS = $(shell R CMD config --cppflags)
 LDFLAGS = $(shell R CMD config --ldflags)
-EXTRAFLAGS = -Wall -Iinclude
+EXTRAFLAGS = -Wall -Wno-unused-result -Iinclude
 RELEASEFLAGS = -s
 DEBUGFLAGS = -g
 

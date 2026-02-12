@@ -1,0 +1,9 @@
+#!/bin/sh
+# cleanup.win script for builder R package (Windows / Rtools)
+set -eu
+
+rm -f src/Makevars.win
+rm -f src/*.o src/*.so src/*.dll
+rm -f inst/bin/builder.exe
+
+echo "Cleanup complete."
